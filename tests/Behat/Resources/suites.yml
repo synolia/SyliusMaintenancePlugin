@@ -1,0 +1,10 @@
+# Put your Behat suites definitions here
+
+default:
+    suites:
+        greeting_customer:
+            contexts:
+                - synolia_sylius_maintenance.context.ui.shop.welcome
+
+            filters:
+                tags: "@greeting_customer"
