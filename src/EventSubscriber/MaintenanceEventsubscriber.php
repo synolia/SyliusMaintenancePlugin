@@ -19,6 +19,8 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
     private const MAINTENANCE_FILE = 'maintenance.yaml';
 
+    private const MAINTENANCE_TEMPLATE = 'templates/maintenance.html.twig';
+
     private Filesystem $filesystem;
 
     private KernelInterface $kernel;
@@ -77,7 +79,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
         $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
 
-        if ($this->filesystem->exists($projectRootPath . '/templates/maintenance.html.twig')) {
+        if ($this->filesystem->exists($projectRootPath . '/' . self::MAINTENANCE_TEMPLATE)) {
             $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
         }
     }
