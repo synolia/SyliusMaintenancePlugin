@@ -5,12 +5,6 @@
         <defaults public="true" />
         <!-- Put your Behat services here -->
 
-        <service id="synolia_sylius_maintenance.context.ui.shop.welcome" class="Tests\Synolia\SyliusMaintenancePlugin\Behat\Context\Ui\Shop\WelcomeContext">
-            <argument type="service" id="synolia_sylius_maintenance.page.shop.static_welcome" />
-            <argument type="service" id="synolia_sylius_maintenance.page.shop.dynamic_welcome" />
-        </service>
 
-        <service id="synolia_sylius_maintenance.page.shop.static_welcome" class="Tests\Synolia\SyliusMaintenancePlugin\Behat\Page\Shop\StaticWelcomePage" parent="sylius.behat.symfony_page" public="false" />
-        <service id="synolia_sylius_maintenance.page.shop.dynamic_welcome" class="Tests\Synolia\SyliusMaintenancePlugin\Behat\Page\Shop\DynamicWelcomePage" parent="sylius.behat.symfony_page" public="false" />
     </services>
 </container>
