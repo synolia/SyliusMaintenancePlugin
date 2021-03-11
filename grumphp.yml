@@ -1,0 +1,33 @@
+grumphp:
+    ascii:
+        failed: ~
+        succeeded: ~
+    tasks:
+        composer:
+            no_check_all: true
+        git_blacklist:
+            keywords:
+                - 'var_dump'
+                - 'dump('
+                - 'print_r'
+                - 'die('
+                - 'console\.'
+            triggered_by: [php, twig, js]
+        jsonlint:
+            detect_key_conflicts: true
+        phpmd:
+            ruleset: ['ruleset/.php_md.xml']
+        phpstan:
+            level: ~
+            configuration: 'ruleset/phpstan.neon'
+        yamllint: ~
+        ecs:
+            config: 'ruleset/easy-coding-standard.yml'
+            paths:
+                - src
+                - tests/Behat
+                - tests/PHPUnit
+            no-progress-bar: true
+        twigcs:
+            path: 'src/'
+            severity: error

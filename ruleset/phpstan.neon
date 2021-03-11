@@ -1,14 +1,17 @@
 parameters:
+    level: max
     reportUnmatchedIgnoredErrors: false
     checkMissingIterableValueType: false
-
+    bootstrapFiles:
+        - ../tests/Application/config/bootstrap.php
+        - ../vendor/autoload.php
     excludes_analyse:
         # Makes PHPStan crash
-        - 'src/DependencyInjection/Configuration.php'
+        - '../src/DependencyInjection/Configuration.php'
 
         # Test dependencies
-        - 'tests/Application/app/**.php'
-        - 'tests/Application/src/**.php'
+        - '../tests/Application/'
+        - '../tests/PHPUnit'
 
     ignoreErrors:
         - '/Parameter #1 \$configuration of method Symfony\\Component\\DependencyInjection\\Extension\\Extension::processConfiguration\(\) expects Symfony\\Component\\Config\\Definition\\ConfigurationInterface, Symfony\\Component\\Config\\Definition\\ConfigurationInterface\|null given\./'
