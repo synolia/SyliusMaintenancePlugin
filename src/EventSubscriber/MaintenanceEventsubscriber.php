@@ -51,8 +51,8 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
     public function handle(RequestEvent $event): void
     {
-        $getRequestUri = $event->getRequest()->getRequestUri();
         $projectRootPath = $this->kernel->getProjectDir();
+        $getRequestUri = $event->getRequest()->getRequestUri();
         $prefix = $this->params->get('sylius_admin.path_name');
 
         if (!$this->filesystem->exists($projectRootPath . '/maintenance.yaml')) {
