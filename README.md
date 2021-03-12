@@ -68,6 +68,7 @@
     ```yaml
     ips: [172.16.254.1, 255.255.255.255, 192.0.0.255]
     ```
+  
 ### You can turn your website under maintenance by console commands :
 
   1. Enable the plugin
@@ -85,6 +86,7 @@
       ```shell
       php bin/console maintenance:disable
       ```
+     
 ### You can also turn your website under maintenance in Back Office :     
 
 ![Alt text](images/maintenance.png "maintenance_configure")
