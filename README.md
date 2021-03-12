@@ -63,7 +63,8 @@
 
 ## Usage
 
-To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project   
+- To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project.   
+- If you want to create a custom template, please create and name your template in : **templates/maintenance.html.twig**.
 
 ## Development
 

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
@@ -22,16 +23,20 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
     private ParameterBagInterface $params;
 
+    private Environment $twig;
+
     public function __construct(
         Filesystem $filesystem,
         KernelInterface $kernel,
         TranslatorInterface $translator,
-        ParameterBagInterface $params
+        ParameterBagInterface $params,
+        Environment $twig
     ) {
         $this->filesystem = $filesystem;
         $this->kernel = $kernel;
         $this->translator = $translator;
         $this->params = $params;
+        $this->twig = $twig;
     }
 
     public static function getSubscribedEvents(): array
@@ -44,9 +49,10 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
     public function handle(RequestEvent $event): void
     {
         $getRequestUri = $event->getRequest()->getRequestUri();
+        $projectRootPath = $this->kernel->getProjectDir();
         $prefix = $this->params->get('sylius_admin.path_name');
 
-        if (!$this->filesystem->exists($this->kernel->getProjectDir() . '/maintenance.yaml')) {
+        if (!$this->filesystem->exists($projectRootPath . '/maintenance.yaml')) {
             return;
         }
 
@@ -55,5 +61,9 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         }
 
         $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
+
+        if ($this->filesystem->exists($projectRootPath . '/templates/maintenance.html.twig')) {
+            $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
+        }
     }
 }
