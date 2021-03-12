@@ -21,9 +21,8 @@
 
 | | Version |
 | :--- | :--- |
-| PHP  | 7.3+ |
+| PHP  | 7.4+ |
 | Sylius | 1.8+ |
-
 
 ## Installation
 
@@ -59,7 +58,7 @@
     ```shell
     bin/console cache:clear
     ```
-
+   
 ## Usage
 
 - To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project.
@@ -87,7 +86,6 @@
       php bin/console maintenance:disable
       ```
 ### You can also turn your website under maintenance in Back Office :     
-
 
 ![Alt text](images/maintenance.png "maintenance_configure")
 
