@@ -25,6 +25,9 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
     private Environment $twig;
 
+    /** @var Environment */
+    private $twig;
+
     public function __construct(
         Filesystem $filesystem,
         KernelInterface $kernel,
