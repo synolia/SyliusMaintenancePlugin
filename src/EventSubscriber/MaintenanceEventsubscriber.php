@@ -55,6 +55,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         if (!$this->filesystem->exists($projectRootPath . '/maintenance.yaml')) {
             return;
         }
+
         if (false !== strpos($getRequestUri, $prefix, 1)) {
             return;
         }
