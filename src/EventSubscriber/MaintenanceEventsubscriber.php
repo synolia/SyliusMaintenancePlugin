@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
@@ -24,9 +25,6 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
     private ParameterBagInterface $params;
 
     private Environment $twig;
-
-    /** @var Environment */
-    private $twig;
 
     public function __construct(
         Filesystem $filesystem,
@@ -54,8 +52,14 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $projectRootPath = $this->kernel->getProjectDir();
         $getRequestUri = $event->getRequest()->getRequestUri();
         $prefix = $this->params->get('sylius_admin.path_name');
+        $maintenanceYaml = Yaml::parseFile($projectRootPath . '/maintenance.yaml');
+        $ipUser = $event->getRequest()->getClientIp();
 
         if (!$this->filesystem->exists($projectRootPath . '/maintenance.yaml')) {
+            return;
+        }
+
+        if(in_array($ipUser, $maintenanceYaml['ips'])) {
             return;
         }
 
