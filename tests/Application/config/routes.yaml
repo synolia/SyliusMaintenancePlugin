@@ -1,0 +1,9 @@
+synolia_sylius_maintenance_shop:
+    resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/shop_routing.yml"
+    prefix: /{_locale}
+    requirements:
+        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
+
+synolia_sylius_maintenance_admin:
+    resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yml"
+    prefix: /admin

@@ -4,8 +4,29 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Node artifact files
-node_modules/
-dist/
+**/node_modules/
+/dist/
+
+# Plugin sylius
+/vendor/
+/composer.lock
+
+**/.*cache
+
+/etc/build/*
+!/etc/build/.gitignore
+
+/tests/Application/yarn.lock
+
+/.phpunit.result.cache
+/behat.yml
+/phpspec.yml
+/phpunit.xml
+
+auth.json
+
+# JetBrains IDE
+.idea/
 
 # Compiled Java class files
 *.class
@@ -22,9 +43,6 @@ dist/
 # Maven
 target/
 dist/
-
-# JetBrains IDE
-.idea/
 
 # Unit test reports
 TEST*.xml
