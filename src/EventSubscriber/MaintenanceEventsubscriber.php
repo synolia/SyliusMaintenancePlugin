@@ -10,8 +10,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
@@ -59,7 +59,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
             return;
         }
 
-        if(in_array($ipUser, $maintenanceYaml['ips'])) {
+        if(in_array($ipUser, $maintenanceYaml['ips'], true)) {
             return;
         }
 
