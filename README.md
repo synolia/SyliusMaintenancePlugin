@@ -63,7 +63,7 @@
 
 ## Usage
 
-To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project
+To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project   
 
 ## Development
 
