@@ -45,6 +45,7 @@ final class EnableMaintenanceCommand extends Command
         $output->writeln($this->createFile());
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
+
         if (0 < \count($ipsAddress)) {
             $output->writeln($this->putIpsIntoFile($ipsAddress));
         }
@@ -65,9 +66,10 @@ final class EnableMaintenanceCommand extends Command
     private function putIpsIntoFile(array $ipAddresses): string
     {
         foreach ($ipAddresses as $key => $ipAddress) {
-            if (!$this->isValidIp($ipAddress)) {
-                unset($ipAddresses[$key]);
+            if ($this->isValidIp($ipAddress)) {
+                continue;
             }
+            unset($ipAddresses[$key]);
         }
 
         if ($this->filesystem->exists($this->getPathtoFile()) && \count($ipAddresses) > 0) {
