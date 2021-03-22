@@ -54,7 +54,6 @@
         prefix: /admin
     ```
 
-
 5. Clear cache
 
     ```shell
@@ -70,6 +69,23 @@
     ```yaml
     ips: [172.16.254.1, 255.255.255.255, 192.0.0.255]
     ```
+### You can turn your website under maintenance by console commands :
+
+  1. Enable the plugin
+
+     ```shell
+      php bin/console maintenance:enable
+      ```
+  2. Enable the plugin and add one or multiple ips addresses separated with a space
+
+      ```shell
+      php bin/console maintenance:enable 172.16.254.1 255.255.255.255 192.0.0.255
+      ```
+  3. Disable the plugin
+
+      ```shell
+      php bin/console maintenance:disable
+      ```
 
 ## Development
 
