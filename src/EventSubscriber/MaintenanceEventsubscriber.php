@@ -14,17 +14,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
-    /** @var Filesystem */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var KernelInterface */
-    private $kernel;
+    private KernelInterface $kernel;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var ParameterBagInterface */
-    private $params;
+    private ParameterBagInterface $params;
 
     public function __construct(
         Filesystem $filesystem,
