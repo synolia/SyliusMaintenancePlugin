@@ -1,0 +1,7 @@
+sylius_resource:
+  resources:
+    synolia.maintenance:
+      driver: doctrine/orm
+      classes:
+        model: Synolia\SyliusMaintenancePlugin\Entity\MaintenanceConfiguration
+        form: Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType

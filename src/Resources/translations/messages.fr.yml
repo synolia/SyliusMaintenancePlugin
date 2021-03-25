@@ -1,3 +1,11 @@
-sylius:
+maintenance:
     ui:
         message: Site en maintenance
+        title: Configuration
+        form:
+            enabled: Activé ?
+            ip: Adresses Ip (séparées par une virgule)
+            validate: Valider
+            placeholder: 'Ajouter une ou plusieurs adresses ips séparées par une virgule. Par exemple: 255.255.255.255,192.0.0.255'
+        message_enabled: Le plugin de maintenance a été activé avec succès
+        message_disabled: Le plugin de maintenance a été désactivé avec succès

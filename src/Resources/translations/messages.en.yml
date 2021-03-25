@@ -1,3 +1,11 @@
 maintenance:
     ui:
         message: The website is under maintenance
+        title: Configuration
+        form:
+            enabled: Enabled ?
+            ip: Ip addresses (separated with a comma)
+            validate: Validate
+            placeholder: 'Add one or multiple ips addresses separated with a comma. For example: 255.255.255.255,192.0.0.255'
+        message_enabled: The maintenance plugin was successfully enabled
+        message_disabled: The maintenance plugin has been successfully disabled

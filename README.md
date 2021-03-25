@@ -86,6 +86,10 @@
       ```shell
       php bin/console maintenance:disable
       ```
+### You can also turn your website under maintenance in Back Office :     
+
+
+![Alt text](images/maintenance.png "maintenance_configure")
 
 ## Development
 
