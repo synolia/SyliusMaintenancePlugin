@@ -4,9 +4,10 @@ maintenance:
         title: Maintenance
         form:
             enabled: Activé ?
-            ip: Adresses Ip (séparées par une virgule)
+            ip: Adresses Ip (séparées par une virgule, sans espace)
             validate: Valider
             placeholder: 'Ajouter une ou plusieurs adresses ip séparées par une virgule. Par exemple: 255.255.255.255,192.0.0.255'
+            custom_message: Message personnalisé
         message_enabled: Le plugin de maintenance a été activé avec succès.
         message_disabled: Le plugin de maintenance a été désactivé avec succès.
         message_success_ips: Les adresses ip ont été ajoutés au fichier maintenance.yaml avec succès.

@@ -95,6 +95,10 @@ final class MaintenanceConfigurationController extends AbstractController
                     );
                 }
 
+                if (null !== $data->getCustomMessage()) {
+                    $this->fileManager->addCustomMessage($data->getCustomMessage());
+                }
+
                 return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
                     'form' => $form->createView(),
                 ]);
@@ -120,6 +124,7 @@ final class MaintenanceConfigurationController extends AbstractController
         $maintenanceConfig = new MaintenanceConfiguration();
         $maintenanceConfig->setEnabled($formData !== null ? $formData->isEnabled() : true);
         $maintenanceConfig->setIpAddresses($formData !== null ? $formData->getIpAddresses() : '');
+        $maintenanceConfig->setCustomMessage($formData !== null ? $formData->getCustomMessage() : '<h1>Hello world</h1>');
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($maintenanceConfig);

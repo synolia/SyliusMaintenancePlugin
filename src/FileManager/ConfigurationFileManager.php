@@ -13,13 +13,19 @@ final class ConfigurationFileManager
 {
     public const ADD_IP_SUCCESS = 'maintenance.ui.message_success_ips';
 
-    private const ADD_IP_ERROR = 'maintenance.ui.message_error_ips';
+    public const MAINTENANCE_FILE = 'maintenance.yaml';
 
-    private const PLUGIN_ENABLED = 'maintenance.ui.message_enabled';
+    private const MAINTENANCE_TEMPLATE = 'templates/maintenance.html.twig';
 
-    private const PLUGIN_DISABLED = 'maintenance.ui.message_disabled';
+    private const ADD_IP_SUCCESS_MESSAGE = 'maintenance.ui.message_success_ips';
 
-    private const PLUGIN_DISABLED_FILE_NOT_FOUND = 'maintenance.ui.message_disabled_404';
+    private const ADD_IP_ERROR_MESSAGE = 'maintenance.ui.message_error_ips';
+
+    private const PLUGIN_ENABLED_MESSAGE = 'maintenance.ui.message_enabled';
+
+    private const PLUGIN_DISABLED_MESSAGE = 'maintenance.ui.message_disabled';
+
+    private const PLUGIN_DISABLED_404_MESSAGE = 'maintenance.ui.message_disabled_404';
 
     private Filesystem $filesystem;
 
@@ -36,17 +42,17 @@ final class ConfigurationFileManager
         $this->deleteFile($filename);
         $this->filesystem->touch($this->getPathtoFile($filename));
 
-        return self::PLUGIN_ENABLED;
+        return self::PLUGIN_ENABLED_MESSAGE;
     }
 
     public function deleteFile(string $filename): string
     {
         if (!$this->fileExists($filename)) {
-            return self::PLUGIN_DISABLED_FILE_NOT_FOUND;
+            return self::PLUGIN_DISABLED_404_MESSAGE;
         }
         $this->filesystem->remove($this->getPathtoFile($filename));
 
-        return self::PLUGIN_DISABLED;
+        return self::PLUGIN_DISABLED_MESSAGE;
     }
 
     public function fileExists(string $filename): bool
@@ -80,15 +86,21 @@ final class ConfigurationFileManager
 
             file_put_contents($this->getPathtoFile($filename), $yaml);
 
-            return self::ADD_IP_SUCCESS;
+            return self::ADD_IP_SUCCESS_MESSAGE;
         }
 
-        return self::ADD_IP_ERROR;
+        return self::ADD_IP_ERROR_MESSAGE;
     }
 
     public function convertStringToArray(string $data): array
     {
         return explode(',', $data);
+    }
+
+    public function addCustomMessage(string $content): void
+    {
+        $this->deleteFile(self::MAINTENANCE_TEMPLATE);
+        $this->filesystem->appendToFile($this->getPathtoFile(self::MAINTENANCE_TEMPLATE), $content);
     }
 
     private function getPathtoFile(string $filename): string

@@ -7,6 +7,7 @@ namespace Synolia\SyliusMaintenancePlugin\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -27,6 +28,10 @@ final class MaintenanceConfigurationType extends AbstractType
                 'attr' => [
                     'placeholder' => 'maintenance.ui.form.placeholder',
                 ],
+                'required' => false,
+            ])
+            ->add('customMessage', TextareaType::class, [
+                'label' => 'maintenance.ui.form.custom_message',
                 'required' => false,
             ])
             ->add('submit', SubmitType::class, [

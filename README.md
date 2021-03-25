@@ -89,7 +89,13 @@
      
 ### You can also turn your website under maintenance in Back Office :     
 
+<<<<<<< HEAD
 ![Alt text](images/maintenance.png "maintenance_configure")
+=======
+You need to create first your template in : **templates/maintenance.html.twig** if you want to add the custom message in your template.
+
+![Alt text](images/maintenance.png "maintenance_configure")    
+>>>>>>> add message custom in templates/maintenance.html.twig
 
 ## Development
 

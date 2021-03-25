@@ -33,6 +33,12 @@ class MaintenanceConfiguration implements ResourceInterface
      */
     private $enabled = true;
 
+    /**
+     * @var string|null
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $customMessage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,6 +78,18 @@ class MaintenanceConfiguration implements ResourceInterface
     public function disable(): self
     {
         $this->enabled = false;
+
+        return $this;
+    }
+
+    public function getCustomMessage(): ?string
+    {
+        return $this->customMessage;
+    }
+
+    public function setCustomMessage(?string $customMessage): self
+    {
+        $this->customMessage = $customMessage;
 
         return $this;
     }
