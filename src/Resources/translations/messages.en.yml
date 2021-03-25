@@ -1,7 +1,7 @@
 maintenance:
     ui:
         message: The website is under maintenance
-        title: Configuration
+        title: Maintenance
         form:
             enabled: Enabled ?
             ip: Ip addresses (separated with a comma)

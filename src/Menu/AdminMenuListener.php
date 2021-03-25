@@ -14,7 +14,7 @@ final class AdminMenuListener
         $menu = $event->getMenu();
 
         /** @var ItemInterface $newSubmenu */
-        $newSubmenu = $menu->addChild('maintenance');
+        $newSubmenu = $menu->getChild('configuration');
 
         $newSubmenu->addChild('sylius_admin_maintenance_configuration', [
             'route' => 'sylius_admin_maintenance_configuration',

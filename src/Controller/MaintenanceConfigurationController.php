@@ -44,14 +44,14 @@ final class MaintenanceConfigurationController extends AbstractController
         $form = $this->createForm(MaintenanceConfigurationType::class);
         $form->handleRequest($request);
 
-        if ($request->isMethod('POST') && $form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             if (0 == \count($data)) {
                 $this->redirectToRoute('sylius_admin_maintenance_configuration');
             }
 
-            if ($data['enabled'] === true) {
+            if (true === $data['enabled']) {
                 $this->createFile();
 
                 if (null !== $data['ip']) {
@@ -64,14 +64,18 @@ final class MaintenanceConfigurationController extends AbstractController
                         $this->translator->trans('maintenance.ui.message_enabled')
                     );
                 }
-            } elseif ($data['enabled'] === false) {
-                $this->deleteFile();
-                if (!$this->fileExists()) {
-                    $this->flashBag->add(
-                        'success',
-                        $this->translator->trans('maintenance.ui.message_disabled')
-                    );
-                }
+
+                return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            $this->deleteFile();
+            if (!$this->fileExists()) {
+                $this->flashBag->add(
+                    'success',
+                    $this->translator->trans('maintenance.ui.message_disabled')
+                );
             }
         }
 
@@ -88,18 +92,19 @@ final class MaintenanceConfigurationController extends AbstractController
 
     private function deleteFile(): void
     {
-        if ($this->fileExists()) {
-            $this->filesystem->remove($this->getPathtoFile());
+        if (!$this->fileExists()) {
+            return;
         }
+        $this->filesystem->remove($this->getPathtoFile());
     }
 
     private function fileExists(): bool
     {
-        if ($this->filesystem->exists($this->getPathtoFile())) {
-            return true;
+        if (!$this->filesystem->exists($this->getPathtoFile())) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     private function putIpsIntoFile(string $ipAddresses): void
@@ -107,9 +112,10 @@ final class MaintenanceConfigurationController extends AbstractController
         $ipAddressesArray = explode(',', $ipAddresses);
 
         foreach ($ipAddressesArray as $key => $ipAddress) {
-            if (!$this->isValidIp($ipAddress)) {
-                unset($ipAddressesArray[$key]);
+            if ($this->isValidIp($ipAddress)) {
+                continue;
             }
+            unset($ipAddressesArray[$key]);
         }
 
         if ($this->fileExists() && \count($ipAddressesArray) > 0) {
@@ -135,10 +141,10 @@ final class MaintenanceConfigurationController extends AbstractController
 
     private function isValidIp(string $ipAddress): bool
     {
-        if (filter_var($ipAddress, \FILTER_VALIDATE_IP) !== false) {
-            return true;
+        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 }

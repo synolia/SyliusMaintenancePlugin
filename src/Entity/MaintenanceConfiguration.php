@@ -55,18 +55,24 @@ class MaintenanceConfiguration implements ResourceInterface
         return $this->enabled;
     }
 
-    public function setEnabled(?bool $enabled): void
+    public function setEnabled(?bool $enabled): self
     {
         $this->enabled = (bool) $enabled;
+
+        return $this;
     }
 
-    public function enable(): void
+    public function enable(): self
     {
         $this->enabled = true;
+
+        return $this;
     }
 
-    public function disable(): void
+    public function disable(): self
     {
         $this->enabled = false;
+
+        return $this;
     }
 }

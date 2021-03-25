@@ -1,7 +1,7 @@
 maintenance:
     ui:
         message: Site en maintenance
-        title: Configuration
+        title: Maintenance
         form:
             enabled: Activé ?
             ip: Adresses Ip (séparées par une virgule)
