@@ -10,12 +10,15 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
+    private const MAINTENANCE_FILE = 'maintenance.yaml';
+
     private Filesystem $filesystem;
 
     private KernelInterface $kernel;
@@ -52,14 +55,19 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $projectRootPath = $this->kernel->getProjectDir();
         $getRequestUri = $event->getRequest()->getRequestUri();
         $prefix = $this->params->get('sylius_admin.path_name');
-        $maintenanceYaml = Yaml::parseFile($projectRootPath . '/maintenance.yaml');
         $ipUser = $event->getRequest()->getClientIp();
 
         if (!$this->filesystem->exists($projectRootPath . '/maintenance.yaml')) {
             return;
         }
 
-        if(in_array($ipUser, $maintenanceYaml['ips'], true)) {
+        try {
+            $maintenanceYaml = Yaml::parseFile($projectRootPath . '/' . self::MAINTENANCE_FILE);
+        } catch (ParseException $exception) {
+            throw new ParseException('Unable to parse the YAML. ' . $exception->getMessage());
+        }
+
+        if ($maintenanceYaml !== null && in_array($ipUser, $maintenanceYaml['ips'], true)) {
             return;
         }
 
