@@ -62,11 +62,17 @@ final class EnableMaintenanceCommand extends Command
         return 'The file maintenance.yaml was created successfully';
     }
 
-    private function putIpsIntoFile(?array $ipsAddress): string
+    private function putIpsIntoFile(array $ipAddresses): string
     {
-        if ($this->filesystem->exists($this->getPathtoFile())) {
+        foreach ($ipAddresses as $key => $ipAddress) {
+            if (!$this->isValidIp($ipAddress)) {
+                unset($ipAddresses[$key]);
+            }
+        }
+
+        if ($this->filesystem->exists($this->getPathtoFile()) && \count($ipAddresses) > 0) {
             $ipsArray = [
-                'ips' => $ipsAddress,
+                'ips' => $ipAddresses,
             ];
             $yaml = Yaml::dump($ipsArray);
             file_put_contents($this->getPathtoFile(), $yaml);
@@ -82,5 +88,14 @@ final class EnableMaintenanceCommand extends Command
         $projectRootPath = $this->kernel->getProjectDir();
 
         return  $projectRootPath . '/' . self::MAINTENANCE_FILE;
+    }
+
+    private function isValidIp(string $ipAddress): bool
+    {
+        if (filter_var($ipAddress, \FILTER_VALIDATE_IP) !== false) {
+            return true;
+        }
+
+        return false;
     }
 }
