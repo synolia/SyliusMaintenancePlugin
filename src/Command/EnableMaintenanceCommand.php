@@ -45,7 +45,7 @@ final class EnableMaintenanceCommand extends Command
         $output->writeln($this->createFile());
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
-        if (count($ipsAddress) > 0) {
+        if (0 < \count($ipsAddress)) {
             $output->writeln($this->putIpsIntoFile($ipsAddress));
         }
 
@@ -92,7 +92,7 @@ final class EnableMaintenanceCommand extends Command
 
     private function isValidIp(string $ipAddress): bool
     {
-        if (filter_var($ipAddress, \FILTER_VALIDATE_IP) !== false) {
+        if (false !== filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
             return true;
         }
 
