@@ -1,0 +1,2 @@
+imports:
+  - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/services.yaml" }

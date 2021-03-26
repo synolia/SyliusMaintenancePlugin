@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Synolia\SyliusMaintenancePlugin\:
+    resource: '../../*'
+    exclude: '../../{Controller,Migrations,SynoliaSyliusMaintenancePlugin.php}'
+
+  Synolia\SyliusMaintenancePlugin\Controller\:
+    resource: '../../Controller/*'
+    tags: ['controller.service_arguments']
+
