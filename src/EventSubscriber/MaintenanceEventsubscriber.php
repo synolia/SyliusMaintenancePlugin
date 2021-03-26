@@ -55,13 +55,10 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         if (!$this->filesystem->exists($projectRootPath . '/maintenance.yaml')) {
             return;
         }
-
         if (false !== strpos($getRequestUri, $prefix, 1)) {
             return;
         }
-
         $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
-
         if ($this->filesystem->exists($projectRootPath . '/templates/maintenance.html.twig')) {
             $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
         }
