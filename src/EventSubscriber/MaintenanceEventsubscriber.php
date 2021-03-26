@@ -34,7 +34,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $this->params = $params;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             RequestEvent::class => 'handle',
@@ -46,10 +46,14 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $getRequestUri = $event->getRequest()->getRequestUri();
         $prefix = $this->params->get('sylius_admin.path_name');
 
-        if ($this->filesystem->exists($this->kernel->getProjectDir() . '/maintenance.yaml')) {
-            if (strpos($getRequestUri, $prefix, 1) === false) {
-                $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
-            }
+        if (!$this->filesystem->exists($this->kernel->getProjectDir() . '/maintenance.yaml')) {
+            return;
         }
+
+        if (false !== strpos($getRequestUri, $prefix, 1)) {
+            return;
+        }
+
+        $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
     }
 }
