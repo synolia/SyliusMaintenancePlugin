@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Synolia\SyliusMaintenancePlugin\Entity\MaintenanceConfiguration;
 use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
 
 final class MaintenanceConfigurationController extends AbstractController
@@ -44,39 +45,44 @@ final class MaintenanceConfigurationController extends AbstractController
         $form = $this->createForm(MaintenanceConfigurationType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->isMethod('POST') && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             if (0 == \count($data)) {
-                $this->redirectToRoute('sylius_admin_maintenance_configuration');
+                return $this->redirectToRoute('sylius_admin_maintenance_configuration', [
+                    'form' => $form->createView(),
+                ]);
             }
 
             if (true === $data['enabled']) {
-                $this->createFile();
+                $this->createFile(self::MAINTENANCE_FILE);
 
-                if (null !== $data['ip']) {
-                    $this->putIpsIntoFile($data['ip']);
+                if (null !== $data['ipAddresses']) {
+                    $this->putIpsIntoFile($data['ipAddresses']);
                 }
 
-                if ($this->fileExists()) {
+                if ($this->fileExists(self::MAINTENANCE_FILE)) {
                     $this->flashBag->add(
                         'success',
                         $this->translator->trans('maintenance.ui.message_enabled')
                     );
                 }
 
-                return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
+                return $this->redirectToRoute('sylius_admin_maintenance_configuration', [
                     'form' => $form->createView(),
                 ]);
             }
 
-            $this->deleteFile();
-            if (!$this->fileExists()) {
+            $this->deleteFile(self::MAINTENANCE_FILE);
+
+            if (!$this->fileExists(self::MAINTENANCE_FILE)) {
                 $this->flashBag->add(
                     'success',
                     $this->translator->trans('maintenance.ui.message_disabled')
                 );
             }
+
+            $this->saveConfiguration($data);
         }
 
         return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
@@ -84,23 +90,23 @@ final class MaintenanceConfigurationController extends AbstractController
         ]);
     }
 
-    private function createFile(): void
+    private function createFile(string $filename): void
     {
-        $this->deleteFile();
-        $this->filesystem->touch($this->getPathtoFile());
+        $this->deleteFile($filename);
+        $this->filesystem->touch($this->getPathtoFile($filename));
     }
 
-    private function deleteFile(): void
+    private function deleteFile(string $filename): void
     {
-        if (!$this->fileExists()) {
+        if (!$this->fileExists($filename)) {
             return;
         }
-        $this->filesystem->remove($this->getPathtoFile());
+        $this->filesystem->remove($this->getPathtoFile($filename));
     }
 
-    private function fileExists(): bool
+    private function fileExists(string $filename): bool
     {
-        if (!$this->filesystem->exists($this->getPathtoFile())) {
+        if (!$this->filesystem->exists($this->getPathtoFile($filename))) {
             return false;
         }
 
@@ -109,7 +115,9 @@ final class MaintenanceConfigurationController extends AbstractController
 
     private function putIpsIntoFile(string $ipAddresses): void
     {
-        $ipAddressesArray = explode(',', $ipAddresses);
+        $ipAddressesArrayBeforeTrim = explode(',', $ipAddresses);
+
+        $ipAddressesArray = $this->trimSpaceOfArrayValues($ipAddressesArrayBeforeTrim);
 
         foreach ($ipAddressesArray as $key => $ipAddress) {
             if ($this->isValidIp($ipAddress)) {
@@ -118,7 +126,7 @@ final class MaintenanceConfigurationController extends AbstractController
             unset($ipAddressesArray[$key]);
         }
 
-        if ($this->fileExists() && \count($ipAddressesArray) > 0) {
+        if ($this->fileExists(self::MAINTENANCE_FILE) && \count($ipAddressesArray) > 0) {
             $ipsArray = [
                 'ips' => $ipAddressesArray,
             ];
@@ -128,15 +136,15 @@ final class MaintenanceConfigurationController extends AbstractController
             } catch (DumpException $exception) {
                 throw new DumpException('Unable to dump the YAML. ' . $exception->getMessage());
             }
-            file_put_contents($this->getPathtoFile(), $yaml);
+            file_put_contents($this->getPathtoFile(self::MAINTENANCE_FILE), $yaml);
         }
     }
 
-    private function getPathtoFile(): string
+    private function getPathtoFile(string $filename): string
     {
         $projectRootPath = $this->kernel->getProjectDir();
 
-        return  $projectRootPath . '/' . self::MAINTENANCE_FILE;
+        return $projectRootPath . '/' . $filename;
     }
 
     private function isValidIp(string $ipAddress): bool
@@ -146,5 +154,26 @@ final class MaintenanceConfigurationController extends AbstractController
         }
 
         return true;
+    }
+
+    private function trimSpaceOfArrayValues(array $array): array
+    {
+        $result = [];
+        foreach ($array as $value) {
+            $result[] = trim($value);
+        }
+
+        return $result;
+    }
+
+    private function saveConfiguration(array $formData): void
+    {
+        $maintenanceConfig = new MaintenanceConfiguration();
+        $maintenanceConfig->setEnabled($formData['enabled']);
+        $maintenanceConfig->setIpAddresses($formData['ipAddresses']);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($maintenanceConfig);
+        $entityManager->flush();
     }
 }

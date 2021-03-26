@@ -22,7 +22,7 @@ final class MaintenanceConfigurationType extends AbstractType
                 'label' => 'maintenance.ui.form.enabled',
                 'required' => true,
             ])
-            ->add('ip', TextType::class, [
+            ->add('ipAddresses', TextType::class, [
                 'label' => 'maintenance.ui.form.ip',
                 'attr' => [
                     'placeholder' => 'maintenance.ui.form.placeholder',
