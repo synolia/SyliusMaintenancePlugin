@@ -8,7 +8,6 @@ grumphp:
         git_blacklist:
             keywords:
                 - 'var_dump'
-                - 'dump\('
                 - 'print_r'
                 - 'die\('
                 - 'console\.'
