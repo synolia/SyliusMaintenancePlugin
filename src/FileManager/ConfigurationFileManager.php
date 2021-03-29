@@ -15,7 +15,7 @@ final class ConfigurationFileManager
 
     public const MAINTENANCE_FILE = 'maintenance.yaml';
 
-    private const MAINTENANCE_TEMPLATE = 'templates/maintenance.html.twig';
+    public const MAINTENANCE_TEMPLATE = 'templates/maintenance.html.twig';
 
     private const ADD_IP_SUCCESS_MESSAGE = 'maintenance.ui.message_success_ips';
 
@@ -103,7 +103,7 @@ final class ConfigurationFileManager
         $this->filesystem->appendToFile($this->getPathtoFile(self::MAINTENANCE_TEMPLATE), $content);
     }
 
-    private function getPathtoFile(string $filename): string
+    public function getPathtoFile(string $filename): string
     {
         $projectRootPath = $this->kernel->getProjectDir();
 

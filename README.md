@@ -53,10 +53,18 @@
         prefix: /admin
     ```
 
-5. Clear cache
+5. Generate & Run Doctrine migrations:
 
     ```shell
-    bin/console cache:clear
+      php bin/console doctrine:migrations:diff --formatted --namespace="App\Migrations"
+      php bin/console doctrine:migration:migrate
+      ```
+
+
+6. Clear cache
+
+    ```shell
+    php bin/console cache:clear
     ```
    
 ## Usage
@@ -89,13 +97,13 @@
      
 ### You can also turn your website under maintenance in Back Office :     
 
-<<<<<<< HEAD
 ![Alt text](images/maintenance.png "maintenance_configure")
-=======
-You need to create first your template in : **templates/maintenance.html.twig** if you want to add the custom message in your template.
 
-![Alt text](images/maintenance.png "maintenance_configure")    
->>>>>>> add message custom in templates/maintenance.html.twig
+- Enable/disable the plugin
+- Allow access for one or multiple ips addresses (optional)
+- Create your custom message (optional)
+
+![Alt text](images/maintenance.png "maintenance_configure")
 
 ## Development
 

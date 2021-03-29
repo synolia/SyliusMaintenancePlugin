@@ -16,8 +16,6 @@ use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
 
 final class MaintenanceConfigurationController extends AbstractController
 {
-    private const MAINTENANCE_FILE = 'maintenance.yaml';
-
     private TranslatorInterface $translator;
 
     private FlashBagInterface $flashBag;
@@ -54,25 +52,33 @@ final class MaintenanceConfigurationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            if ([] === (array) $data) {
+            if ([] === (array)$data) {
                 return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
                     'form' => $form->createView(),
                 ]);
             }
 
             if ($data->isEnabled()) {
-                $this->fileManager->createFile(self::MAINTENANCE_FILE);
+                $this->fileManager->createFile($this->fileManager::MAINTENANCE_FILE);
 
-                if ($this->fileManager->fileExists(self::MAINTENANCE_FILE)) {
+                if ($this->fileManager->fileExists($this->fileManager::MAINTENANCE_FILE)) {
                     $this->flashBag->add(
                         'success',
                         $this->translator->trans('maintenance.ui.message_enabled')
                     );
                 }
 
+                if (null !== $data->getCustomMessage()) {
+                    $this->fileManager->addCustomMessage($data->getCustomMessage());
+                    $this->flashBag->add(
+                        'success',
+                        $this->translator->trans('maintenance.ui.message_success_message')
+                    );
+                }
+
                 if (null !== $data->getIpAddresses()) {
                     $result = $this->fileManager->putIpsIntoFile(
-                        $this->fileManager->convertStringToArray($data->getIpAddresses()), self::MAINTENANCE_FILE
+                        $this->fileManager->convertStringToArray($data->getIpAddresses()), $this->fileManager::MAINTENANCE_FILE
                     );
 
                     if ($result !== $this->fileManager::ADD_IP_SUCCESS) {
@@ -95,18 +101,15 @@ final class MaintenanceConfigurationController extends AbstractController
                     );
                 }
 
-                if (null !== $data->getCustomMessage()) {
-                    $this->fileManager->addCustomMessage($data->getCustomMessage());
-                }
-
                 return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
                     'form' => $form->createView(),
                 ]);
             }
 
-            $this->fileManager->deleteFile(self::MAINTENANCE_FILE);
+            $this->fileManager->deleteFile($this->fileManager::MAINTENANCE_FILE);
+            $this->fileManager->deleteFile($this->fileManager::MAINTENANCE_TEMPLATE);
 
-            if (!$this->fileManager->fileExists(self::MAINTENANCE_FILE)) {
+            if (!$this->fileManager->fileExists($this->fileManager::MAINTENANCE_FILE)) {
                 $this->flashBag->add(
                     'success',
                     $this->translator->trans('maintenance.ui.message_disabled')
