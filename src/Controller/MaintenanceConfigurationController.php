@@ -54,14 +54,11 @@ final class MaintenanceConfigurationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            if (0 === \count((array) $data)) {
+            if ([] === (array) $data) {
                 return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
                     'form' => $form->createView(),
                 ]);
             }
-
-            $this->saveConfiguration($data);
-            $this->removeConfiguration($maintenanceConfiguration);
 
             if ($data->isEnabled()) {
                 $this->fileManager->createFile(self::MAINTENANCE_FILE);
@@ -78,17 +75,24 @@ final class MaintenanceConfigurationController extends AbstractController
                         $this->fileManager->convertStringToArray($data->getIpAddresses()), self::MAINTENANCE_FILE
                     );
 
-                    if ($result === 'The ips were added to the file maintenance.yaml successfully.') {
-                        $this->flashBag->add(
-                            'success',
-                            $this->translator->trans('maintenance.ui.message_success_ips')
-                        );
-                    } else {
+                    if ($result !== 'The ips were added to the file maintenance.yaml successfully.') {
                         $this->flashBag->add(
                             'error',
                             $this->translator->trans('maintenance.ui.message_error_ips')
                         );
+
+                        return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
+                            'form' => $form->createView(),
+                        ]);
                     }
+
+                    $this->removeConfiguration($maintenanceConfiguration);
+                    $this->saveConfiguration($data);
+
+                    $this->flashBag->add(
+                        'success',
+                        $this->translator->trans('maintenance.ui.message_success_ips')
+                    );
                 }
 
                 return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
