@@ -16,9 +16,10 @@ final class AdminMenuListener
         /** @var ItemInterface $newSubmenu */
         $newSubmenu = $menu->getChild('configuration');
 
-        $newSubmenu->addChild('sylius_admin_maintenance_configuration', [
-            'route' => 'sylius_admin_maintenance_configuration',
-        ])
+        $newSubmenu
+            ->addChild('sylius_admin_maintenance_configuration', [
+                'route' => 'sylius_admin_maintenance_configuration',
+            ])
             ->setAttribute('type', 'link')
             ->setLabel('maintenance.ui.title')
             ->setLabelAttribute('icon', 'cogs')

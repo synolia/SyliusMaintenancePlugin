@@ -22,7 +22,7 @@ class MaintenanceConfiguration implements ResourceInterface
     private $id;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $ipAddresses;
@@ -43,7 +43,7 @@ class MaintenanceConfiguration implements ResourceInterface
         return $this->ipAddresses;
     }
 
-    public function setIpAddresses(string $ipAddresses): self
+    public function setIpAddresses(?string $ipAddresses): self
     {
         $this->ipAddresses = $ipAddresses;
 

@@ -8,9 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Yaml\Yaml;
+use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class EnableMaintenanceCommand extends Command
 {
@@ -18,16 +16,11 @@ final class EnableMaintenanceCommand extends Command
 
     protected static $defaultName = 'maintenance:enable';
 
-    private Filesystem $filesystem;
+    private ConfigurationFileManager $fileManager;
 
-    private KernelInterface $kernel;
-
-    public function __construct(
-        Filesystem $filesystem,
-        KernelInterface $kernel
-    ) {
-        $this->filesystem = $filesystem;
-        $this->kernel = $kernel;
+    public function __construct(ConfigurationFileManager $fileManager)
+    {
+        $this->fileManager = $fileManager;
 
         parent::__construct();
     }
@@ -42,62 +35,15 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->createFile());
+        $output->writeln($this->fileManager->createFile(self::MAINTENANCE_FILE));
+
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
 
         if (0 < \count($ipsAddress)) {
-            $output->writeln($this->putIpsIntoFile($ipsAddress));
+            $output->writeln($this->fileManager->putIpsIntoFile($ipsAddress, self::MAINTENANCE_FILE));
         }
 
         return 0;
-    }
-
-    private function createFile(): string
-    {
-        if ($this->filesystem->exists($this->getPathtoFile())) {
-            $this->filesystem->remove($this->getPathtoFile());
-        }
-        $this->filesystem->touch($this->getPathtoFile());
-
-        return 'The file maintenance.yaml was created successfully';
-    }
-
-    private function putIpsIntoFile(array $ipAddresses): string
-    {
-        foreach ($ipAddresses as $key => $ipAddress) {
-            if ($this->isValidIp($ipAddress)) {
-                continue;
-            }
-            unset($ipAddresses[$key]);
-        }
-
-        if ($this->filesystem->exists($this->getPathtoFile()) && \count($ipAddresses) > 0) {
-            $ipsArray = [
-                'ips' => $ipAddresses,
-            ];
-            $yaml = Yaml::dump($ipsArray);
-            file_put_contents($this->getPathtoFile(), $yaml);
-
-            return 'The ips were added to the file maintenance.yaml successfully.';
-        }
-
-        return 'The file maintenance.yaml was not found. Please create it.';
-    }
-
-    private function getPathtoFile(): string
-    {
-        $projectRootPath = $this->kernel->getProjectDir();
-
-        return  $projectRootPath . '/' . self::MAINTENANCE_FILE;
-    }
-
-    private function isValidIp(string $ipAddress): bool
-    {
-        if (false !== filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
-            return true;
-        }
-
-        return false;
     }
 }

@@ -7,8 +7,7 @@ namespace Synolia\SyliusMaintenancePlugin\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class DisableMaintenanceCommand extends Command
 {
@@ -16,16 +15,11 @@ final class DisableMaintenanceCommand extends Command
 
     protected static $defaultName = 'maintenance:disable';
 
-    private Filesystem $filesystem;
+    private ConfigurationFileManager $fileManager;
 
-    private KernelInterface $kernel;
-
-    public function __construct(
-        Filesystem $filesystem,
-        KernelInterface $kernel
-    ) {
-        $this->filesystem = $filesystem;
-        $this->kernel = $kernel;
+    public function __construct(ConfigurationFileManager $fileManager)
+    {
+        $this->fileManager = $fileManager;
 
         parent::__construct();
     }
@@ -39,21 +33,8 @@ final class DisableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($this->filesystem->exists($this->getPathtoFile())) {
-            $this->filesystem->remove($this->getPathtoFile());
-            $output->writeln('The file maintenance.yaml was deleted successfully');
-
-            return 0;
-        }
-        $output->writeln('The file maintenance.yaml was not found. No need to delete it');
+        $output->writeln($this->fileManager->deleteFile(self::MAINTENANCE_FILE));
 
         return 0;
-    }
-
-    private function getPathtoFile(): string
-    {
-        $projectRootPath = $this->kernel->getProjectDir();
-
-        return  $projectRootPath . '/' . self::MAINTENANCE_FILE;
     }
 }
