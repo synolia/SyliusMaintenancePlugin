@@ -11,15 +11,15 @@ use Symfony\Component\Yaml\Yaml;
 
 final class ConfigurationFileManager
 {
-    private const ADD_IP_SUCCESS = 'The ips were added to the file maintenance.yaml successfully.';
+    private const ADD_IP_SUCCESS = 'maintenance.ui.message_success_ips';
 
-    private const ADD_IP_ERROR = 'An error occurred while adding ips addresses.';
+    private const ADD_IP_ERROR = 'maintenance.ui.message_error_ips';
 
-    private const PLUGIN_ENABLED = 'The file maintenance.yaml was created successfully. The plugin was enabled.';
+    private const PLUGIN_ENABLED = 'maintenance.ui.message_enabled';
 
-    private const PLUGIN_DISABLED = 'The file maintenance.yaml was deleted successfully. The plugin was disabled.';
+    private const PLUGIN_DISABLED = 'maintenance.ui.message_disabled';
 
-    private const PLUGIN_DISABLED_FILE_NOT_FOUND = 'The file maintenance.yaml was not found. The plugin is disabled.';
+    private const PLUGIN_DISABLED_FILE_NOT_FOUND = 'maintenance.ui.message_disabled_404';
 
     private Filesystem $filesystem;
 

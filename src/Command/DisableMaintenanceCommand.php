@@ -7,6 +7,7 @@ namespace Synolia\SyliusMaintenancePlugin\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class DisableMaintenanceCommand extends Command
@@ -17,9 +18,12 @@ final class DisableMaintenanceCommand extends Command
 
     private ConfigurationFileManager $fileManager;
 
-    public function __construct(ConfigurationFileManager $fileManager)
+    private TranslatorInterface $translator;
+
+    public function __construct(ConfigurationFileManager $fileManager, TranslatorInterface $translator)
     {
         $this->fileManager = $fileManager;
+        $this->translator = $translator;
 
         parent::__construct();
     }
@@ -33,7 +37,7 @@ final class DisableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->fileManager->deleteFile(self::MAINTENANCE_FILE));
+        $output->writeln($this->translator->trans($this->fileManager->deleteFile(self::MAINTENANCE_FILE)));
 
         return 0;
     }

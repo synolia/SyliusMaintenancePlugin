@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class EnableMaintenanceCommand extends Command
@@ -18,9 +19,12 @@ final class EnableMaintenanceCommand extends Command
 
     private ConfigurationFileManager $fileManager;
 
-    public function __construct(ConfigurationFileManager $fileManager)
+    private TranslatorInterface $translator;
+
+    public function __construct(ConfigurationFileManager $fileManager, TranslatorInterface $translator)
     {
         $this->fileManager = $fileManager;
+        $this->translator = $translator;
 
         parent::__construct();
     }
@@ -35,13 +39,13 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->fileManager->createFile(self::MAINTENANCE_FILE));
+        $output->writeln($this->translator->trans($this->fileManager->createFile(self::MAINTENANCE_FILE)));
 
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
 
         if (0 < \count($ipsAddress)) {
-            $output->writeln($this->fileManager->putIpsIntoFile($ipsAddress, self::MAINTENANCE_FILE));
+            $output->writeln($this->translator->trans($this->fileManager->putIpsIntoFile($ipsAddress, self::MAINTENANCE_FILE)));
         }
 
         return 0;

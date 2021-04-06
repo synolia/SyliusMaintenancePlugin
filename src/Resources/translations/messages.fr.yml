@@ -11,3 +11,4 @@ maintenance:
         message_disabled: Le plugin de maintenance a été désactivé avec succès.
         message_success_ips: Les adresses ip ont été ajoutés au fichier maintenance.yaml avec succès.
         message_error_ips: Une erreur s'est produite lors de l'ajout d'adresses ip. Ajouter une ou plusieurs adresses ip séparées par une virgule.
+        message_disabled_404: Le plugin est désactivé.
