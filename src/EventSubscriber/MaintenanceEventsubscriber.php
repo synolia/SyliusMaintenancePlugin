@@ -16,10 +16,6 @@ use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
-    private const MAINTENANCE_FILE = 'maintenance.yaml';
-
-    private const MAINTENANCE_TEMPLATE = 'templates/maintenance.html.twig';
-
     private TranslatorInterface $translator;
 
     private ParameterBagInterface $params;
@@ -53,12 +49,12 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $prefix = $this->params->get('sylius_admin.path_name');
         $ipUser = $event->getRequest()->getClientIp();
 
-        if (!$this->fileManager->fileExists($this->fileManager::MAINTENANCE_FILE)) {
+        if (!$this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
             return;
         }
 
         try {
-            $maintenanceYaml = Yaml::parseFile($this->fileManager->getPathtoFile($this->fileManager::MAINTENANCE_FILE));
+            $maintenanceYaml = Yaml::parseFile($this->fileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_FILE));
         } catch (ParseException $exception) {
             throw new ParseException('Unable to parse the YAML. ' . $exception->getMessage());
         }
@@ -73,7 +69,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
         $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
 
-        if ($this->fileManager->fileExists($this->fileManager::MAINTENANCE_TEMPLATE)) {
+        if ($this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
             $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
         }
     }

@@ -23,9 +23,9 @@ class MaintenanceConfiguration implements ResourceInterface
 
     /**
      * @var string|null
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $ipAddresses;
+    private $ipAddresses = '';
 
     /**
      * @var bool
@@ -35,9 +35,9 @@ class MaintenanceConfiguration implements ResourceInterface
 
     /**
      * @var string|null
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text")
      */
-    private $customMessage;
+    private $customMessage = '';
 
     public function getId(): ?int
     {
@@ -64,20 +64,6 @@ class MaintenanceConfiguration implements ResourceInterface
     public function setEnabled(?bool $enabled): self
     {
         $this->enabled = (bool) $enabled;
-
-        return $this;
-    }
-
-    public function enable(): self
-    {
-        $this->enabled = true;
-
-        return $this;
-    }
-
-    public function disable(): self
-    {
-        $this->enabled = false;
 
         return $this;
     }

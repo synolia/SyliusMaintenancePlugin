@@ -52,16 +52,16 @@ final class MaintenanceConfigurationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            if ([] === (array)$data) {
+            if ([] === (array) $data) {
                 return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
                     'form' => $form->createView(),
                 ]);
             }
 
             if ($data->isEnabled()) {
-                $this->fileManager->createFile($this->fileManager::MAINTENANCE_FILE);
+                $this->fileManager->createFile(ConfigurationFileManager::MAINTENANCE_FILE);
 
-                if ($this->fileManager->fileExists($this->fileManager::MAINTENANCE_FILE)) {
+                if ($this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
                     $this->flashBag->add(
                         'success',
                         $this->translator->trans('maintenance.ui.message_enabled')
@@ -78,10 +78,9 @@ final class MaintenanceConfigurationController extends AbstractController
 
                 if (null !== $data->getIpAddresses()) {
                     $result = $this->fileManager->putIpsIntoFile(
-                        $this->fileManager->convertStringToArray($data->getIpAddresses()), $this->fileManager::MAINTENANCE_FILE
-                    );
+                        $this->fileManager->convertStringToArray($data->getIpAddresses()), ConfigurationFileManager::MAINTENANCE_FILE);
 
-                    if ($result !== $this->fileManager::ADD_IP_SUCCESS) {
+                    if ($result !== ConfigurationFileManager::ADD_IP_SUCCESS) {
                         $this->flashBag->add(
                             'error',
                             $this->translator->trans('maintenance.ui.message_error_ips')
@@ -106,10 +105,10 @@ final class MaintenanceConfigurationController extends AbstractController
                 ]);
             }
 
-            $this->fileManager->deleteFile($this->fileManager::MAINTENANCE_FILE);
-            $this->fileManager->deleteFile($this->fileManager::MAINTENANCE_TEMPLATE);
+            $this->fileManager->deleteFile(ConfigurationFileManager::MAINTENANCE_FILE);
+            $this->fileManager->deleteFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE);
 
-            if (!$this->fileManager->fileExists($this->fileManager::MAINTENANCE_FILE)) {
+            if (!$this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
                 $this->flashBag->add(
                     'success',
                     $this->translator->trans('maintenance.ui.message_disabled')
