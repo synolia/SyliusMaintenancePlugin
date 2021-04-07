@@ -75,7 +75,7 @@ final class MaintenanceConfigurationController extends AbstractController
                         $this->fileManager->convertStringToArray($data->getIpAddresses()), self::MAINTENANCE_FILE
                     );
 
-                    if ($result !== $this->fileManager::ADD_IP_SUCCESS) {
+                    if ($result !== ConfigurationFileManager::ADD_IP_SUCCESS) {
                         $this->flashBag->add(
                             'error',
                             $this->translator->trans('maintenance.ui.message_error_ips')
