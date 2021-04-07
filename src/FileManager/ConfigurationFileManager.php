@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 final class ConfigurationFileManager
 {
-    private const ADD_IP_SUCCESS = 'maintenance.ui.message_success_ips';
+    public const ADD_IP_SUCCESS = 'maintenance.ui.message_success_ips';
 
     private const ADD_IP_ERROR = 'maintenance.ui.message_error_ips';
 
@@ -60,7 +60,7 @@ final class ConfigurationFileManager
 
     public function putIpsIntoFile(array $ipAddresses, string $filename): string
     {
-        $ipAddressesArray = $this->trimSpaceOfArrayValues($ipAddresses);
+        $ipAddressesArray = array_map('trim', $ipAddresses);
 
         foreach ($ipAddressesArray as $key => $ipAddress) {
             if ($this->isValidIp($ipAddress)) {
@@ -105,15 +105,5 @@ final class ConfigurationFileManager
         }
 
         return true;
-    }
-
-    private function trimSpaceOfArrayValues(array $array): array
-    {
-        $result = [];
-        foreach ($array as $value) {
-            $result[] = trim($value);
-        }
-
-        return $result;
     }
 }

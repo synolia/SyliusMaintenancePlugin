@@ -75,7 +75,7 @@ final class MaintenanceConfigurationController extends AbstractController
                         $this->fileManager->convertStringToArray($data->getIpAddresses()), self::MAINTENANCE_FILE
                     );
 
-                    if ($result !== 'maintenance.ui.message_success_ips') {
+                    if ($result !== $this->fileManager::ADD_IP_SUCCESS) {
                         $this->flashBag->add(
                             'error',
                             $this->translator->trans('maintenance.ui.message_error_ips')
@@ -119,7 +119,7 @@ final class MaintenanceConfigurationController extends AbstractController
     {
         $maintenanceConfig = new MaintenanceConfiguration();
         $maintenanceConfig->setEnabled($formData !== null ? $formData->isEnabled() : true);
-        $maintenanceConfig->setIpAddresses($formData !== null ? $formData->getIpAddresses() : '172.16.254.1,192.0.0.255');
+        $maintenanceConfig->setIpAddresses($formData !== null ? $formData->getIpAddresses() : '');
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($maintenanceConfig);
