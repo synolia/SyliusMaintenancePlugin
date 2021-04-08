@@ -12,6 +12,10 @@ class MaintenanceConfiguration
 
     private string $customMessage = '';
 
+    private ?\DateTimeInterface $startDate;
+
+    private ?\DateTimeInterface $endDate;
+
     public function getIpAddresses(): string
     {
         return $this->ipAddresses;

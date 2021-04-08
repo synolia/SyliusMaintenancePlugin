@@ -8,6 +8,8 @@ maintenance:
             validate: Validate
             placeholder: 'Add one or multiple ips addresses separated with a comma. For example: 255.255.255.255,192.0.0.255'
             custom_message: Custom Message
+            start_date: Starts at
+            end_date: Ends at
         message_enabled: The maintenance plugin was successfully enabled.
         message_disabled: The maintenance plugin was successfully disabled.
         message_success_ips: The ips were added to the file maintenance.yaml successfully.
