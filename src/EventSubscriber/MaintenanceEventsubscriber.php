@@ -58,6 +58,11 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
             return;
         }
 
+        if (isset($maintenanceYaml['scheduler']) &&
+            false === $this->checkScheduledDates($maintenanceYaml['scheduler'])) {
+            return;
+        }
+
         if (false !== strpos($getRequestUri, $prefix, 1)) {
             return;
         }
@@ -67,5 +72,29 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         if ($this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
             $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
         }
+    }
+
+    private function checkScheduledDates(array $array): bool
+    {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $startDate = 'start_date';
+        $endDate = 'end_date';
+
+        if (array_key_exists($startDate, $array) && array_key_exists($endDate, $array) &&
+            ($now >= $array['start_date']) && ($now <= $array['end_date'])) {
+            return true;
+        }
+
+        if (array_key_exists($startDate, $array) && !array_key_exists($endDate, $array) &&
+            ($now >= $array['start_date'])) {
+            return true;
+        }
+
+        if (array_key_exists($endDate, $array) && !array_key_exists($startDate, $array) &&
+            ($now <= $array['end_date'])) {
+            return true;
+        }
+
+        return false;
     }
 }
