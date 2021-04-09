@@ -9,7 +9,6 @@ use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * @ORM\Entity
- * @ORM\Table("maintenance_configuration")
  */
 class MaintenanceConfiguration implements ResourceInterface
 {

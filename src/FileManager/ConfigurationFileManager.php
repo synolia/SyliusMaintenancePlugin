@@ -7,6 +7,7 @@ namespace Synolia\SyliusMaintenancePlugin\FileManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Yaml\Exception\DumpException;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 final class ConfigurationFileManager
@@ -108,6 +109,15 @@ final class ConfigurationFileManager
         $projectRootPath = $this->kernel->getProjectDir();
 
         return $projectRootPath . '/' . $filename;
+    }
+
+    public function parseMaintenanceYaml(): ?array
+    {
+        try {
+            return Yaml::parseFile($this->getPathtoFile(self::MAINTENANCE_FILE));
+        } catch (ParseException $exception) {
+            return null;
+        }
     }
 
     private function isValidIp(string $ipAddress): bool
