@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Synolia\SyliusMaintenancePlugin\Entity\MaintenanceConfiguration;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
 
@@ -38,27 +37,19 @@ final class MaintenanceConfigurationController extends AbstractController
 
     public function __invoke(Request $request): Response
     {
-        /** @var MaintenanceConfiguration|null $maintenanceConfiguration */
-        $maintenanceConfiguration = $this->maintenanceRepository->findOneBy([]);
-
-        if (null === $maintenanceConfiguration) {
-            $maintenanceConfiguration = $this->saveConfiguration(null);
-        }
-
-        $form = $this->createForm(MaintenanceConfigurationType::class, $maintenanceConfiguration);
-
+        $form = $this->createForm(MaintenanceConfigurationType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            if ([] === (array) $data) {
+            if ([] === $data) {
                 return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
                     'form' => $form->createView(),
                 ]);
             }
 
-            if ($data->isEnabled()) {
+            if ($data['enabled']) {
                 $this->fileManager->createFile(ConfigurationFileManager::MAINTENANCE_FILE);
 
                 if ($this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
@@ -68,17 +59,17 @@ final class MaintenanceConfigurationController extends AbstractController
                     );
                 }
 
-                if (null !== $data->getCustomMessage()) {
-                    $this->fileManager->addCustomMessage($data->getCustomMessage());
+                if (null !== $data['customMessage']) {
+                    $this->fileManager->addCustomMessage($data['customMessage']);
                     $this->flashBag->add(
                         'success',
                         $this->translator->trans('maintenance.ui.message_success_message')
                     );
                 }
 
-                if (null !== $data->getIpAddresses()) {
+                if (null !== $data['ipAddresses']) {
                     $result = $this->fileManager->putIpsIntoFile(
-                        $this->fileManager->convertStringToArray($data->getIpAddresses()), ConfigurationFileManager::MAINTENANCE_FILE);
+                        $this->fileManager->convertStringToArray($data['ipAddresses']), ConfigurationFileManager::MAINTENANCE_FILE);
 
                     if ($result !== ConfigurationFileManager::ADD_IP_SUCCESS) {
                         $this->flashBag->add(
@@ -90,9 +81,6 @@ final class MaintenanceConfigurationController extends AbstractController
                             'form' => $form->createView(),
                         ]);
                     }
-
-                    $this->removeConfiguration($maintenanceConfiguration);
-                    $this->saveConfiguration($data);
 
                     $this->flashBag->add(
                         'success',
@@ -119,26 +107,5 @@ final class MaintenanceConfigurationController extends AbstractController
         return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    private function saveConfiguration(?MaintenanceConfiguration $formData): MaintenanceConfiguration
-    {
-        $maintenanceConfig = new MaintenanceConfiguration();
-        $maintenanceConfig->setEnabled($formData !== null ? $formData->isEnabled() : true);
-        $maintenanceConfig->setIpAddresses($formData !== null ? $formData->getIpAddresses() : '');
-        $maintenanceConfig->setCustomMessage($formData !== null ? $formData->getCustomMessage() : '<h1>Hello world</h1>');
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($maintenanceConfig);
-        $entityManager->flush();
-
-        return $maintenanceConfig;
-    }
-
-    private function removeConfiguration(MaintenanceConfiguration $config): void
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($config);
-        $entityManager->flush();
     }
 }
