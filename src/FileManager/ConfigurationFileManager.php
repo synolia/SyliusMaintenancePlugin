@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\FileManager;
 
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Yaml\Exception\DumpException;
@@ -12,21 +13,13 @@ use Symfony\Component\Yaml\Yaml;
 
 final class ConfigurationFileManager
 {
-    public const ADD_IP_SUCCESS = 'maintenance.ui.message_success_ips';
-
     public const MAINTENANCE_FILE = 'maintenance.yaml';
 
     public const MAINTENANCE_TEMPLATE = 'templates/maintenance.html.twig';
 
-    private const ADD_IP_SUCCESS_MESSAGE = 'maintenance.ui.message_success_ips';
-
-    private const ADD_IP_ERROR_MESSAGE = 'maintenance.ui.message_error_ips';
-
     private const PLUGIN_ENABLED_MESSAGE = 'maintenance.ui.message_enabled';
 
     private const PLUGIN_DISABLED_MESSAGE = 'maintenance.ui.message_disabled';
-
-    private const PLUGIN_DISABLED_404_MESSAGE = 'maintenance.ui.message_disabled_404';
 
     private Filesystem $filesystem;
 
@@ -38,34 +31,32 @@ final class ConfigurationFileManager
         $this->kernel = $kernel;
     }
 
-    public function createFile(string $filename): string
+    public function createFile(): string
     {
-        $this->deleteFile($filename);
-        $this->filesystem->touch($this->getPathtoFile($filename));
+        $this->deleteFile();
+        $this->filesystem->touch($this->getPathtoFile(self::MAINTENANCE_FILE));
 
         return self::PLUGIN_ENABLED_MESSAGE;
     }
 
-    public function deleteFile(string $filename): string
+    public function deleteFile(): string
     {
-        if (!$this->fileExists($filename)) {
-            return self::PLUGIN_DISABLED_404_MESSAGE;
-        }
-        $this->filesystem->remove($this->getPathtoFile($filename));
+        try {
+            $this->filesystem->remove($this->getPathtoFile(self::MAINTENANCE_FILE));
+            $this->filesystem->remove($this->getPathtoFile(self::MAINTENANCE_TEMPLATE));
 
-        return self::PLUGIN_DISABLED_MESSAGE;
+            return self::PLUGIN_DISABLED_MESSAGE;
+        } catch (IOException $exception) {
+            throw new IOException($exception->getMessage());
+        }
     }
 
     public function fileExists(string $filename): bool
     {
-        if (!$this->filesystem->exists($this->getPathtoFile($filename))) {
-            return false;
-        }
-
-        return true;
+        return $this->filesystem->exists($this->getPathtoFile($filename));
     }
 
-    public function putIpsIntoFile(array $ipAddresses, string $filename): string
+    public function getIpAddressesArray(array $ipAddresses): array
     {
         $ipAddressesArray = array_map('trim', $ipAddresses);
 
@@ -76,39 +67,35 @@ final class ConfigurationFileManager
             unset($ipAddressesArray[$key]);
         }
 
-        if ($this->fileExists($filename) && \count($ipAddressesArray) > 0) {
-            $ipsArray = ['ips' => $ipAddressesArray];
-
-            try {
-                $yaml = Yaml::dump($ipsArray);
-            } catch (DumpException $exception) {
-                throw new DumpException('Unable to dump the YAML. ' . $exception->getMessage());
-            }
-
-            file_put_contents($this->getPathtoFile($filename), $yaml);
-
-            return self::ADD_IP_SUCCESS_MESSAGE;
+        if (!$this->fileExists(self::MAINTENANCE_FILE) || [] === $ipAddressesArray) {
+            return [];
         }
 
-        return self::ADD_IP_ERROR_MESSAGE;
+        return ['ips' => $ipAddressesArray];
     }
 
-    public function convertStringToArray(string $data): array
+    public function saveYamlConfiguration(array $data): void
     {
-        return explode(',', $data);
+        try {
+            $yaml = Yaml::dump($data);
+        } catch (DumpException $exception) {
+            throw new DumpException('Unable to dump the YAML. ' . $exception->getMessage());
+        }
+
+        file_put_contents($this->getPathtoFile(self::MAINTENANCE_FILE), $yaml);
     }
 
-    public function addCustomMessage(string $content): void
+    public function saveTemplate(?string $customMessage): void
     {
-        $this->deleteFile(self::MAINTENANCE_TEMPLATE);
-        $this->filesystem->appendToFile($this->getPathtoFile(self::MAINTENANCE_TEMPLATE), $content);
-    }
+        if (null === $customMessage) {
+            return;
+        }
 
-    public function getPathtoFile(string $filename): string
-    {
-        $projectRootPath = $this->kernel->getProjectDir();
+        if ($this->fileExists(self::MAINTENANCE_TEMPLATE)) {
+            $this->filesystem->remove($this->getPathtoFile(self::MAINTENANCE_TEMPLATE));
+        }
 
-        return $projectRootPath . '/' . $filename;
+        $this->filesystem->appendToFile($this->getPathtoFile(self::MAINTENANCE_TEMPLATE), $customMessage);
     }
 
     public function parseMaintenanceYaml(): ?array
@@ -118,6 +105,34 @@ final class ConfigurationFileManager
         } catch (ParseException $exception) {
             return null;
         }
+    }
+
+    public function getPathtoFile(string $filename): string
+    {
+        $projectRootPath = $this->kernel->getProjectDir();
+
+        return $projectRootPath . '/' . $filename;
+    }
+
+    public function getDataFromYaml(): array
+    {
+        $data = [
+            'enabled' => true,
+            'ipAddresses' => null,
+            'customMessage' => null,
+        ];
+
+        if ($this->fileExists(self::MAINTENANCE_FILE)) {
+            $maintenanceYaml = $this->parseMaintenanceYaml();
+            if (null !== $maintenanceYaml && array_key_exists('ips', $maintenanceYaml)) {
+                $data['ipAddresses'] = implode(',', $maintenanceYaml['ips']);
+            }
+        }
+        if ($this->fileExists(self::MAINTENANCE_TEMPLATE)) {
+            $data['customMessage'] = file_get_contents($this->getPathtoFile(self::MAINTENANCE_TEMPLATE));
+        }
+
+        return $data;
     }
 
     private function isValidIp(string $ipAddress): bool

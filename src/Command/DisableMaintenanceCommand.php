@@ -14,13 +14,13 @@ final class DisableMaintenanceCommand extends Command
 {
     protected static $defaultName = 'maintenance:disable';
 
-    private ConfigurationFileManager $fileManager;
+    private ConfigurationFileManager $configurationFileManager;
 
     private TranslatorInterface $translator;
 
     public function __construct(ConfigurationFileManager $fileManager, TranslatorInterface $translator)
     {
-        $this->fileManager = $fileManager;
+        $this->configurationFileManager = $fileManager;
         $this->translator = $translator;
 
         parent::__construct();
@@ -35,7 +35,7 @@ final class DisableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->translator->trans($this->fileManager->deleteFile(ConfigurationFileManager::MAINTENANCE_FILE)));
+        $output->writeln($this->translator->trans($this->configurationFileManager->deleteFile()));
 
         return 0;
     }

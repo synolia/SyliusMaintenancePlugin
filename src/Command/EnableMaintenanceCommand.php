@@ -15,13 +15,13 @@ final class EnableMaintenanceCommand extends Command
 {
     protected static $defaultName = 'maintenance:enable';
 
-    private ConfigurationFileManager $fileManager;
+    private ConfigurationFileManager $configurationFileManager;
 
     private TranslatorInterface $translator;
 
     public function __construct(ConfigurationFileManager $fileManager, TranslatorInterface $translator)
     {
-        $this->fileManager = $fileManager;
+        $this->configurationFileManager = $fileManager;
         $this->translator = $translator;
 
         parent::__construct();
@@ -37,13 +37,13 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->translator->trans($this->fileManager->createFile(ConfigurationFileManager::MAINTENANCE_FILE)));
+        $output->writeln($this->translator->trans($this->configurationFileManager->createFile()));
 
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
 
-        if (0 < \count($ipsAddress)) {
-            $output->writeln($this->translator->trans($this->fileManager->putIpsIntoFile($ipsAddress, ConfigurationFileManager::MAINTENANCE_FILE)));
+        if ([] !== $ipsAddress) {
+            $this->configurationFileManager->saveYamlConfiguration($this->configurationFileManager->getIpAddressesArray($ipsAddress));
         }
 
         return 0;
