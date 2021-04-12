@@ -7,10 +7,16 @@
 {% form_theme form '@SyliusAdmin/Form/theme.html.twig' %}
 
 {% block content %}
-    {{ headers.default('maintenance.ui.title'|trans, 'cogs') }}
-    {{ form_start(form, {'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
-    <div class="ui segment">
-        {{ form_widget(form) }}
-    </div>
-    {{ form_end(form) }}
+	{{ headers.default('maintenance.ui.title'|trans, 'cogs') }}
+	{{ form_start(form, {'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+	<div class="ui segment">
+		{{ form_row(form.enabled) }}
+		{{ form_row(form.ipAddresses) }}
+		{{ form_row(form.customMessage) }}
+		<div class="two fields">
+			{{ form_row(form.startDate) }}
+			{{ form_row(form.endDate) }}
+		</div>
+	</div>
+	{{ form_end(form) }}
 {% endblock %}
