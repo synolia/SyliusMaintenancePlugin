@@ -55,7 +55,7 @@ final class MaintenanceConfigurationController extends AbstractController
 
                 $this->flashBag->add('success', $this->translator->trans('maintenance.ui.message_enabled'));
 
-                return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
+                return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
                     'form' => $form->createView(),
                 ]);
             }
@@ -70,7 +70,7 @@ final class MaintenanceConfigurationController extends AbstractController
             }
         }
 
-        return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/config.html.twig', [
+        return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
             'form' => $form->createView(),
         ]);
     }

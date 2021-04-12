@@ -14,6 +14,10 @@ use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
+    private const START_DATE = 'start_date';
+
+    private const END_DATE = 'end_date';
+
     private TranslatorInterface $translator;
 
     private ParameterBagInterface $params;
@@ -54,12 +58,14 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $maintenanceYaml = $this->configurationFileManager->parseMaintenanceYaml();
 
         if (null !== $maintenanceYaml && isset($maintenanceYaml['ips']) &&
-            in_array($ipUser, $maintenanceYaml['ips'], true)) {
+            in_array($ipUser, $maintenanceYaml['ips'], true)
+        ) {
             return;
         }
 
         if (isset($maintenanceYaml['scheduler']) &&
-            false === $this->checkScheduledDates($maintenanceYaml['scheduler'])) {
+            false === $this->checkScheduledDates($maintenanceYaml['scheduler'])
+        ) {
             return;
         }
 
@@ -74,24 +80,29 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         }
     }
 
-    private function checkScheduledDates(array $array): bool
+    private function checkScheduledDates(array $scheduler): bool
     {
         $now = (new \DateTime())->format('Y-m-d H:i:s');
-        $startDate = 'start_date';
-        $endDate = 'end_date';
 
-        if (array_key_exists($startDate, $array) && array_key_exists($endDate, $array) &&
-            ($now >= $array['start_date']) && ($now <= $array['end_date'])) {
+        if (array_key_exists(self::START_DATE, $scheduler) &&
+            array_key_exists(self::END_DATE, $scheduler) &&
+            ($now >= $scheduler[self::START_DATE]) &&
+            ($now <= $scheduler[self::END_DATE])
+        ) {
             return true;
         }
 
-        if (array_key_exists($startDate, $array) && !array_key_exists($endDate, $array) &&
-            ($now >= $array['start_date'])) {
+        if (array_key_exists(self::START_DATE, $scheduler) &&
+            !array_key_exists(self::END_DATE, $scheduler) &&
+            ($now >= $scheduler[self::START_DATE])
+        ) {
             return true;
         }
 
-        if (array_key_exists($endDate, $array) && !array_key_exists($startDate, $array) &&
-            ($now <= $array['end_date'])) {
+        if (array_key_exists(self::END_DATE, $scheduler) &&
+            !array_key_exists(self::START_DATE, $scheduler) &&
+            ($now <= $scheduler[self::END_DATE])
+        ) {
             return true;
         }
 
