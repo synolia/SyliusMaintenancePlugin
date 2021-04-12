@@ -11,9 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -66,16 +63,6 @@ final class MaintenanceConfigurationType extends AbstractType
                 'attr' => ['class' => 'ui icon primary button'],
                 'label' => 'maintenance.ui.form.validate',
             ])
-            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
-                $form = $event->getForm();
-                $startDate = $form->get('startDate')->getData();
-                $endDate = $form->get('endDate')->getData();
-                $message = $this->translator->trans('maintenance.ui.form.error_end_date');
-                if (null !== $endDate && $startDate > $endDate) {
-                    $form->get('endDate')->addError(new FormError($message));
-                }
-                $this->flashBag->add('error', $message);
-            })
         ;
     }
 }
