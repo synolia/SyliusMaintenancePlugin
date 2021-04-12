@@ -1,3 +1,14 @@
 maintenance:
     ui:
         message: The website is under maintenance
+        title: Maintenance
+        form:
+            enabled: Enabled ?
+            ip: Ip addresses (separated with a comma)
+            validate: Validate
+            placeholder: 'Add one or multiple ips addresses separated with a comma. For example: 255.255.255.255,192.0.0.255'
+        message_enabled: The maintenance plugin was successfully enabled
+        message_disabled: The maintenance plugin has been successfully disabled
+        message_success_ips: The ips were added to the file maintenance.yaml successfully.
+        message_error_ips: An error occurred while adding ips addresses. Add one or multiple ips addresses separated with a comma.
+        message_disabled_404: The plugin is disabled.
