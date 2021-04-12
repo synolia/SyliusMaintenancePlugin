@@ -53,13 +53,10 @@ final class MaintenanceConfigurationExporter
 
     private function saveTemplate(string $templateContent): void
     {
-        if ('' === $templateContent) {
-            return;
-        }
+        $this->filesystem->remove($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE));
 
-        if ($this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
-            $this->filesystem->remove($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE));
+        if ('' !== $templateContent) {
+            $this->filesystem->appendToFile($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE), $templateContent);
         }
-        $this->filesystem->appendToFile($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE), $templateContent);
     }
 }

@@ -54,6 +54,21 @@ class MaintenanceConfiguration
         return $this;
     }
 
+    public function map(?array $dataFromMaintenanceYaml): self
+    {
+        $self = new self();
+
+        if (null === $dataFromMaintenanceYaml) {
+            return $self;
+        }
+        if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
+            $self->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
+        }
+        $self->setEnabled(true);
+
+        return $self;
+    }
+
     public function setIpAddressesArray(array $ipAddresses): array
     {
         $ipAddressesArray = array_map('trim', $ipAddresses);
