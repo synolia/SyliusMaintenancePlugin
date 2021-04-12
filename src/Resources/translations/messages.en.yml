@@ -10,6 +10,7 @@ maintenance:
             custom_message: Custom Message
             start_date: Starts at
             end_date: Ends at
+            error_end_date: The end date must be later than the start date.
         message_enabled: The maintenance plugin was successfully enabled.
         message_disabled: The maintenance plugin was successfully disabled.
         message_success_ips: The ips were added to the file maintenance.yaml successfully.
