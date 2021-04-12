@@ -12,9 +12,9 @@ class MaintenanceConfiguration
 
     private string $customMessage = '';
 
-    private ?\DateTimeInterface $startDate;
+    private ?\DateTime $startDate;
 
-    private ?\DateTimeInterface $endDate;
+    private ?\DateTime $endDate;
 
     public function getIpAddresses(): string
     {
@@ -58,24 +58,24 @@ class MaintenanceConfiguration
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getStartDate(): ?\DateTime
     {
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTimeInterface $startDate): self
+    public function setStartDate(?\DateTime $startDate): self
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?\DateTime
     {
         return $this->endDate;
     }
 
-    public function setEndDate(?\DateTimeInterface $endDate): self
+    public function setEndDate(?\DateTime $endDate): self
     {
         $this->endDate = $endDate;
 
@@ -91,6 +91,12 @@ class MaintenanceConfiguration
         }
         if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
             $self->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
+        }
+        if (array_key_exists('scheduler', $dataFromMaintenanceYaml)) {
+            $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
+            $endDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['end_date'] ?? '');
+            $self->setStartDate(false === $startDate ? null : $startDate);
+            $self->setEndDate(false === $endDate ? null : $endDate);
         }
         $self->setEnabled(true);
 
