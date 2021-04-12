@@ -12,8 +12,6 @@ use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class DisableMaintenanceCommand extends Command
 {
-    private const MAINTENANCE_FILE = 'maintenance.yaml';
-
     protected static $defaultName = 'maintenance:disable';
 
     private ConfigurationFileManager $fileManager;
@@ -37,7 +35,7 @@ final class DisableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->translator->trans($this->fileManager->deleteFile(self::MAINTENANCE_FILE)));
+        $output->writeln($this->translator->trans($this->fileManager->deleteFile(ConfigurationFileManager::MAINTENANCE_FILE)));
 
         return 0;
     }

@@ -14,37 +14,36 @@ use Sylius\Component\Resource\Model\ResourceInterface;
 class MaintenanceConfiguration implements ResourceInterface
 {
     /**
-     * @var int
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string|null
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $ipAddresses;
+    /** @ORM\Column(type="string") */
+    private string $ipAddresses = '';
 
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=false)
-     */
-    private $enabled = true;
+    /** @ORM\Column(type="boolean") */
+    private bool $enabled = true;
 
-    public function getId(): ?int
+    /** @ORM\Column(type="text") */
+    private string $customMessage = '';
+
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getIpAddresses(): ?string
+    public function getIpAddresses(): string
     {
         return $this->ipAddresses;
     }
 
     public function setIpAddresses(?string $ipAddresses): self
     {
+        if (null === $ipAddresses) {
+            return $this;
+        }
         $this->ipAddresses = $ipAddresses;
 
         return $this;
@@ -55,23 +54,24 @@ class MaintenanceConfiguration implements ResourceInterface
         return $this->enabled;
     }
 
-    public function setEnabled(?bool $enabled): self
+    public function setEnabled(bool $enabled): self
     {
-        $this->enabled = (bool) $enabled;
+        $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function enable(): self
+    public function getCustomMessage(): string
     {
-        $this->enabled = true;
-
-        return $this;
+        return $this->customMessage;
     }
 
-    public function disable(): self
+    public function setCustomMessage(?string $customMessage): self
     {
-        $this->enabled = false;
+        if (null === $customMessage) {
+            return $this;
+        }
+        $this->customMessage = $customMessage;
 
         return $this;
     }

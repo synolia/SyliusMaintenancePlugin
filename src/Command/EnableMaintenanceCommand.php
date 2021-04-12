@@ -13,8 +13,6 @@ use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class EnableMaintenanceCommand extends Command
 {
-    private const MAINTENANCE_FILE = 'maintenance.yaml';
-
     protected static $defaultName = 'maintenance:enable';
 
     private ConfigurationFileManager $fileManager;
@@ -39,13 +37,13 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->translator->trans($this->fileManager->createFile(self::MAINTENANCE_FILE)));
+        $output->writeln($this->translator->trans($this->fileManager->createFile(ConfigurationFileManager::MAINTENANCE_FILE)));
 
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
 
         if (0 < \count($ipsAddress)) {
-            $output->writeln($this->translator->trans($this->fileManager->putIpsIntoFile($ipsAddress, self::MAINTENANCE_FILE)));
+            $output->writeln($this->translator->trans($this->fileManager->putIpsIntoFile($ipsAddress, ConfigurationFileManager::MAINTENANCE_FILE)));
         }
 
         return 0;

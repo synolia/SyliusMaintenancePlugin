@@ -6,41 +6,34 @@ namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
-    private const MAINTENANCE_FILE = 'maintenance.yaml';
-
-    private Filesystem $filesystem;
-
-    private KernelInterface $kernel;
-
     private TranslatorInterface $translator;
 
     private ParameterBagInterface $params;
 
     private Environment $twig;
 
+    private ConfigurationFileManager $fileManager;
+
     public function __construct(
-        Filesystem $filesystem,
-        KernelInterface $kernel,
         TranslatorInterface $translator,
         ParameterBagInterface $params,
-        Environment $twig
+        Environment $twig,
+        ConfigurationFileManager $fileManager
     ) {
-        $this->filesystem = $filesystem;
-        $this->kernel = $kernel;
         $this->translator = $translator;
         $this->params = $params;
         $this->twig = $twig;
+        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -52,17 +45,16 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
     public function handle(RequestEvent $event): void
     {
-        $projectRootPath = $this->kernel->getProjectDir();
         $getRequestUri = $event->getRequest()->getRequestUri();
         $prefix = $this->params->get('sylius_admin.path_name');
         $ipUser = $event->getRequest()->getClientIp();
 
-        if (!$this->filesystem->exists($projectRootPath . '/maintenance.yaml')) {
+        if (!$this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
             return;
         }
 
         try {
-            $maintenanceYaml = Yaml::parseFile($projectRootPath . '/' . self::MAINTENANCE_FILE);
+            $maintenanceYaml = Yaml::parseFile($this->fileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_FILE));
         } catch (ParseException $exception) {
             throw new ParseException('Unable to parse the YAML. ' . $exception->getMessage());
         }
@@ -77,7 +69,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
         $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
 
-        if ($this->filesystem->exists($projectRootPath . '/templates/maintenance.html.twig')) {
+        if ($this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
             $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
         }
     }

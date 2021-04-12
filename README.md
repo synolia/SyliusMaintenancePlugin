@@ -24,7 +24,6 @@
 | PHP  | 7.4+ |
 | Sylius | 1.8+ |
 
-
 ## Installation
 
 1. Add the bundle and dependencies in your composer.json :
@@ -54,12 +53,20 @@
         prefix: /admin
     ```
 
-5. Clear cache
+5. Generate & Run Doctrine migrations:
 
     ```shell
-    bin/console cache:clear
-    ```
+      php bin/console doctrine:migrations:diff --formatted --namespace="App\Migrations"
+      php bin/console doctrine:migration:migrate
+      ```
 
+
+6. Clear cache
+
+    ```shell
+    php bin/console cache:clear
+    ```
+   
 ## Usage
 
 - To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project.
@@ -69,6 +76,7 @@
     ```yaml
     ips: [172.16.254.1, 255.255.255.255, 192.0.0.255]
     ```
+  
 ### You can turn your website under maintenance by console commands :
 
   1. Enable the plugin
@@ -86,8 +94,14 @@
       ```shell
       php bin/console maintenance:disable
       ```
+     
 ### You can also turn your website under maintenance in Back Office :     
 
+![Alt text](images/maintenance.png "maintenance_configure")
+
+- Enable/disable the plugin
+- Allow access for one or multiple ips addresses (optional)
+- Create your custom message (optional)
 
 ![Alt text](images/maintenance.png "maintenance_configure")
 

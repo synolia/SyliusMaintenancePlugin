@@ -16,8 +16,6 @@ use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
 
 final class MaintenanceConfigurationController extends AbstractController
 {
-    private const MAINTENANCE_FILE = 'maintenance.yaml';
-
     private TranslatorInterface $translator;
 
     private FlashBagInterface $flashBag;
@@ -61,19 +59,26 @@ final class MaintenanceConfigurationController extends AbstractController
             }
 
             if ($data->isEnabled()) {
-                $this->fileManager->createFile(self::MAINTENANCE_FILE);
+                $this->fileManager->createFile(ConfigurationFileManager::MAINTENANCE_FILE);
 
-                if ($this->fileManager->fileExists(self::MAINTENANCE_FILE)) {
+                if ($this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
                     $this->flashBag->add(
                         'success',
                         $this->translator->trans('maintenance.ui.message_enabled')
                     );
                 }
 
+                if (null !== $data->getCustomMessage()) {
+                    $this->fileManager->addCustomMessage($data->getCustomMessage());
+                    $this->flashBag->add(
+                        'success',
+                        $this->translator->trans('maintenance.ui.message_success_message')
+                    );
+                }
+
                 if (null !== $data->getIpAddresses()) {
                     $result = $this->fileManager->putIpsIntoFile(
-                        $this->fileManager->convertStringToArray($data->getIpAddresses()), self::MAINTENANCE_FILE
-                    );
+                        $this->fileManager->convertStringToArray($data->getIpAddresses()), ConfigurationFileManager::MAINTENANCE_FILE);
 
                     if ($result !== ConfigurationFileManager::ADD_IP_SUCCESS) {
                         $this->flashBag->add(
@@ -100,9 +105,10 @@ final class MaintenanceConfigurationController extends AbstractController
                 ]);
             }
 
-            $this->fileManager->deleteFile(self::MAINTENANCE_FILE);
+            $this->fileManager->deleteFile(ConfigurationFileManager::MAINTENANCE_FILE);
+            $this->fileManager->deleteFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE);
 
-            if (!$this->fileManager->fileExists(self::MAINTENANCE_FILE)) {
+            if (!$this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
                 $this->flashBag->add(
                     'success',
                     $this->translator->trans('maintenance.ui.message_disabled')
@@ -120,6 +126,7 @@ final class MaintenanceConfigurationController extends AbstractController
         $maintenanceConfig = new MaintenanceConfiguration();
         $maintenanceConfig->setEnabled($formData !== null ? $formData->isEnabled() : true);
         $maintenanceConfig->setIpAddresses($formData !== null ? $formData->getIpAddresses() : '');
+        $maintenanceConfig->setCustomMessage($formData !== null ? $formData->getCustomMessage() : '<h1>Hello world</h1>');
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($maintenanceConfig);
