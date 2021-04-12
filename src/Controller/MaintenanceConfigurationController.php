@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Controller;
 
-use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
+use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
 final class MaintenanceConfigurationController extends AbstractController
 {
@@ -21,38 +22,32 @@ final class MaintenanceConfigurationController extends AbstractController
 
     private ConfigurationFileManager $configurationFileManager;
 
-    private RepositoryInterface $maintenanceRepository;
+    private MaintenanceConfigurationExporter $maintenanceExporter;
 
     public function __construct(
         FlashBagInterface $flashBag,
         TranslatorInterface $translator,
         ConfigurationFileManager $configurationFileManager,
-        RepositoryInterface $maintenanceRepository
+        MaintenanceConfigurationExporter $maintenanceExporter
     ) {
         $this->flashBag = $flashBag;
         $this->translator = $translator;
         $this->configurationFileManager = $configurationFileManager;
-        $this->maintenanceRepository = $maintenanceRepository;
+        $this->maintenanceExporter = $maintenanceExporter;
     }
 
     public function __invoke(Request $request): Response
     {
-        $dataFromYaml = $this->configurationFileManager->getDataFromYaml();
+        $maintenanceConfiguration = new MaintenanceConfiguration();
 
-        $form = $this->createForm(MaintenanceConfigurationType::class, $dataFromYaml);
+        $form = $this->createForm(MaintenanceConfigurationType::class, $maintenanceConfiguration);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            if ($data['enabled']) {
+            if ($maintenanceConfiguration->isEnabled()) {
                 $this->configurationFileManager->createFile();
-                $this->configurationFileManager->saveTemplate($data['customMessage']);
 
-                if (null !== $data['ipAddresses']) {
-                    $ipAddresses = $this->configurationFileManager->getIpAddressesArray(explode(',', $data['ipAddresses']));
-                    $this->configurationFileManager->saveYamlConfiguration($ipAddresses);
-                }
+                $this->maintenanceExporter->export($maintenanceConfiguration);
 
                 $this->flashBag->add('success', $this->translator->trans('maintenance.ui.message_enabled'));
 

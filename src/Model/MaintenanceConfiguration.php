@@ -2,36 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Synolia\SyliusMaintenancePlugin\Entity;
+namespace Synolia\SyliusMaintenancePlugin\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-use Sylius\Component\Resource\Model\ResourceInterface;
-
-/**
- * @ORM\Entity
- */
-class MaintenanceConfiguration implements ResourceInterface
+class MaintenanceConfiguration
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private int $id;
-
-    /** @ORM\Column(type="string") */
     private string $ipAddresses = '';
 
-    /** @ORM\Column(type="boolean") */
     private bool $enabled = true;
 
-    /** @ORM\Column(type="text") */
     private string $customMessage = '';
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     public function getIpAddresses(): string
     {
@@ -73,5 +52,32 @@ class MaintenanceConfiguration implements ResourceInterface
         $this->customMessage = $customMessage;
 
         return $this;
+    }
+
+    public function setIpAddressesArray(array $ipAddresses): array
+    {
+        $ipAddressesArray = array_map('trim', $ipAddresses);
+
+        foreach ($ipAddressesArray as $key => $ipAddress) {
+            if ($this->isValidIp($ipAddress)) {
+                continue;
+            }
+            unset($ipAddressesArray[$key]);
+        }
+
+        if ([] === $ipAddressesArray) {
+            return [];
+        }
+
+        return ['ips' => $ipAddressesArray];
+    }
+
+    private function isValidIp(string $ipAddress): bool
+    {
+        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
+            return false;
+        }
+
+        return true;
     }
 }

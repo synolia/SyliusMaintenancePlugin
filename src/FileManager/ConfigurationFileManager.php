@@ -7,7 +7,6 @@ namespace Synolia\SyliusMaintenancePlugin\FileManager;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -56,48 +55,6 @@ final class ConfigurationFileManager
         return $this->filesystem->exists($this->getPathtoFile($filename));
     }
 
-    public function getIpAddressesArray(array $ipAddresses): array
-    {
-        $ipAddressesArray = array_map('trim', $ipAddresses);
-
-        foreach ($ipAddressesArray as $key => $ipAddress) {
-            if ($this->isValidIp($ipAddress)) {
-                continue;
-            }
-            unset($ipAddressesArray[$key]);
-        }
-
-        if (!$this->fileExists(self::MAINTENANCE_FILE) || [] === $ipAddressesArray) {
-            return [];
-        }
-
-        return ['ips' => $ipAddressesArray];
-    }
-
-    public function saveYamlConfiguration(array $data): void
-    {
-        try {
-            $yaml = Yaml::dump($data);
-        } catch (DumpException $exception) {
-            throw new DumpException('Unable to dump the YAML. ' . $exception->getMessage());
-        }
-
-        file_put_contents($this->getPathtoFile(self::MAINTENANCE_FILE), $yaml);
-    }
-
-    public function saveTemplate(?string $customMessage): void
-    {
-        if (null === $customMessage) {
-            return;
-        }
-
-        if ($this->fileExists(self::MAINTENANCE_TEMPLATE)) {
-            $this->filesystem->remove($this->getPathtoFile(self::MAINTENANCE_TEMPLATE));
-        }
-
-        $this->filesystem->appendToFile($this->getPathtoFile(self::MAINTENANCE_TEMPLATE), $customMessage);
-    }
-
     public function parseMaintenanceYaml(): ?array
     {
         try {
@@ -112,35 +69,5 @@ final class ConfigurationFileManager
         $projectRootPath = $this->kernel->getProjectDir();
 
         return $projectRootPath . '/' . $filename;
-    }
-
-    public function getDataFromYaml(): array
-    {
-        $data = [
-            'enabled' => true,
-            'ipAddresses' => null,
-            'customMessage' => null,
-        ];
-
-        if ($this->fileExists(self::MAINTENANCE_FILE)) {
-            $maintenanceYaml = $this->parseMaintenanceYaml();
-            if (null !== $maintenanceYaml && array_key_exists('ips', $maintenanceYaml)) {
-                $data['ipAddresses'] = implode(',', $maintenanceYaml['ips']);
-            }
-        }
-        if ($this->fileExists(self::MAINTENANCE_TEMPLATE)) {
-            $data['customMessage'] = file_get_contents($this->getPathtoFile(self::MAINTENANCE_TEMPLATE));
-        }
-
-        return $data;
-    }
-
-    private function isValidIp(string $ipAddress): bool
-    {
-        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
-            return false;
-        }
-
-        return true;
     }
 }

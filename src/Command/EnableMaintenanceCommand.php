@@ -9,7 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
+use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
 final class EnableMaintenanceCommand extends Command
 {
@@ -19,10 +21,20 @@ final class EnableMaintenanceCommand extends Command
 
     private TranslatorInterface $translator;
 
-    public function __construct(ConfigurationFileManager $fileManager, TranslatorInterface $translator)
-    {
+    private MaintenanceConfigurationExporter $maintenanceExporter;
+
+    private MaintenanceConfiguration $maintenanceConfiguration;
+
+    public function __construct(
+        ConfigurationFileManager $fileManager,
+        TranslatorInterface $translator,
+        MaintenanceConfigurationExporter $maintenanceExporter,
+        MaintenanceConfiguration $maintenanceConfiguration
+    ) {
         $this->configurationFileManager = $fileManager;
         $this->translator = $translator;
+        $this->maintenanceExporter = $maintenanceExporter;
+        $this->maintenanceConfiguration = $maintenanceConfiguration;
 
         parent::__construct();
     }
@@ -43,7 +55,7 @@ final class EnableMaintenanceCommand extends Command
         $ipsAddress = $input->getArgument('ips_address');
 
         if ([] !== $ipsAddress) {
-            $this->configurationFileManager->saveYamlConfiguration($this->configurationFileManager->getIpAddressesArray($ipsAddress));
+            $this->maintenanceExporter->saveYamlConfiguration($this->maintenanceConfiguration->setIpAddressesArray($ipsAddress));
         }
 
         return 0;
