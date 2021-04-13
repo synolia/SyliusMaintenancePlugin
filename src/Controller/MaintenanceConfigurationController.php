@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synolia\SyliusMaintenancePlugin\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -50,17 +49,6 @@ final class MaintenanceConfigurationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($maintenanceConfiguration->isEnabled()) {
-                if (null !== $maintenanceConfiguration->getStartDate() &&
-                    null !== $maintenanceConfiguration->getEndDate() &&
-                    $maintenanceConfiguration->getStartDate() > $maintenanceConfiguration->getEndDate()
-                ) {
-                    $form->get('endDate')->addError(new FormError($this->translator->trans('maintenance.ui.form.error_end_date')));
-
-                    return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
-                        'form' => $form->createView(),
-                    ]);
-                }
-
                 $this->configurationFileManager->createFile();
 
                 $this->maintenanceExporter->export($maintenanceConfiguration);
