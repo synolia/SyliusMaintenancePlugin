@@ -1,3 +1,2 @@
 imports:
   - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/services.yaml" }
-  - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/resources.yaml" }

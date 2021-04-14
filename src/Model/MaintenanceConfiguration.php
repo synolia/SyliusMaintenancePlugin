@@ -2,37 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Synolia\SyliusMaintenancePlugin\Entity;
+namespace Synolia\SyliusMaintenancePlugin\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-use Sylius\Component\Resource\Model\ResourceInterface;
-
-/**
- * @ORM\Entity
- * @ORM\Table("maintenance_configuration")
- */
-class MaintenanceConfiguration implements ResourceInterface
+class MaintenanceConfiguration
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private int $id;
-
-    /** @ORM\Column(type="string") */
     private string $ipAddresses = '';
 
-    /** @ORM\Column(type="boolean") */
     private bool $enabled = true;
 
-    /** @ORM\Column(type="text") */
     private string $customMessage = '';
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     public function getIpAddresses(): string
     {
@@ -74,5 +52,20 @@ class MaintenanceConfiguration implements ResourceInterface
         $this->customMessage = $customMessage;
 
         return $this;
+    }
+
+    public function map(?array $dataFromMaintenanceYaml): self
+    {
+        $self = new self();
+
+        if (null === $dataFromMaintenanceYaml) {
+            return $self;
+        }
+        if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
+            $self->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
+        }
+        $self->setEnabled(true);
+
+        return $self;
     }
 }
