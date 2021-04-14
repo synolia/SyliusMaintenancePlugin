@@ -7,6 +7,7 @@ namespace Synolia\SyliusMaintenancePlugin\Exporter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Yaml;
+use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
@@ -16,12 +17,16 @@ final class MaintenanceConfigurationExporter
 
     private Filesystem $filesystem;
 
+    private MaintenanceConfigurationFactory $configurationFactory;
+
     public function __construct(
         ConfigurationFileManager $configurationFileManager,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        MaintenanceConfigurationFactory $configurationFactory
     ) {
         $this->configurationFileManager = $configurationFileManager;
         $this->filesystem = $filesystem;
+        $this->configurationFactory = $configurationFactory;
     }
 
     public function export(MaintenanceConfiguration $configuration): void
@@ -32,7 +37,7 @@ final class MaintenanceConfigurationExporter
             return;
         }
 
-        $ipAddresses = $configuration->setIpAddressesArray(explode(',', $configuration->getIpAddresses()));
+        $ipAddresses = $this->configurationFactory->getIpAddressesArray(explode(',', $configuration->getIpAddresses()));
         $this->saveYamlConfiguration($ipAddresses);
     }
 

@@ -68,31 +68,4 @@ class MaintenanceConfiguration
 
         return $self;
     }
-
-    public function setIpAddressesArray(array $ipAddresses): array
-    {
-        $ipAddressesArray = array_map('trim', $ipAddresses);
-
-        foreach ($ipAddressesArray as $key => $ipAddress) {
-            if ($this->isValidIp($ipAddress)) {
-                continue;
-            }
-            unset($ipAddressesArray[$key]);
-        }
-
-        if ([] === $ipAddressesArray) {
-            return [];
-        }
-
-        return ['ips' => $ipAddressesArray];
-    }
-
-    private function isValidIp(string $ipAddress): bool
-    {
-        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
-            return false;
-        }
-
-        return true;
-    }
 }
