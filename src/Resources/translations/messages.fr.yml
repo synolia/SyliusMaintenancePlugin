@@ -8,6 +8,9 @@ maintenance:
             validate: Valider
             placeholder: 'Ajouter une ou plusieurs adresses ip séparées par une virgule. Par exemple: 255.255.255.255,192.0.0.255'
             custom_message: Message personnalisé
+            start_date: Commence le
+            end_date: Se termine le
+            error_end_date: La date de fin doit être postérieure à la date de début.
         message_enabled: Le plugin de maintenance a été activé avec succès.
         message_disabled: Le plugin de maintenance a été désactivé avec succès.
         message_success_ips: Les adresses ip ont été ajoutés au fichier maintenance.yaml avec succès.

@@ -9,20 +9,32 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
+use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class EnableMaintenanceCommand extends Command
 {
     protected static $defaultName = 'maintenance:enable';
 
-    private ConfigurationFileManager $fileManager;
+    private ConfigurationFileManager $configurationFileManager;
 
     private TranslatorInterface $translator;
 
-    public function __construct(ConfigurationFileManager $fileManager, TranslatorInterface $translator)
-    {
-        $this->fileManager = $fileManager;
+    private MaintenanceConfigurationExporter $maintenanceExporter;
+
+    private MaintenanceConfigurationFactory $configurationFactory;
+
+    public function __construct(
+        ConfigurationFileManager $fileManager,
+        TranslatorInterface $translator,
+        MaintenanceConfigurationExporter $maintenanceExporter,
+        MaintenanceConfigurationFactory $configurationFactory
+    ) {
+        $this->configurationFileManager = $fileManager;
         $this->translator = $translator;
+        $this->maintenanceExporter = $maintenanceExporter;
+        $this->configurationFactory = $configurationFactory;
 
         parent::__construct();
     }
@@ -37,13 +49,13 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->translator->trans($this->fileManager->createFile(ConfigurationFileManager::MAINTENANCE_FILE)));
+        $output->writeln($this->translator->trans($this->configurationFileManager->createFile()));
 
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
 
-        if (0 < \count($ipsAddress)) {
-            $output->writeln($this->translator->trans($this->fileManager->putIpsIntoFile($ipsAddress, ConfigurationFileManager::MAINTENANCE_FILE)));
+        if ([] !== $ipsAddress) {
+            $this->maintenanceExporter->saveYamlConfiguration($this->configurationFactory->getIpAddressesArray($ipsAddress));
         }
 
         return 0;

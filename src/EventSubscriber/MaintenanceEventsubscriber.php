@@ -8,21 +8,23 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
+    private const START_DATE = 'start_date';
+
+    private const END_DATE = 'end_date';
+
     private TranslatorInterface $translator;
 
     private ParameterBagInterface $params;
 
     private Environment $twig;
 
-    private ConfigurationFileManager $fileManager;
+    private ConfigurationFileManager $configurationFileManager;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -33,7 +35,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $this->translator = $translator;
         $this->params = $params;
         $this->twig = $twig;
-        $this->fileManager = $fileManager;
+        $this->configurationFileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -49,17 +51,21 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $prefix = $this->params->get('sylius_admin.path_name');
         $ipUser = $event->getRequest()->getClientIp();
 
-        if (!$this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
+        if (!$this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
             return;
         }
 
-        try {
-            $maintenanceYaml = Yaml::parseFile($this->fileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_FILE));
-        } catch (ParseException $exception) {
-            throw new ParseException('Unable to parse the YAML. ' . $exception->getMessage());
+        $maintenanceYaml = $this->configurationFileManager->parseMaintenanceYaml();
+
+        if (null !== $maintenanceYaml && isset($maintenanceYaml['ips']) &&
+            in_array($ipUser, $maintenanceYaml['ips'], true)
+        ) {
+            return;
         }
 
-        if ($maintenanceYaml !== null && in_array($ipUser, $maintenanceYaml['ips'], true)) {
+        if (isset($maintenanceYaml['scheduler']) &&
+            false === $this->checkScheduledDates($maintenanceYaml['scheduler'])
+        ) {
             return;
         }
 
@@ -69,8 +75,37 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
         $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
 
-        if ($this->fileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
+        if ($this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
             $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
         }
+    }
+
+    private function checkScheduledDates(array $scheduler): bool
+    {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
+        if (array_key_exists(self::START_DATE, $scheduler) &&
+            array_key_exists(self::END_DATE, $scheduler) &&
+            ($now >= $scheduler[self::START_DATE]) &&
+            ($now <= $scheduler[self::END_DATE])
+        ) {
+            return true;
+        }
+
+        if (array_key_exists(self::START_DATE, $scheduler) &&
+            !array_key_exists(self::END_DATE, $scheduler) &&
+            ($now >= $scheduler[self::START_DATE])
+        ) {
+            return true;
+        }
+
+        if (array_key_exists(self::END_DATE, $scheduler) &&
+            !array_key_exists(self::START_DATE, $scheduler) &&
+            ($now <= $scheduler[self::END_DATE])
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
