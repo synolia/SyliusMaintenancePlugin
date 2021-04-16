@@ -14,6 +14,10 @@ use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
+    private const START_DATE = 'start_date';
+
+    private const END_DATE = 'end_date';
+
     private TranslatorInterface $translator;
 
     private ParameterBagInterface $params;
@@ -54,7 +58,14 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $maintenanceYaml = $this->configurationFileManager->parseMaintenanceYaml();
 
         if (null !== $maintenanceYaml && isset($maintenanceYaml['ips']) &&
-            in_array($ipUser, $maintenanceYaml['ips'], true)) {
+            in_array($ipUser, $maintenanceYaml['ips'], true)
+        ) {
+            return;
+        }
+
+        if (isset($maintenanceYaml['scheduler']) &&
+            false === $this->checkScheduledDates($maintenanceYaml['scheduler'])
+        ) {
             return;
         }
 
@@ -67,5 +78,34 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         if ($this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
             $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
         }
+    }
+
+    private function checkScheduledDates(array $scheduler): bool
+    {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
+        if (array_key_exists(self::START_DATE, $scheduler) &&
+            array_key_exists(self::END_DATE, $scheduler) &&
+            ($now >= $scheduler[self::START_DATE]) &&
+            ($now <= $scheduler[self::END_DATE])
+        ) {
+            return true;
+        }
+
+        if (array_key_exists(self::START_DATE, $scheduler) &&
+            !array_key_exists(self::END_DATE, $scheduler) &&
+            ($now >= $scheduler[self::START_DATE])
+        ) {
+            return true;
+        }
+
+        if (array_key_exists(self::END_DATE, $scheduler) &&
+            !array_key_exists(self::START_DATE, $scheduler) &&
+            ($now <= $scheduler[self::END_DATE])
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -66,4 +66,25 @@ final class MaintenanceConfigurationFactory
 
         return true;
     }
+
+    public function getSchedulerArray(?\DateTimeInterface $startDate, ?\DateTimeInterface $endDate): array
+    {
+        if (null === $startDate && null === $endDate) {
+            return [];
+        }
+
+        $scheduler = ['scheduler' => []];
+
+        if (null !== $startDate) {
+            $scheduler['scheduler'] += ['start_date' => $startDate->format('Y-m-d H:i:s')];
+        }
+        if (null !== $endDate) {
+            $scheduler['scheduler'] += ['end_date' => $endDate->format('Y-m-d H:i:s')];
+        }
+        if ([] === $scheduler['scheduler']) {
+            return [];
+        }
+
+        return $scheduler;
+    }
 }

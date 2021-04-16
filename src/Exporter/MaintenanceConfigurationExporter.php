@@ -38,7 +38,10 @@ final class MaintenanceConfigurationExporter
         }
 
         $ipAddresses = $this->configurationFactory->getIpAddressesArray(explode(',', $configuration->getIpAddresses()));
-        $this->saveYamlConfiguration($ipAddresses);
+
+        $scheduler = $this->configurationFactory->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
+
+        $this->saveYamlConfiguration(array_merge($ipAddresses, $scheduler));
     }
 
     public function saveYamlConfiguration(array $yamlData): void
