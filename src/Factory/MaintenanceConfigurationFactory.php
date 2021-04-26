@@ -19,72 +19,14 @@ final class MaintenanceConfigurationFactory
     public function get(): MaintenanceConfiguration
     {
         $maintenanceConfiguration = new MaintenanceConfiguration();
-        if (!$this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
+
+        if (!$this->configurationFileManager->hasMaintenanceFile()) {
             return $maintenanceConfiguration;
         }
 
+        $maintenanceConfiguration->setEnabled(true);
         $maintenanceConfiguration = $maintenanceConfiguration->map($this->configurationFileManager->parseMaintenanceYaml());
 
-        if ('' === $maintenanceConfiguration->getCustomMessage()) {
-            return $maintenanceConfiguration;
-        }
-
-        if ($this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
-            $content = file_get_contents($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE));
-            if (!is_string($content)) {
-                $content = '';
-            }
-            $maintenanceConfiguration->setCustomMessage($content);
-        }
-
         return $maintenanceConfiguration;
-    }
-
-    public function getIpAddressesArray(array $ipAddresses): array
-    {
-        $ipAddressesArray = array_map('trim', $ipAddresses);
-
-        foreach ($ipAddressesArray as $key => $ipAddress) {
-            if ($this->isValidIp($ipAddress)) {
-                continue;
-            }
-            unset($ipAddressesArray[$key]);
-        }
-
-        if ([] === $ipAddressesArray) {
-            return [];
-        }
-
-        return ['ips' => $ipAddressesArray];
-    }
-
-    private function isValidIp(string $ipAddress): bool
-    {
-        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function getSchedulerArray(?\DateTimeInterface $startDate, ?\DateTimeInterface $endDate): array
-    {
-        if (null === $startDate && null === $endDate) {
-            return [];
-        }
-
-        $scheduler = ['scheduler' => []];
-
-        if (null !== $startDate) {
-            $scheduler['scheduler'] += ['start_date' => $startDate->format('Y-m-d H:i:s')];
-        }
-        if (null !== $endDate) {
-            $scheduler['scheduler'] += ['end_date' => $endDate->format('Y-m-d H:i:s')];
-        }
-        if ([] === $scheduler['scheduler']) {
-            return [];
-        }
-
-        return $scheduler;
     }
 }

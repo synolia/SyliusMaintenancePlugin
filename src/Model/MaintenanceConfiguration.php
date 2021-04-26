@@ -8,7 +8,7 @@ class MaintenanceConfiguration
 {
     private string $ipAddresses = '';
 
-    private bool $enabled = true;
+    private bool $enabled = false;
 
     private string $customMessage = '';
 
@@ -16,9 +16,29 @@ class MaintenanceConfiguration
 
     private ?\DateTime $endDate;
 
+    public function __construct()
+    {
+        $this->startDate = null;
+        $this->endDate = null;
+    }
+
     public function getIpAddresses(): string
     {
         return $this->ipAddresses;
+    }
+
+    public function getArrayIpsAddresses(): array
+    {
+        $ipAddressesArray = array_map('trim', explode(',', $this->ipAddresses));
+
+        foreach ($ipAddressesArray as $key => $ipAddress) {
+            if (false !== filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
+                continue;
+            }
+            unset($ipAddressesArray[$key]);
+        }
+
+        return $ipAddressesArray;
     }
 
     public function setIpAddresses(?string $ipAddresses): self
@@ -84,22 +104,24 @@ class MaintenanceConfiguration
 
     public function map(?array $dataFromMaintenanceYaml): self
     {
-        $self = new self();
-
         if (null === $dataFromMaintenanceYaml) {
-            return $self;
+            return $this;
         }
+
         if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
-            $self->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
+            $this->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
         }
+
         if (array_key_exists('scheduler', $dataFromMaintenanceYaml)) {
             $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
             $endDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['end_date'] ?? '');
-            $self->setStartDate(false === $startDate ? null : $startDate);
-            $self->setEndDate(false === $endDate ? null : $endDate);
+            $this->setStartDate(false === $startDate ? null : $startDate);
+            $this->setEndDate(false === $endDate ? null : $endDate);
         }
-        $self->setEnabled(true);
+        if (array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
+            $this->setCustomMessage($dataFromMaintenanceYaml['custom_message'] ?? '');
+        }
 
-        return $self;
+        return $this;
     }
 }

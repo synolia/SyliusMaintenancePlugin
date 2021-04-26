@@ -48,26 +48,13 @@ final class MaintenanceConfigurationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->maintenanceExporter->export($maintenanceConfiguration);
+            $message = 'maintenance.ui.message_disabled';
             if ($maintenanceConfiguration->isEnabled()) {
-                $this->configurationFileManager->createFile();
-
-                $this->maintenanceExporter->export($maintenanceConfiguration);
-
-                $this->flashBag->add('success', $this->translator->trans('maintenance.ui.message_enabled'));
-
-                return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
-                    'form' => $form->createView(),
-                ]);
+                $message = 'maintenance.ui.message_enabled';
             }
 
-            $this->configurationFileManager->deleteFile();
-
-            if (!$this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
-                $this->flashBag->add(
-                    'success',
-                    $this->translator->trans('maintenance.ui.message_disabled')
-                );
-            }
+            $this->flashBag->add('success', $this->translator->trans($message));
         }
 
         return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [

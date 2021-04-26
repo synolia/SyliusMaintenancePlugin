@@ -9,33 +9,30 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
+use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
+use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
-    private const START_DATE = 'start_date';
-
-    private const END_DATE = 'end_date';
-
     private TranslatorInterface $translator;
 
     private ParameterBagInterface $params;
 
     private Environment $twig;
 
-    private ConfigurationFileManager $configurationFileManager;
+    private MaintenanceConfigurationFactory $configurationFactory;
 
     public function __construct(
         TranslatorInterface $translator,
         ParameterBagInterface $params,
         Environment $twig,
-        ConfigurationFileManager $fileManager
+        MaintenanceConfigurationFactory $configurationFactory
     ) {
         $this->translator = $translator;
         $this->params = $params;
         $this->twig = $twig;
-        $this->configurationFileManager = $fileManager;
+        $this->configurationFactory = $configurationFactory;
     }
 
     public static function getSubscribedEvents(): array
@@ -48,64 +45,59 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
     public function handle(RequestEvent $event): void
     {
         $getRequestUri = $event->getRequest()->getRequestUri();
-        $prefix = $this->params->get('sylius_admin.path_name');
+        $adminPrefix = $this->params->get('sylius_admin.path_name');
         $ipUser = $event->getRequest()->getClientIp();
+        $maintenanceConfiguration = $this->configurationFactory->get();
 
-        if (!$this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_FILE)) {
+        if (!$maintenanceConfiguration->isEnabled()) {
             return;
         }
 
-        $maintenanceYaml = $this->configurationFileManager->parseMaintenanceYaml();
+        $authorizedIps = $maintenanceConfiguration->getArrayIpsAddresses();
+        if (in_array($ipUser, $authorizedIps, true)) {
+            return;
+        }
 
-        if (null !== $maintenanceYaml && isset($maintenanceYaml['ips']) &&
-            in_array($ipUser, $maintenanceYaml['ips'], true)
+        if (false === $this->isActuallyScheduledMaintenance($maintenanceConfiguration) &&
+            (null !== $maintenanceConfiguration->getStartDate() ||
+             null !== $maintenanceConfiguration->getEndDate())
         ) {
             return;
         }
 
-        if (isset($maintenanceYaml['scheduler']) &&
-            false === $this->checkScheduledDates($maintenanceYaml['scheduler'])
-        ) {
+        if (false !== mb_strpos($getRequestUri, $adminPrefix, 1)) {
             return;
         }
 
-        if (false !== strpos($getRequestUri, $prefix, 1)) {
-            return;
+        $responseContent = $this->translator->trans('maintenance.ui.message');
+
+        if ('' !== $maintenanceConfiguration->getCustomMessage()) {
+            $responseContent = $this->twig->render('@SynoliaSyliusMaintenancePlugin/maintenance.html.twig', [
+                'custom_message' => $maintenanceConfiguration->getCustomMessage(),
+            ]);
         }
 
-        $event->setResponse(new Response($this->translator->trans('maintenance.ui.message')));
-
-        if ($this->configurationFileManager->fileExists(ConfigurationFileManager::MAINTENANCE_TEMPLATE)) {
-            $event->setResponse(new Response($this->twig->render('/maintenance.html.twig')));
-        }
+        $event->setResponse(new Response($responseContent, 200));
     }
 
-    private function checkScheduledDates(array $scheduler): bool
+    private function isActuallyScheduledMaintenance(MaintenanceConfiguration $maintenanceConfiguration): bool
     {
-        $now = (new \DateTime())->format('Y-m-d H:i:s');
-
-        if (array_key_exists(self::START_DATE, $scheduler) &&
-            array_key_exists(self::END_DATE, $scheduler) &&
-            ($now >= $scheduler[self::START_DATE]) &&
-            ($now <= $scheduler[self::END_DATE])
-        ) {
+        $now = new \DateTime();
+        $startDate = $maintenanceConfiguration->getStartDate();
+        $endDate = $maintenanceConfiguration->getEndDate();
+        // Now is between startDate and endDate
+        if ($startDate !== null && $endDate !== null && ($now >= $startDate) && ($now <= $endDate)) {
             return true;
         }
-
-        if (array_key_exists(self::START_DATE, $scheduler) &&
-            !array_key_exists(self::END_DATE, $scheduler) &&
-            ($now >= $scheduler[self::START_DATE])
-        ) {
+        // No enddate provided, now is greater than startDate
+        if ($startDate !== null && $endDate === null && ($now >= $startDate)) {
             return true;
         }
-
-        if (array_key_exists(self::END_DATE, $scheduler) &&
-            !array_key_exists(self::START_DATE, $scheduler) &&
-            ($now <= $scheduler[self::END_DATE])
-        ) {
+        // No startdate provided, now is before than enddate
+        if ($endDate !== null && $startDate === null && ($now <= $endDate)) {
             return true;
         }
-
+        // No schedule date
         return false;
     }
 }
