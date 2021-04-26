@@ -28,52 +28,44 @@
 
 1. Add the bundle and dependencies in your composer.json :
 
-    ```shell
+    ``` shell   
     composer require synolia/sylius-maintenance-plugin
     ```
 
 2. Enable the plugin in your `config/bundles.php` file by add
 
-    ```php
+    ``` php    
     Synolia\SyliusMaintenancePlugin\SynoliaSyliusMaintenancePlugin::class => ['all' => true],
     ```
 
 3. Import required config in your `config/packages/_sylius.yaml` file:
 
-    ```yaml
+    ``` yaml    
     imports:
         - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/config.yaml" }
     ```
 
 4. Import routing in your `config/routes.yaml` file:
 
-    ```yaml
+    ``` yaml   
     synolia_synolia_maintenance:
         resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yaml"
         prefix: /admin
     ```
 
-5. Generate & Run Doctrine migrations:
-
-    ```shell
-      php bin/console doctrine:migrations:diff --formatted --namespace="App\Migrations"
-      php bin/console doctrine:migration:migrate
-      ```
-
-
 6. Clear cache
 
-    ```shell
+    ``` shell
     php bin/console cache:clear
     ```
    
 ## Usage
 
 - To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project.
-- If you want to create a custom template, please create and name your template in : **templates/maintenance.html.twig**.
 - If you want to allow access for some Ips, please add these Ip into **maintenance.yaml**   
-   For example : 
-    ```yaml
+   For example :   
+    
+    ``` yaml   
     ips: [172.16.254.1, 255.255.255.255, 192.0.0.255]
     ```
   
@@ -81,23 +73,21 @@
 
   1. Enable the plugin
 
-     ```shell
+     ``` shell
       php bin/console maintenance:enable
       ```
   2. Enable the plugin and add one or multiple ips addresses separated with a space
 
-      ```shell
+      ``` shell
       php bin/console maintenance:enable 172.16.254.1 255.255.255.255 192.0.0.255
       ```
   3. Disable the plugin
 
-      ```shell
+      ``` shell
       php bin/console maintenance:disable
       ```
      
 ### You can also turn your website under maintenance in Back Office :     
-
-![Alt text](images/maintenance.png "maintenance_configure")
 
 - Enable/disable the plugin
 - Allow access for one or multiple ips addresses (optional)
