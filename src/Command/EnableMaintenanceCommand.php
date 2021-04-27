@@ -45,6 +45,7 @@ final class EnableMaintenanceCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $maintenanceConfiguration = $this->configurationFactory->get();
+        $maintenanceConfiguration->setEnabled(true);
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
         if ([] !== $ipsAddress) {

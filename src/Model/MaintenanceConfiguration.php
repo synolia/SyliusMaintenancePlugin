@@ -107,18 +107,20 @@ class MaintenanceConfiguration
         if (null === $dataFromMaintenanceYaml) {
             return $this;
         }
-
-        if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
+        if ('' !== $this->getIpAddresses() && array_key_exists('ips', $dataFromMaintenanceYaml)) {
             $this->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
         }
-
         if (array_key_exists('scheduler', $dataFromMaintenanceYaml)) {
-            $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
-            $endDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['end_date'] ?? '');
-            $this->setStartDate(false === $startDate ? null : $startDate);
-            $this->setEndDate(false === $endDate ? null : $endDate);
+            if (null !== $this->getStartDate()) {
+                $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
+                $this->setStartDate(false === $startDate ? null : $startDate);
+            }
+            if (null !== $this->getEndDate()) {
+                $endDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['end_date'] ?? '');
+                $this->setEndDate(false === $endDate ? null : $endDate);
+            }
         }
-        if (array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
+        if ('' !== $this->getCustomMessage() && array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
             $this->setCustomMessage($dataFromMaintenanceYaml['custom_message'] ?? '');
         }
 
