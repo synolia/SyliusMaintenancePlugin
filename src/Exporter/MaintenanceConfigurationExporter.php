@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Exporter;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Exception\DumpException;
-use Symfony\Component\Yaml\Yaml;
-use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
@@ -15,56 +11,53 @@ final class MaintenanceConfigurationExporter
 {
     private ConfigurationFileManager $configurationFileManager;
 
-    private Filesystem $filesystem;
-
-    private MaintenanceConfigurationFactory $configurationFactory;
-
-    public function __construct(
-        ConfigurationFileManager $configurationFileManager,
-        Filesystem $filesystem,
-        MaintenanceConfigurationFactory $configurationFactory
-    ) {
+    public function __construct(ConfigurationFileManager $configurationFileManager)
+    {
         $this->configurationFileManager = $configurationFileManager;
-        $this->filesystem = $filesystem;
-        $this->configurationFactory = $configurationFactory;
     }
 
     public function export(MaintenanceConfiguration $configuration): void
     {
-        $this->saveTemplate($configuration->getCustomMessage());
-
-        if ('' === $configuration->getIpAddresses()) {
+        $this->configurationFileManager->deleteMaintenanceFile();
+        if (!$configuration->isEnabled()) {
             return;
         }
+        $dataToExport = [];
 
-        $ipAddresses = $this->configurationFactory->getIpAddressesArray(explode(',', $configuration->getIpAddresses()));
+        $ipAddresses = $configuration->getArrayIpsAddresses();
+        if ([] !== $ipAddresses) {
+            $dataToExport['ips'] = $ipAddresses;
+        }
+        $customMessage = $configuration->getCustomMessage();
+        if ('' !== $customMessage) {
+            $dataToExport['custom_message'] = $customMessage;
+        }
+        $scheduler = $this->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
 
-        $scheduler = $this->configurationFactory->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
-
-        $this->saveYamlConfiguration(array_merge($ipAddresses, $scheduler));
+        $this->configurationFileManager->createMaintenanceFile(array_merge(
+            $scheduler,
+            $dataToExport,
+        ));
     }
 
-    public function saveYamlConfiguration(array $yamlData): void
+    private function getSchedulerArray(?\DateTimeInterface $startDate, ?\DateTimeInterface $endDate): array
     {
-        if ([] === $yamlData) {
-            return;
+        if (null === $startDate && null === $endDate) {
+            return [];
         }
 
-        try {
-            $yaml = Yaml::dump($yamlData);
-        } catch (DumpException $exception) {
-            throw new DumpException('Unable to dump the YAML. ' . $exception->getMessage());
+        $scheduler = ['scheduler' => []];
+
+        if (null !== $startDate) {
+            $scheduler['scheduler'] += ['start_date' => $startDate->format('Y-m-d H:i:s')];
+        }
+        if (null !== $endDate) {
+            $scheduler['scheduler'] += ['end_date' => $endDate->format('Y-m-d H:i:s')];
+        }
+        if ([] === $scheduler['scheduler']) {
+            return [];
         }
 
-        file_put_contents($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_FILE), $yaml);
-    }
-
-    private function saveTemplate(string $templateContent): void
-    {
-        $this->filesystem->remove($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE));
-
-        if ('' !== $templateContent) {
-            $this->filesystem->appendToFile($this->configurationFileManager->getPathtoFile(ConfigurationFileManager::MAINTENANCE_TEMPLATE), $templateContent);
-        }
+        return $scheduler;
     }
 }

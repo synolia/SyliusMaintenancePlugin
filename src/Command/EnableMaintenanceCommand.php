@@ -11,13 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
-use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class EnableMaintenanceCommand extends Command
 {
     protected static $defaultName = 'maintenance:enable';
-
-    private ConfigurationFileManager $configurationFileManager;
 
     private TranslatorInterface $translator;
 
@@ -26,12 +23,10 @@ final class EnableMaintenanceCommand extends Command
     private MaintenanceConfigurationFactory $configurationFactory;
 
     public function __construct(
-        ConfigurationFileManager $fileManager,
         TranslatorInterface $translator,
         MaintenanceConfigurationExporter $maintenanceExporter,
         MaintenanceConfigurationFactory $configurationFactory
     ) {
-        $this->configurationFileManager = $fileManager;
         $this->translator = $translator;
         $this->maintenanceExporter = $maintenanceExporter;
         $this->configurationFactory = $configurationFactory;
@@ -49,14 +44,15 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->translator->trans($this->configurationFileManager->createFile()));
-
+        $maintenanceConfiguration = $this->configurationFactory->get();
+        $maintenanceConfiguration->setEnabled(true);
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
-
         if ([] !== $ipsAddress) {
-            $this->maintenanceExporter->saveYamlConfiguration($this->configurationFactory->getIpAddressesArray($ipsAddress));
+            $maintenanceConfiguration->setIpAddresses(implode(',', $ipsAddress));
         }
+        $this->maintenanceExporter->export($maintenanceConfiguration);
+        $output->writeln($this->translator->trans('maintenance.ui.message_enabled'));
 
         return 0;
     }

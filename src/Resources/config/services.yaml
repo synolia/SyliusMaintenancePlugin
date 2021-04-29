@@ -1,8 +1,14 @@
+parameters:
+  env(SYNOLIA_MAINTENANCE_DIR): ''
+  synolia_maintenance_dir: '%env(resolve:SYNOLIA_MAINTENANCE_DIR)%'
+
 services:
   _defaults:
     autowire: true
     autoconfigure: true
     public: false
+    bind:
+      $maintenanceDirectory: '%synolia_maintenance_dir%'
 
   Synolia\SyliusMaintenancePlugin\:
     resource: '../../*'

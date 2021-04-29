@@ -35,7 +35,8 @@ final class DisableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln($this->translator->trans($this->configurationFileManager->deleteFile()));
+        $this->configurationFileManager->deleteMaintenanceFile();
+        $output->writeln($this->translator->trans('maintenance.ui.message_disabled'));
 
         return 0;
     }
