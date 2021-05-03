@@ -44,6 +44,8 @@ class MaintenanceConfiguration
     public function setIpAddresses(?string $ipAddresses): self
     {
         if (null === $ipAddresses) {
+            $this->ipAddresses = '';
+
             return $this;
         }
         $this->ipAddresses = $ipAddresses;
@@ -71,6 +73,8 @@ class MaintenanceConfiguration
     public function setCustomMessage(?string $customMessage): self
     {
         if (null === $customMessage) {
+            $this->customMessage = '';
+
             return $this;
         }
         $this->customMessage = $customMessage;
@@ -107,20 +111,16 @@ class MaintenanceConfiguration
         if (null === $dataFromMaintenanceYaml) {
             return $this;
         }
-        if ('' !== $this->getIpAddresses() && array_key_exists('ips', $dataFromMaintenanceYaml)) {
+        if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
             $this->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
         }
         if (array_key_exists('scheduler', $dataFromMaintenanceYaml)) {
-            if (null !== $this->getStartDate()) {
-                $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
-                $this->setStartDate(false === $startDate ? null : $startDate);
-            }
-            if (null !== $this->getEndDate()) {
-                $endDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['end_date'] ?? '');
-                $this->setEndDate(false === $endDate ? null : $endDate);
-            }
+            $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
+            $this->setStartDate(false === $startDate ? null : $startDate);
+            $endDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['end_date'] ?? '');
+            $this->setEndDate(false === $endDate ? null : $endDate);
         }
-        if ('' !== $this->getCustomMessage() && array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
+        if (array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
             $this->setCustomMessage($dataFromMaintenanceYaml['custom_message'] ?? '');
         }
 

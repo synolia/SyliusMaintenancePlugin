@@ -50,7 +50,7 @@
     ``` yaml   
     synolia_synolia_maintenance:
         resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yaml"
-        prefix: /admin
+        prefix: '%sylius_admin.path_name%'
     ```
 
 6. Clear cache

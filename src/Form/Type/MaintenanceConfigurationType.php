@@ -31,10 +31,12 @@ final class MaintenanceConfigurationType extends AbstractType
                 'attr' => [
                     'placeholder' => 'maintenance.ui.form.placeholder',
                 ],
+                'empty_data' => '',
                 'required' => false,
             ])
             ->add('customMessage', TextareaType::class, [
                 'label' => 'maintenance.ui.form.custom_message',
+                'empty_data' => '',
                 'required' => false,
             ])
             ->add('endDate', DateTimeType::class, [
