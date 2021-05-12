@@ -6,7 +6,7 @@ use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(__DIR__. '../vendor/sylius-labs/coding-standard/easy-coding-standard.yml');
+    $containerConfigurator->import(__DIR__. '/../vendor/sylius-labs/coding-standard/ecs.php');
 
     $services = $containerConfigurator->services();
 
@@ -14,7 +14,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters = $containerConfigurator->parameters();
 
-    $parameters->set('paths', [__DIR__ . '/src', 'tests']);
+    $parameters->set('paths', [
+        __DIR__ . '/src',
+        __DIR__ . '/tests/PhpUnit',
+    ]);
 
     $parameters->set('exclude_files', ['tests/Application/**']);
 };

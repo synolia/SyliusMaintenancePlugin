@@ -11,7 +11,6 @@ class MaintenanceNotEnableTest extends AbstractMaintenanceTest
         $client = static::createPantherClient();
         $client->request('GET', '/');
 
-        $this->assertPageTitleContains('Boutique Web');
-        $this->assertSelectorTextContains('#footer', 'Powered by Sylius');
+        $this->assertSiteIsUp();
     }
 }
