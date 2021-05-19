@@ -9,7 +9,7 @@ use ReflectionClassConstant;
 use Symfony\Component\Panther\PantherTestCase;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
-abstract class AbstractMaintenanceTest extends PantherTestCase
+abstract class AbstractWebTestCase extends PantherTestCase
 {
     protected string $file;
 

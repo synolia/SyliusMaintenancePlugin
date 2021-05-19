@@ -7,9 +7,9 @@ namespace Tests\Synolia\SyliusMaintenancePlugin\PhpUnit\E2e;
 use Symfony\Component\Yaml\Yaml;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
-class MaintenanceByFileTest extends AbstractMaintenanceTest
+final class WebByFileTestCaseTest extends AbstractWebTestCase
 {
-    public function testMaintenanceFileExiste(): void
+    public function testMaintenanceEnabledWhenFileExist(): void
     {
         \touch($this->file);
         $client = static::createPantherClient();
@@ -98,20 +98,20 @@ class MaintenanceByFileTest extends AbstractMaintenanceTest
     public function generateDates(): \Generator
     {
         // ?\DateTime $startDate, ?\DateTime $endDate, bool $maintenance
-        yield [null, (new \DateTime())->modify('-1 day'), false];// already end
-        yield [null, (new \DateTime())->modify('+1 day'), true];// end tomorrow
-        yield [(new \DateTime())->modify('-10 day'), (new \DateTime())->modify('-1 day'), false];// interval ended
-        yield [(new \DateTime())->modify('+1 day'), (new \DateTime())->modify('+2 day'), false];// interval not stated
-        yield [(new \DateTime())->modify('-10 day'), (new \DateTime())->modify('+1 day'), true];// in date interval
-        yield [(new \DateTime())->modify('+1 day'), null, false];// in the futur
-        yield [(new \DateTime())->modify('-1 day'), null, true];// already start
+        yield 'Maintenance already ended' => [null, (new \DateTime())->modify('-1 day'), false];
+        yield 'Maintenance end tomorrow' => [null, (new \DateTime())->modify('+1 day'), true];
+        yield 'Maintenance interval ended' => [(new \DateTime())->modify('-10 day'), (new \DateTime())->modify('-1 day'), false];
+        yield 'Maintenance interval not stated' => [(new \DateTime())->modify('+1 day'), (new \DateTime())->modify('+2 day'), false];
+        yield 'Maintenance in date interval' => [(new \DateTime())->modify('-10 day'), (new \DateTime())->modify('+1 day'), true];
+        yield 'Maintenance in the futur' => [(new \DateTime())->modify('+1 day'), null, false];
+        yield 'Maintenance already start' => [(new \DateTime())->modify('-1 day'), null, true];
 
-        yield [null, (new \DateTime())->modify('-1 hour'), false];// already end
-        yield [null, (new \DateTime())->modify('+1 hour'), true];// end tomorrow
-        yield [(new \DateTime())->modify('-10 hour'), (new \DateTime())->modify('-1 hour'), false];// interval ended
-        yield [(new \DateTime())->modify('+1 hour'), (new \DateTime())->modify('+2 hour'), false];// interval not stated
-        yield [(new \DateTime())->modify('-10 hour'), (new \DateTime())->modify('+1 hour'), true];// in date interval
-        yield [(new \DateTime())->modify('+1 hour'), null, false];// in the futur
-        yield [(new \DateTime())->modify('-1 hour'), null, true];// already start
+        yield 'Maintenance ended 1 hour ago' => [null, (new \DateTime())->modify('-1 hour'), false];
+        yield 'Maintenance end in 1 hour' => [null, (new \DateTime())->modify('+1 hour'), true];
+        yield 'Maintenance interval in hours ended' => [(new \DateTime())->modify('-10 hour'), (new \DateTime())->modify('-1 hour'), false];
+        yield 'Maintenance interval in hours not stated' => [(new \DateTime())->modify('+1 hour'), (new \DateTime())->modify('+2 hour'), false];
+        yield 'Maintenance in hours interval' => [(new \DateTime())->modify('-10 hour'), (new \DateTime())->modify('+1 hour'), true];
+        yield 'Maintenance in 1 hour' => [(new \DateTime())->modify('+1 hour'), null, false];
+        yield 'Maintenance started 1 hour ago' => [(new \DateTime())->modify('-1 hour'), null, true];
     }
 }

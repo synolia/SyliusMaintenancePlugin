@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PhpUnit\E2e;
 
-class MaintenanceNotEnableTest extends AbstractMaintenanceTest
+final class MaintenanceNotEnabledTest extends AbstractWebTestCase
 {
-    public function testMaintenanceIsNotEnable(): void
+    public function testMaintenanceIsNotEnabled(): void
     {
         $client = static::createPantherClient();
         $client->request('GET', '/');
