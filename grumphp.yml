@@ -20,9 +20,9 @@ grumphp:
             level: ~
             configuration: 'ruleset/phpstan.neon'
         yamllint: ~
-#        ecs:
-#            config: 'ruleset/ecs.php'
-#            no-progress-bar: true
+        ecs:
+            config: 'ruleset/ecs.php'
+            no-progress-bar: true
         twigcs:
             path: 'src/'
             severity: error

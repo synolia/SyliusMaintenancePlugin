@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Synolia\SyliusMaintenancePlugin\PhpUnit\E2e;
 
 use Symfony\Component\Yaml\Yaml;
-use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class WebByFileTestCaseTest extends AbstractWebTestCase
 {
@@ -24,7 +23,7 @@ final class WebByFileTestCaseTest extends AbstractWebTestCase
         \file_put_contents(
             $this->file,
             Yaml::dump([
-                'ips' => $ips
+                'ips' => $ips,
             ])
         );
 
@@ -44,7 +43,7 @@ final class WebByFileTestCaseTest extends AbstractWebTestCase
         \file_put_contents(
             $this->file,
             Yaml::dump([
-                'custom_message' => $message
+                'custom_message' => $message,
             ])
         );
 
@@ -71,7 +70,7 @@ final class WebByFileTestCaseTest extends AbstractWebTestCase
         \file_put_contents(
             $this->file,
             Yaml::dump([
-                'scheduler' => $scheduler
+                'scheduler' => $scheduler,
             ])
         );
 

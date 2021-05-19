@@ -15,8 +15,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
 
     $parameters->set('paths', [
-        __DIR__ . '/src',
-        __DIR__ . '/tests/PhpUnit',
+        __DIR__ . '/../src',
+        __DIR__ . '/../tests/PhpUnit',
     ]);
 
     $parameters->set('exclude_files', ['tests/Application/**']);

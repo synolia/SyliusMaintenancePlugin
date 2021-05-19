@@ -16,7 +16,7 @@ abstract class AbstractWebTestCase extends PantherTestCase
     protected function setUp(): void
     {
         $constant = (new ReflectionClass(ConfigurationFileManager::class))
-        ->getReflectionConstant( 'MAINTENANCE_FILE');
+        ->getReflectionConstant('MAINTENANCE_FILE');
 
         self::assertInstanceOf(ReflectionClassConstant::class, $constant);
 
