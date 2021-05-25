@@ -10,7 +10,6 @@
     },
     "require-dev": {
         "dbrekelmans/bdi": "^0.3.0",
-        "friendsofphp/php-cs-fixer": "^2.19",
         "friendsofsymfony/oauth-server-bundle": "^1.6 || >2.0.0-alpha.0 ^2.0@dev",
         "friendsoftwig/twigcs": "^5.0",
         "lakion/mink-debug-extension": "^2.0.0",
@@ -68,6 +67,6 @@
         "post-create-project-cmd": [
             "php bin/create_node_symlink.php"
         ],
-        "fix-ecs": "ecs check -c ruleset/easy-coding-standard.php --fix --ansi --clear-cache  ."
+        "fix-ecs": "ecs check -c ruleset/ecs.php --fix --ansi --clear-cache  ."
     }
 }
