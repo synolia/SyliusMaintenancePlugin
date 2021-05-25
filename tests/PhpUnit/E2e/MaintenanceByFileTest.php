@@ -6,7 +6,7 @@ namespace Tests\Synolia\SyliusMaintenancePlugin\PhpUnit\E2e;
 
 use Symfony\Component\Yaml\Yaml;
 
-final class WebByFileTestCaseTest extends AbstractWebTestCase
+final class MaintenanceByFileTest extends AbstractWebTestCase
 {
     public function testMaintenanceEnabledWhenFileExist(): void
     {

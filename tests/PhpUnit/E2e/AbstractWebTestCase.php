@@ -15,15 +15,10 @@ abstract class AbstractWebTestCase extends PantherTestCase
 
     protected function setUp(): void
     {
+        /** @var ReflectionClassConstant $constant */
         $constant = (new ReflectionClass(ConfigurationFileManager::class))
-        ->getReflectionConstant('MAINTENANCE_FILE');
-
-        self::assertInstanceOf(ReflectionClassConstant::class, $constant);
-
+            ->getReflectionConstant('MAINTENANCE_FILE');
         $this->file = $constant->getValue();
-
-        self::assertIsString($this->file);
-
         @\unlink($this->file);
     }
 
