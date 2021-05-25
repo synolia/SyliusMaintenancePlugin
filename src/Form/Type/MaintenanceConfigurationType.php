@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 
 final class MaintenanceConfigurationType extends AbstractType
@@ -45,20 +44,16 @@ final class MaintenanceConfigurationType extends AbstractType
                 'time_widget' => 'single_text',
                 'required' => false,
                 'constraints' => [
-                    new Date(),
                     new GreaterThan([
                         'propertyPath' => 'parent.all[startDate].data',
                     ]),
                 ],
             ])
-            ->add('startDate', DatetimeType::class, [
+            ->add('startDate', DateTimeType::class, [
                 'label' => 'maintenance.ui.form.start_date',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
                 'required' => false,
-                'constraints' => [
-                    new Date(),
-                ],
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => ['class' => 'ui icon primary button'],

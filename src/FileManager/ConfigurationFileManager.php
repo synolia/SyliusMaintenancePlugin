@@ -17,12 +17,9 @@ final class ConfigurationFileManager
 
     private string $maintenanceDirectory;
 
-    private string $projectDir;
-
     public function __construct(Filesystem $filesystem, KernelInterface $kernel, string $maintenanceDirectory)
     {
         $this->filesystem = $filesystem;
-        $this->projectDir = $kernel->getProjectDir();
         $this->maintenanceDirectory = $kernel->getProjectDir() . '/' . $maintenanceDirectory;
     }
 

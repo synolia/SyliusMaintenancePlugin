@@ -21,11 +21,7 @@ grumphp:
             configuration: 'ruleset/phpstan.neon'
         yamllint: ~
         ecs:
-            config: 'ruleset/easy-coding-standard.php'
-            paths:
-                - src
-                - tests/Behat
-                - tests/PHPUnit
+            config: 'ruleset/ecs.php'
             no-progress-bar: true
         twigcs:
             path: 'src/'
