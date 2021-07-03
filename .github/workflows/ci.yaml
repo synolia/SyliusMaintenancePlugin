@@ -76,15 +76,19 @@ jobs:
               if: always() && steps.end-of-setup.outcome == 'success'
 
     sylius:
-        name: PHPUnit (PHP ${{ matrix.php }} Sylius ${{ matrix.sylius }})
+        name: "Sylius ${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}"
         runs-on: ubuntu-18.04
         strategy:
             fail-fast: false
             matrix:
                 php: [7.4]
-                sylius: [1.8.9, 1.9.1]
-                symfony: [4.4.*]
+                sylius: [~1.9.0, ~1.10.0]
+                symfony: [^4.4, ^5.2]
                 node: [10.x]
+                exclude:
+                    -
+                        sylius: ~1.8.0
+                        symfony: ^5.2
 
         env:
             APP_ENV: test
@@ -194,6 +198,14 @@ jobs:
               working-directory: ./sylius
               run: |
                   php bin/console c:c
+
+            - name: PHPUnit - Configure
+              working-directory: ./sylius
+              run: |
+                  cp vendor/${{ env.package-name }}/phpunit.xml.dist phpunit.xml
+                  sed -i "s#tests/Application/config/bootstrap.php#config/bootstrap.php#g" phpunit.xml
+                  sed -i "s#<directory>tests</directory>#<directory>./vendor/${{ env.package-name }}/tests/PhpUnit</directory>#g" phpunit.xml
+                  sed -i "s#/tests/Application/Kernel.php#src/Kernel.php#g" phpunit.xml
 
             - name: PHPunit - Run
               working-directory: ./sylius
