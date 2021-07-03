@@ -151,6 +151,10 @@ jobs:
               working-directory: ./sylius
               run: composer req "${{ env.package-name }}:*" --prefer-source --no-scripts
 
+            - name: Add Admin API Bundle
+              working-directory: ./sylius
+              run: composer require sylius/admin-api-bundle --no-update --no-scripts --no-interaction
+
             - name: Sylius - Update dependencies # need to update sylius version
               working-directory: ./sylius
               run: |
@@ -192,6 +196,7 @@ jobs:
                   php bin/console c:c
 
             - name: PHPunit - Run
+              working-directory: ./sylius
               run: vendor/bin/phpunit
 
         services:
