@@ -6,7 +6,7 @@
     "license": "EUPL-1.2",
     "require": {
         "php": "^7.4",
-        "sylius/sylius": "~1.8.0 || ~1.9.0"
+        "sylius/sylius": "~1.9.0 || ~1.10.0"
     },
     "require-dev": {
         "dbrekelmans/bdi": "^0.3.0",
@@ -46,16 +46,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Synolia\\SyliusMaintenancePlugin\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "Synolia\\SyliusMaintenancePlugin\\": "src/",
             "Tests\\Synolia\\SyliusMaintenancePlugin\\": "tests/"
-        },
-        "classmap": [
-            "tests/Application/Kernel.php"
-        ]
+        }
     },
     "scripts": {
         "post-install-cmd": [
@@ -67,6 +60,6 @@
         "post-create-project-cmd": [
             "php bin/create_node_symlink.php"
         ],
-        "fix-ecs": "ecs check -c ruleset/ecs.php --fix --ansi --clear-cache  ."
+        "fix-ecs": "ecs check -c ruleset/ecs.php --fix --ansi --clear-cache ."
     }
 }
