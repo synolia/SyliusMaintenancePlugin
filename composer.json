@@ -46,16 +46,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Synolia\\SyliusMaintenancePlugin\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "Synolia\\SyliusMaintenancePlugin\\": "src/",
             "Tests\\Synolia\\SyliusMaintenancePlugin\\": "tests/"
-        },
-        "classmap": [
-            "tests/Application/Kernel.php"
-        ]
+        }
     },
     "scripts": {
         "post-install-cmd": [
@@ -67,6 +60,6 @@
         "post-create-project-cmd": [
             "php bin/create_node_symlink.php"
         ],
-        "fix-ecs": "ecs check -c ruleset/ecs.php --fix --ansi --clear-cache  ."
+        "fix-ecs": "ecs check -c ruleset/ecs.php --fix --ansi --clear-cache ."
     }
 }
