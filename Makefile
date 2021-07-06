@@ -61,6 +61,9 @@ phpunit-configure:
 phpunit-run:
 	cd ${TEST_DIRECTORY} && ./vendor/bin/phpunit
 
+grumphp:
+	vendor/bin/grumphp run
+
 help: SHELL=/bin/bash
 help: ## Dislay this help
 	@IFS=$$'\n'; for line in `grep -h -E '^[a-zA-Z_#-]+:?.*?##.*$$' $(MAKEFILE_LIST)`; do if [ "$${line:0:2}" = "##" ]; then \
