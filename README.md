@@ -1,3 +1,8 @@
+[![License](https://img.shields.io/packagist/l/synolia/sylius-maintenance-plugin.svg)](https://github.com/synolia/SyliusMaintenancePlugin/blob/master/LICENSE)
+[![CI](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/ci.yaml)
+[![Version](https://img.shields.io/packagist/v/synolia/sylius-maintenance-plugin.svg)](https://packagist.org/packages/synolia/sylius-maintenance-plugin)
+[![Total Downloads](https://poser.pugx.org/synolia/sylius-maintenance-plugin/downloads)](https://packagist.org/packages/synolia/sylius-maintenance-plugin)
+
 <p align="center">
     <a href="https://sylius.com" target="_blank">
         <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
@@ -5,7 +10,6 @@
 </p>
 
 <h1 align="center">Sylius Maintenance Plugin</h1>
-
 
 ## Features
 
