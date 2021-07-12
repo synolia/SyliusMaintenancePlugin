@@ -1,6 +1,6 @@
-[![License](https://img.shields.io/packagist/l/synolia/sylius-maintenance-plugin.svg)](https://github.com/synolia/SyliusMaintenancePlugin/blob/master/LICENSE)
+[![License](https://badgen.net/github/license/synolia/SyliusMaintenancePlugin)](https://github.com/synolia/SyliusMaintenancePlugin/blob/master/LICENSE)
 [![CI](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/ci.yaml)
-[![Version](https://img.shields.io/packagist/v/synolia/sylius-maintenance-plugin.svg)](https://packagist.org/packages/synolia/sylius-maintenance-plugin)
+[![Version](https://badgen.net/github/tag/synolia/SyliusMaintenancePlugin?label=Version)](https://packagist.org/packages/synolia/sylius-maintenance-plugin)
 [![Total Downloads](https://poser.pugx.org/synolia/sylius-maintenance-plugin/downloads)](https://packagist.org/packages/synolia/sylius-maintenance-plugin)
 
 <p align="center">
@@ -54,7 +54,7 @@
     ``` yaml   
     synolia_synolia_maintenance:
         resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yaml"
-        prefix: '%sylius_admin.path_name%'
+        prefix: '/%sylius_admin.path_name%'
     ```
 
 6. Clear cache
@@ -62,17 +62,17 @@
     ``` shell
     php bin/console cache:clear
     ```
-   
+
 ## Usage
 
 - To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project.
 - If you want to allow access for some Ips, please add these Ip into **maintenance.yaml**   
    For example :   
-    
+
     ``` yaml   
     ips: [172.16.254.1, 255.255.255.255, 192.0.0.255]
     ```
-  
+
 ### You can turn your website under maintenance by console commands :
 
   1. Enable the plugin
@@ -90,7 +90,7 @@
       ``` shell
       php bin/console maintenance:disable
       ```
-     
+
 ### You can also turn your website under maintenance in Back Office :     
 
 - Enable/disable the plugin
