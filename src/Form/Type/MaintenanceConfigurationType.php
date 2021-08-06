@@ -55,10 +55,6 @@ final class MaintenanceConfigurationType extends AbstractType
                 'time_widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'ui icon primary button'],
-                'label' => 'maintenance.ui.form.validate',
-            ])
         ;
     }
 }

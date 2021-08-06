@@ -5,7 +5,6 @@ maintenance:
         form:
             enabled: Enabled ?
             ip: Ip addresses (separated with a comma, without space)
-            validate: Validate
             placeholder: 'Add one or multiple ips addresses separated with a comma. For example: 255.255.255.255,192.0.0.255'
             custom_message: Custom Message
             start_date: Starts at

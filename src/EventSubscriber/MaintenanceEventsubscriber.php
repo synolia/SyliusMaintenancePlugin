@@ -45,6 +45,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
     public function handle(RequestEvent $event): void
     {
         $getRequestUri = $event->getRequest()->getRequestUri();
+        /** @var string $adminPrefix */
         $adminPrefix = $this->params->get('sylius_admin.path_name');
         $ipUser = $event->getRequest()->getClientIp();
         $maintenanceConfiguration = $this->configurationFactory->get();

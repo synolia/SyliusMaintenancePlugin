@@ -8,8 +8,8 @@
 
 {% block content %}
 	{{ headers.default('maintenance.ui.title'|trans, 'cogs') }}
-	{{ form_start(form, {'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
 	<div class="ui segment">
+		{{ form_start(form, {'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
 		{{ form_row(form.enabled) }}
 		{{ form_row(form.ipAddresses) }}
 		{{ form_row(form.customMessage) }}
@@ -17,6 +17,7 @@
 			{{ form_row(form.startDate) }}
 			{{ form_row(form.endDate) }}
 		</div>
+		{% include '@SyliusUi/Form/Buttons/_update.html.twig' %}
+		{{ form_end(form) }}
 	</div>
-	{{ form_end(form) }}
 {% endblock %}

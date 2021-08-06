@@ -5,7 +5,6 @@ maintenance:
         form:
             enabled: Activé ?
             ip: Adresses Ip (séparées par une virgule, sans espace)
-            validate: Valider
             placeholder: 'Ajouter une ou plusieurs adresses ip séparées par une virgule. Par exemple: 255.255.255.255,192.0.0.255'
             custom_message: Message personnalisé
             start_date: Commence le
