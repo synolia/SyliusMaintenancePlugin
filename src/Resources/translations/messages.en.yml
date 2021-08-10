@@ -2,6 +2,7 @@ maintenance:
     ui:
         message: The website is under maintenance
         title: Maintenance
+        subtitle: Manage maintenance mode on your shop
         form:
             enabled: Enabled ?
             ip: Ip addresses (separated with a comma, without space)
