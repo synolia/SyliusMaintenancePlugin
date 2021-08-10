@@ -17,3 +17,4 @@ maintenance:
         message_error_ips: An error occurred while adding ips addresses. Add one or multiple ips addresses separated with a comma.
         message_disabled_404: The plugin is disabled.
         message_success_message: The custom message was successfully created.
+        message_end_date_in_the_past: The end date is in the past, maintenance has been deactivated.

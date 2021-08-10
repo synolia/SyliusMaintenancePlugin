@@ -17,3 +17,4 @@ maintenance:
         message_error_ips: Une erreur s'est produite lors de l'ajout d'adresses ip. Ajouter une ou plusieurs adresses ip séparées par une virgule.
         message_disabled_404: Le plugin est désactivé.
         message_success_message: Le message personnalisé a été créé avec succès.
+        message_end_date_in_the_past: La date de fin est dans le passé, la maintenance a été désactivée.
