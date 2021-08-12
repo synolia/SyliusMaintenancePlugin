@@ -7,7 +7,6 @@ namespace Synolia\SyliusMaintenancePlugin\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,10 +53,6 @@ final class MaintenanceConfigurationType extends AbstractType
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
                 'required' => false,
-            ])
-            ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'ui icon primary button'],
-                'label' => 'maintenance.ui.form.validate',
             ])
         ;
     }

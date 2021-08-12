@@ -2,7 +2,7 @@
 SHELL=/bin/bash
 COMPOSER_ROOT=composer
 TEST_DIRECTORY=tests/Application
-CONSOLE=cd tests/Application && symfony console
+CONSOLE=cd tests/Application && php bin/console
 COMPOSER=cd tests/Application && composer
 YARN=cd tests/Application && yarn
 
