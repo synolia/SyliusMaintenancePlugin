@@ -2,6 +2,7 @@ maintenance:
     ui:
         message: Site en maintenance
         title: Maintenance
+        subtitle: Administration du mode maintenance de votre boutique
         form:
             enabled: Activé ?
             ip: Adresses Ip (séparées par une virgule, sans espace)
