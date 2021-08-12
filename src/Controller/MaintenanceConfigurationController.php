@@ -48,6 +48,11 @@ final class MaintenanceConfigurationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (null !== $maintenanceConfiguration->getEndDate() && $maintenanceConfiguration->getEndDate() < (new \DateTime())) {
+                $maintenanceConfiguration->setEnabled(false);
+                $this->flashBag->add('error', $this->translator->trans('maintenance.ui.message_end_date_in_the_past'));
+            }
+
             $this->maintenanceExporter->export($maintenanceConfiguration);
             $message = 'maintenance.ui.message_disabled';
             if ($maintenanceConfiguration->isEnabled()) {
