@@ -18,3 +18,4 @@ maintenance:
         message_disabled_404: Le plugin est désactivé.
         message_success_message: Le message personnalisé a été créé avec succès.
         message_end_date_in_the_past: La date de fin est dans le passé, la maintenance a été désactivée.
+        message_info_admin: Le site est actuellement en maintenance.
