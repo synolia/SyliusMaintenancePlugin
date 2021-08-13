@@ -6,7 +6,9 @@ namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
@@ -15,6 +17,10 @@ use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
+    private RequestStack $requestStack;
+
+    private FlashBagInterface $flashBag;
+
     private TranslatorInterface $translator;
 
     private ParameterBagInterface $params;
@@ -27,12 +33,16 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         TranslatorInterface $translator,
         ParameterBagInterface $params,
         Environment $twig,
-        MaintenanceConfigurationFactory $configurationFactory
+        MaintenanceConfigurationFactory $configurationFactory,
+        FlashBagInterface $flashBag,
+        RequestStack $requestStack
     ) {
         $this->translator = $translator;
         $this->params = $params;
         $this->twig = $twig;
         $this->configurationFactory = $configurationFactory;
+        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents(): array
@@ -67,6 +77,10 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         }
 
         if (false !== mb_strpos($getRequestUri, $adminPrefix, 1)) {
+            if ($this->requestStack->getMainRequest() === $this->requestStack->getCurrentRequest()) {
+                $this->flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
+            }
+
             return;
         }
 
