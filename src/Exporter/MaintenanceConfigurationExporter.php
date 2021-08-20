@@ -32,6 +32,10 @@ final class MaintenanceConfigurationExporter
         if ('' !== $customMessage) {
             $dataToExport['custom_message'] = $customMessage;
         }
+        $channels = $configuration->getChannels();
+        if (0 !== count($channels)) {
+            $dataToExport['channels'] = $channels;
+        }
         $scheduler = $this->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
 
         $this->configurationFileManager->createMaintenanceFile(array_merge(

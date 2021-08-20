@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Form\Type;
 
+use Doctrine\Common\Collections\Collection;
+use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
+use Sylius\Component\Channel\Model\ChannelInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -14,6 +19,13 @@ use Symfony\Component\Validator\Constraints\GreaterThan;
 
 final class MaintenanceConfigurationType extends AbstractType
 {
+    private ChannelRepositoryInterface $channelRepository;
+
+    public function __construct(ChannelRepositoryInterface $channelRepository)
+    {
+        $this->channelRepository = $channelRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -55,5 +67,32 @@ final class MaintenanceConfigurationType extends AbstractType
                 'required' => false,
             ])
         ;
+
+        if ($this->channelRepository->count([]) > 1) {
+            $builder->add(
+                'channels',
+                ChannelChoiceType::class,
+                [
+                    'multiple' => true,
+                    'expanded' => true,
+                ]
+            );
+
+            $builder->get('channels')
+                ->addModelTransformer(new CallbackTransformer(
+                    function (array $codesToChannels): array {
+                        return \array_map(
+                            function (string $channelCode): ?ChannelInterface {return $this->channelRepository->findOneByCode($channelCode); },
+                            $codesToChannels
+                        );
+                    },
+                    function (Collection $channelsToCodes): array {
+                        return \array_map(
+                            function (ChannelInterface $channel): ?string {return $channel->getCode(); },
+                            $channelsToCodes->toArray()
+                        );
+                    }
+                ));
+        }
     }
 }
