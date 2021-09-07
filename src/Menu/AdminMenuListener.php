@@ -22,7 +22,7 @@ final class AdminMenuListener
             ])
             ->setAttribute('type', 'link')
             ->setLabel('maintenance.ui.title')
-            ->setLabelAttribute('icon', 'cogs')
+            ->setLabelAttribute('icon', 'toggle off')
         ;
     }
 }
