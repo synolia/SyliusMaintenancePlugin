@@ -44,7 +44,7 @@ abstract class AbstractWebTestCase extends WebTestCase
 
     protected function assertSiteIsInMaintenance(string $message = 'The website is under maintenance'): void
     {
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(503);
         self::assertSelectorTextContains('body', $message);
     }
 }
