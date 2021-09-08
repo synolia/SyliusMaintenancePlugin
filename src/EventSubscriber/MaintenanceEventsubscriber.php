@@ -92,7 +92,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
             ]);
         }
 
-        $event->setResponse(new Response($responseContent, 200));
+        $event->setResponse(new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE));
     }
 
     private function isActuallyScheduledMaintenance(MaintenanceConfiguration $maintenanceConfiguration): bool
