@@ -19,3 +19,8 @@ maintenance:
         message_success_message: The custom message was successfully created.
         message_end_date_in_the_past: The end date is in the past, maintenance has been deactivated.
         message_info_admin: The website is currently under maintenance.
+sylius_plus:
+    rbac:
+        parent:
+            plugin_synolia_maintenances: Maintenance
+        sylius_admin_maintenance_configuration: Maintenance Configuration
