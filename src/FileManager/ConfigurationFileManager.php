@@ -20,7 +20,7 @@ final class ConfigurationFileManager
     public function __construct(Filesystem $filesystem, KernelInterface $kernel, string $maintenanceDirectory)
     {
         $this->filesystem = $filesystem;
-        $this->maintenanceDirectory = $kernel->getProjectDir() . '/' . $maintenanceDirectory;
+        $this->maintenanceDirectory = $maintenanceDirectory;
     }
 
     public function hasMaintenanceFile(): bool
