@@ -32,7 +32,8 @@ sylius: sylius-standard install-plugin restrict-symfony-version install-sylius
 .PHONY: sylius
 
 sylius-standard:
-	${COMPOSER_ROOT} create-project sylius/sylius-standard ${TEST_DIRECTORY} "~${SYLIUS_VERSION}"
+	${COMPOSER_ROOT} create-project sylius/sylius-standard ${TEST_DIRECTORY} "~${SYLIUS_VERSION}" --no-install --no-scripts
+	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}"
 
 install-plugin:
 	${COMPOSER} config repositories.plugin '{"type": "path", "url": "../../"}'
