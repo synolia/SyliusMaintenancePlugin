@@ -6,7 +6,7 @@
     "license": "EUPL-1.2",
     "require": {
         "php": "^7.4 || ^8.0",
-        "sylius/sylius": "~1.9.0 || ~1.10.0"
+        "sylius/sylius": "^1.9"
     },
     "require-dev": {
         "dbrekelmans/bdi": "^0.3.0",
@@ -26,12 +26,12 @@
         "sensiolabs/security-checker": "^6.0",
         "slevomat/coding-standard": "^6.3.2",
         "sylius-labs/coding-standard": "^4.0",
-        "symfony/browser-kit": "^4.4 || ^5.2",
-        "symfony/debug-bundle": "^4.4 || ^5.2",
-        "symfony/dotenv": "^4.4 || ^5.2",
-        "symfony/intl": "^4.4 || ^5.2",
+        "symfony/browser-kit": "^4.4 || ^5.4",
+        "symfony/debug-bundle": "^4.4 || ^5.4",
+        "symfony/dotenv": "^4.4 || ^5.4",
+        "symfony/intl": "^4.4 || ^5.4",
         "symfony/panther": "^1.0",
-        "symfony/web-profiler-bundle": "^4.4 || ^5.2",
+        "symfony/web-profiler-bundle": "^4.4 || ^5.4",
         "vimeo/psalm": "4.4.1"
     },
     "config": {
@@ -42,7 +42,7 @@
             "dev-master": "1.9-dev"
         },
         "symfony": {
-            "require": "^4.3 || ^5.1"
+            "require": "^4.4 || ^5.4"
         }
     },
     "autoload": {
