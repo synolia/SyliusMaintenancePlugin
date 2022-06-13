@@ -4,55 +4,34 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 
-use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
-use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
+use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
-    private ChannelRepositoryInterface $channelRepository;
-
-    private ChannelContextInterface $channelContext;
-
-    private RequestStack $requestStack;
-
-    private FlashBagInterface $flashBag;
-
     private TranslatorInterface $translator;
-
-    private ParameterBagInterface $params;
 
     private Environment $twig;
 
     private MaintenanceConfigurationFactory $configurationFactory;
 
+    private IsMaintenanceVoterInterface $isMaintenanceVoter;
+
     public function __construct(
         TranslatorInterface $translator,
-        ParameterBagInterface $params,
         Environment $twig,
         MaintenanceConfigurationFactory $configurationFactory,
-        ChannelContextInterface $channelContext,
-        ChannelRepositoryInterface $channelRepository,
-        FlashBagInterface $flashBag,
-        RequestStack $requestStack
+        IsMaintenanceVoterInterface $isMaintenanceVoter
     ) {
         $this->translator = $translator;
-        $this->params = $params;
         $this->twig = $twig;
         $this->configurationFactory = $configurationFactory;
-        $this->channelContext = $channelContext;
-        $this->channelRepository = $channelRepository;
-        $this->flashBag = $flashBag;
-        $this->requestStack = $requestStack;
+        $this->isMaintenanceVoter = $isMaintenanceVoter;
     }
 
     public static function getSubscribedEvents(): array
@@ -64,81 +43,20 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
     public function handle(RequestEvent $event): void
     {
-        if (!$this->showMaintenance($event)) {
+        $configuration = $this->configurationFactory->get();
+
+        if (!$this->isMaintenanceVoter->isMaintenance($configuration, $event->getRequest())) {
             return;
         }
 
-        $maintenanceConfiguration = $this->configurationFactory->get();
         $responseContent = $this->translator->trans('maintenance.ui.message');
 
-        if ('' !== $maintenanceConfiguration->getCustomMessage()) {
+        if ('' !== $configuration->getCustomMessage()) {
             $responseContent = $this->twig->render('@SynoliaSyliusMaintenancePlugin/maintenance.html.twig', [
-                'custom_message' => $maintenanceConfiguration->getCustomMessage(),
+                'custom_message' => $configuration->getCustomMessage(),
             ]);
         }
 
         $event->setResponse(new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE));
-    }
-
-    private function isActuallyScheduledMaintenance(MaintenanceConfiguration $maintenanceConfiguration): bool
-    {
-        $now = new \DateTime();
-        $startDate = $maintenanceConfiguration->getStartDate();
-        $endDate = $maintenanceConfiguration->getEndDate();
-        // Now is between startDate and endDate
-        if ($startDate !== null && $endDate !== null && ($now >= $startDate) && ($now <= $endDate)) {
-            return true;
-        }
-        // No enddate provided, now is greater than startDate
-        if ($startDate !== null && $endDate === null && ($now >= $startDate)) {
-            return true;
-        }
-        // No startdate provided, now is before than enddate
-        if ($endDate !== null && $startDate === null && ($now <= $endDate)) {
-            return true;
-        }
-        // No schedule date
-        return false;
-    }
-
-    private function showMaintenance(RequestEvent $event): bool
-    {
-        $getRequestUri = $event->getRequest()->getRequestUri();
-        /** @var string $adminPrefix */
-        $adminPrefix = $this->params->get('sylius_admin.path_name');
-        $maintenanceConfiguration = $this->configurationFactory->get();
-
-        $ipUser = $event->getRequest()->getClientIp();
-        if (!$maintenanceConfiguration->isEnabled()) {
-            return false;
-        }
-
-        $authorizedIps = $maintenanceConfiguration->getArrayIpsAddresses();
-        if (in_array($ipUser, $authorizedIps, true)) {
-            return false;
-        }
-
-        if (false === $this->isActuallyScheduledMaintenance($maintenanceConfiguration) &&
-            (null !== $maintenanceConfiguration->getStartDate() ||
-                null !== $maintenanceConfiguration->getEndDate())
-        ) {
-            return false;
-        }
-
-        if (false !== mb_strpos($getRequestUri, $adminPrefix, 1)) {
-            if ($this->requestStack->getMainRequest() === $this->requestStack->getCurrentRequest()) {
-                $this->flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
-            }
-
-            return false;
-        }
-
-        if ($this->channelRepository->count([]) > 1) {
-            if (!\in_array($this->channelContext->getChannel()->getCode(), $maintenanceConfiguration->getChannels(), true)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
