@@ -63,17 +63,11 @@ class AdminChecker implements IsMaintenanceCheckerInterface
     private function getMainRequest(): ?Request
     {
         if (method_exists($this->requestStack, 'getMainRequest')) {
-            /** @var Request|null $request */
-            $request = $this->requestStack->getMainRequest();
-
-            return $request;
+            return$this->requestStack->getMainRequest();
         }
 
         if (method_exists($this->requestStack, 'getMasterRequest')) {
-            /** @var Request|null $request */
-            $request = $this->requestStack->getMasterRequest();
-
-            return $request;
+            return $this->requestStack->getMasterRequest();
         }
 
         throw new LogicException(sprintf(
