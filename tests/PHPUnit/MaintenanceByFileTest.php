@@ -16,6 +16,16 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
         $this->assertSiteIsInMaintenance();
     }
 
+    public function testMaintenanceNotAffectAdminArea(): void
+    {
+        \touch($this->file);
+        self::$client->request('GET', '/admin/');
+
+        self::assertResponseIsSuccessful();
+        self::assertPageTitleContains('Sylius | Administration panel login');
+        self::assertSelectorTextContains('.form', 'Login');
+    }
+
     /** @dataProvider listOfIps */
     public function testMaintenanceFileWithIp(array $ips, bool $maintenance): void
     {
