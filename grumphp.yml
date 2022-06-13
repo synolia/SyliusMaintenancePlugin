@@ -19,7 +19,8 @@ grumphp:
         phpstan:
             level: ~
             configuration: 'ruleset/phpstan.neon'
-        yamllint: ~
+        yamllint:
+            parse_custom_tags: true
         ecs:
             config: 'ruleset/ecs.php'
             no-progress-bar: true
