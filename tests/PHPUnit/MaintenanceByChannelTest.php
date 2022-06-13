@@ -11,8 +11,10 @@ use Symfony\Component\Yaml\Yaml;
 
 final class MaintenanceByChannelTest extends AbstractWebTestCase
 {
-    public function testMaintenanceWithChannel(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         /** @var ChannelRepositoryInterface $channelRepository */
         $channelRepository = $this->manager->getRepository(ChannelInterface::class);
         /** @var DefaultChannelFactory $channelFactory */
@@ -28,7 +30,24 @@ final class MaintenanceByChannelTest extends AbstractWebTestCase
         $this->manager->persist($maintenanceChannel);
 
         $this->manager->flush();
+    }
 
+    protected function tearDown(): void
+    {
+        /** @var ChannelRepositoryInterface $channelRepository */
+        $channelRepository = $this->manager->getRepository(ChannelInterface::class);
+
+        // remove maintenance channel
+        $maintenanceChannel = $channelRepository->findOneByCode('maintenance');
+        $this->manager->remove($maintenanceChannel);
+
+        $this->manager->flush();
+
+        parent::tearDown();
+    }
+
+    public function testMaintenanceWithChannel(): void
+    {
         \file_put_contents(
             $this->file,
             Yaml::dump([
@@ -41,11 +60,5 @@ final class MaintenanceByChannelTest extends AbstractWebTestCase
 
         self::$client->request('GET', 'http://maintenance.localhost');
         $this->assertSiteIsInMaintenance();
-
-        // remove maintenance channel
-        $maintenanceChannel = $channelRepository->findOneByCode('maintenance');
-        $this->manager->remove($maintenanceChannel);
-
-        $this->manager->flush();
     }
 }
