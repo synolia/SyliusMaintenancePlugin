@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Checker;
 
+use LogicException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -46,7 +47,7 @@ class AdminChecker implements IsMaintenanceCheckerInterface
         $adminPrefix = $this->params->get('sylius_admin.path_name');
 
         if (false !== mb_strpos($getRequestUri, $adminPrefix, 1)) {
-            if ($this->requestStack->getMainRequest() === $this->requestStack->getCurrentRequest()) {
+            if ($this->getMainRequest() === $this->requestStack->getCurrentRequest()) {
                 $this->flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
             }
 
@@ -54,5 +55,31 @@ class AdminChecker implements IsMaintenanceCheckerInterface
         }
 
         return IsMaintenanceVoterInterface::ACCESS_DENIED;
+    }
+
+    /**
+     * @TODO Remove this after drop support of Symfony 4.4
+     */
+    private function getMainRequest(): ?Request
+    {
+        if (method_exists($this->requestStack, 'getMainRequest')) {
+            /** @var Request|null $request */
+            $request = $this->requestStack->getMainRequest();
+
+            return $request;
+        }
+
+        if (method_exists($this->requestStack, 'getMasterRequest')) {
+            /** @var Request|null $request */
+            $request = $this->requestStack->getMasterRequest();
+
+            return $request;
+        }
+
+        throw new LogicException(sprintf(
+            'Neither the method %s::getMainRequest nor the method %s::getMasterRequest exists on the request stack object. This should not be possible.',
+            RequestStack::class,
+            RequestStack::class
+        ));
     }
 }
