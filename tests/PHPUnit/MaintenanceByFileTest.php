@@ -11,7 +11,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
     public function testMaintenanceEnabledWhenFileExist(): void
     {
         \touch($this->file);
-        self::$client->request('GET', '/');
+        self::$client->request('GET', '/en_US/');
 
         $this->assertSiteIsInMaintenance();
     }
@@ -19,7 +19,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
     public function testMaintenanceNotAffectAdminArea(): void
     {
         \touch($this->file);
-        self::$client->request('GET', '/admin/');
+        self::$client->request('GET', '/admin/login');
 
         self::assertResponseIsSuccessful();
         self::assertPageTitleContains('Sylius | Administration panel login');
@@ -36,7 +36,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
             ])
         );
 
-        self::$client->request('GET', '/');
+        self::$client->request('GET', '/en_US/');
 
         if ($maintenance) {
             $this->assertSiteIsInMaintenance();
@@ -55,7 +55,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
             ])
         );
 
-        self::$client->request('GET', '/');
+        self::$client->request('GET', '/en_US/');
 
         $this->assertSiteIsInMaintenance($message);
     }
@@ -81,7 +81,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
             ])
         );
 
-        self::$client->request('GET', '/');
+        self::$client->request('GET', '/en_US/');
 
         if ($maintenance) {
             $this->assertSiteIsInMaintenance();

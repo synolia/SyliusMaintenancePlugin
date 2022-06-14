@@ -17,10 +17,9 @@ class IpChecker implements IsMaintenanceCheckerInterface
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
-        $ipUser = $request->getClientIp();
         $authorizedIps = $configuration->getArrayIpsAddresses();
 
-        if (in_array($ipUser, $authorizedIps, true)) {
+        if (in_array($request->getClientIp(), $authorizedIps, true)) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
 
