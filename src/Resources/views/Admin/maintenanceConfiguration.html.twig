@@ -26,7 +26,12 @@
 	</div>
 	<div class="ui segment">
 		{{ form_start(form, {'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
-		{{ form_row(form.enabled) }}
+		<div class="two fields">
+			{{ form_row(form.enabled) }}
+			{% if form.channels is defined %}
+				{{ form_row(form.channels) }}
+			{% endif %}
+		</div>
 		{{ form_row(form.ipAddresses) }}
 		{{ form_row(form.customMessage) }}
 		<div class="two fields">

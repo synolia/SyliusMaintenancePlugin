@@ -16,6 +16,8 @@ class MaintenanceConfiguration
 
     private ?\DateTime $endDate;
 
+    private array $channels = [];
+
     public function __construct()
     {
         $this->startDate = null;
@@ -114,6 +116,9 @@ class MaintenanceConfiguration
         if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
             $this->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
         }
+        if (array_key_exists('channels', $dataFromMaintenanceYaml)) {
+            $this->setChannels($dataFromMaintenanceYaml['channels']);
+        }
         if (array_key_exists('scheduler', $dataFromMaintenanceYaml)) {
             $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
             $this->setStartDate(false === $startDate ? null : $startDate);
@@ -123,6 +128,18 @@ class MaintenanceConfiguration
         if (array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
             $this->setCustomMessage($dataFromMaintenanceYaml['custom_message'] ?? '');
         }
+
+        return $this;
+    }
+
+    public function getChannels(): array
+    {
+        return $this->channels;
+    }
+
+    public function setChannels(array $channels): self
+    {
+        $this->channels = $channels;
 
         return $this;
     }

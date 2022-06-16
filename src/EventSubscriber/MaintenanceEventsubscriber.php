@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -17,6 +19,10 @@ use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
+    private ChannelRepositoryInterface $channelRepository;
+
+    private ChannelContextInterface $channelContext;
+
     private RequestStack $requestStack;
 
     private FlashBagInterface $flashBag;
@@ -34,6 +40,8 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         ParameterBagInterface $params,
         Environment $twig,
         MaintenanceConfigurationFactory $configurationFactory,
+        ChannelContextInterface $channelContext,
+        ChannelRepositoryInterface $channelRepository,
         FlashBagInterface $flashBag,
         RequestStack $requestStack
     ) {
@@ -41,6 +49,8 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         $this->params = $params;
         $this->twig = $twig;
         $this->configurationFactory = $configurationFactory;
+        $this->channelContext = $channelContext;
+        $this->channelRepository = $channelRepository;
         $this->flashBag = $flashBag;
         $this->requestStack = $requestStack;
     }
@@ -54,36 +64,11 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
     public function handle(RequestEvent $event): void
     {
-        $getRequestUri = $event->getRequest()->getRequestUri();
-        /** @var string $adminPrefix */
-        $adminPrefix = $this->params->get('sylius_admin.path_name');
-        $ipUser = $event->getRequest()->getClientIp();
+        if (!$this->showMaintenance($event)) {
+            return;
+        }
+
         $maintenanceConfiguration = $this->configurationFactory->get();
-
-        if (!$maintenanceConfiguration->isEnabled()) {
-            return;
-        }
-
-        $authorizedIps = $maintenanceConfiguration->getArrayIpsAddresses();
-        if (in_array($ipUser, $authorizedIps, true)) {
-            return;
-        }
-
-        if (false === $this->isActuallyScheduledMaintenance($maintenanceConfiguration) &&
-            (null !== $maintenanceConfiguration->getStartDate() ||
-             null !== $maintenanceConfiguration->getEndDate())
-        ) {
-            return;
-        }
-
-        if (false !== mb_strpos($getRequestUri, $adminPrefix, 1)) {
-            if ($this->requestStack->getMainRequest() === $this->requestStack->getCurrentRequest()) {
-                $this->flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
-            }
-
-            return;
-        }
-
         $responseContent = $this->translator->trans('maintenance.ui.message');
 
         if ('' !== $maintenanceConfiguration->getCustomMessage()) {
@@ -114,5 +99,46 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         }
         // No schedule date
         return false;
+    }
+
+    private function showMaintenance(RequestEvent $event): bool
+    {
+        $getRequestUri = $event->getRequest()->getRequestUri();
+        /** @var string $adminPrefix */
+        $adminPrefix = $this->params->get('sylius_admin.path_name');
+        $maintenanceConfiguration = $this->configurationFactory->get();
+
+        $ipUser = $event->getRequest()->getClientIp();
+        if (!$maintenanceConfiguration->isEnabled()) {
+            return false;
+        }
+
+        $authorizedIps = $maintenanceConfiguration->getArrayIpsAddresses();
+        if (in_array($ipUser, $authorizedIps, true)) {
+            return false;
+        }
+
+        if (false === $this->isActuallyScheduledMaintenance($maintenanceConfiguration) &&
+            (null !== $maintenanceConfiguration->getStartDate() ||
+                null !== $maintenanceConfiguration->getEndDate())
+        ) {
+            return false;
+        }
+
+        if (false !== mb_strpos($getRequestUri, $adminPrefix, 1)) {
+            if ($this->requestStack->getMainRequest() === $this->requestStack->getCurrentRequest()) {
+                $this->flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
+            }
+
+            return false;
+        }
+
+        if ($this->channelRepository->count([]) > 1) {
+            if (!\in_array($this->channelContext->getChannel()->getCode(), $maintenanceConfiguration->getChannels(), true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

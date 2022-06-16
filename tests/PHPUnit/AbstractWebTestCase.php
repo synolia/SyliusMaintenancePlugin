@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
+use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;
 use ReflectionClassConstant;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -15,6 +16,8 @@ abstract class AbstractWebTestCase extends WebTestCase
     protected string $file;
 
     protected static ?AbstractBrowser $client = null;
+
+    protected EntityManagerInterface $manager;
 
     protected function setUp(): void
     {
@@ -28,6 +31,8 @@ abstract class AbstractWebTestCase extends WebTestCase
             self::$client = self::createClient();
             self::$client->followRedirects();
         }
+
+        $this->manager = self::$container->get('doctrine')->getManager();
     }
 
     protected function tearDown(): void
