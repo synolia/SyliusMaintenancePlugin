@@ -29,7 +29,6 @@ abstract class AbstractWebTestCase extends WebTestCase
 
         if (!self::$client) {
             self::$client = self::createClient();
-            self::$client->followRedirects();
         }
 
         $this->manager = self::$container->get('doctrine')->getManager();

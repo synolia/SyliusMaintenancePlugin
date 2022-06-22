@@ -55,10 +55,10 @@ final class MaintenanceByChannelTest extends AbstractWebTestCase
             ])
         );
 
-        self::$client->request('GET', 'http://fashion.localhost');
+        self::$client->request('GET', 'http://fashion.localhost/en_US/');
         $this->assertSiteIsUp();
 
-        self::$client->request('GET', 'http://maintenance.localhost');
+        self::$client->request('GET', 'http://maintenance.localhost/en_US/');
         $this->assertSiteIsInMaintenance();
     }
 }
