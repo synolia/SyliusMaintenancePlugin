@@ -33,7 +33,7 @@
         "symfony/dotenv": "5.4.5",
         "symfony/intl": "5.4.8",
         "symfony/panther": "1.1.2",
-        "symfony/web-profiler-bundle": "4.4.41",
+        "symfony/web-profiler-bundle": "4.4.41"
     },
     "config": {
         "sort-packages": true
