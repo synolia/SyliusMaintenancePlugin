@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
-use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
 
 final class MaintenanceConfigurationController extends AbstractController
@@ -20,8 +19,6 @@ final class MaintenanceConfigurationController extends AbstractController
 
     private FlashBagInterface $flashBag;
 
-    private ConfigurationFileManager $configurationFileManager;
-
     private MaintenanceConfigurationExporter $maintenanceExporter;
 
     private MaintenanceConfigurationFactory $configurationFactory;
@@ -29,13 +26,11 @@ final class MaintenanceConfigurationController extends AbstractController
     public function __construct(
         FlashBagInterface $flashBag,
         TranslatorInterface $translator,
-        ConfigurationFileManager $configurationFileManager,
         MaintenanceConfigurationExporter $maintenanceExporter,
         MaintenanceConfigurationFactory $configurationFactory
     ) {
         $this->flashBag = $flashBag;
         $this->translator = $translator;
-        $this->configurationFileManager = $configurationFileManager;
         $this->maintenanceExporter = $maintenanceExporter;
         $this->configurationFactory = $configurationFactory;
     }

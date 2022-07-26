@@ -4,7 +4,7 @@ parameters:
     checkMissingIterableValueType: false
     bootstrapFiles:
         - ../vendor/autoload.php
-    excludes_analyse:
+    excludePaths:
         # Makes PHPStan crash
         - '../src/DependencyInjection/Configuration.php'
         - '../ruleset/ecs.php'

@@ -27,7 +27,7 @@ final class MaintenanceConfigurationType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -88,6 +88,7 @@ final class MaintenanceConfigurationType extends AbstractType
                     },
                     function (Collection $channelsToCodes): array {
                         return \array_map(
+                            /** @phpstan-ignore-next-line */
                             function (ChannelInterface $channel): ?string {return $channel->getCode(); },
                             $channelsToCodes->toArray()
                         );
