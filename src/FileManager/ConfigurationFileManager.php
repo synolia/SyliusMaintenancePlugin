@@ -8,6 +8,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+use Webmozart\Assert\Assert;
 
 final class ConfigurationFileManager
 {
@@ -51,7 +52,10 @@ final class ConfigurationFileManager
     public function parseMaintenanceYaml(): ?array
     {
         try {
-            return Yaml::parseFile($this->getPathToFile(self::MAINTENANCE_FILE));
+            $yaml = Yaml::parseFile($this->getPathToFile(self::MAINTENANCE_FILE));
+            Assert::nullOrIsArray($yaml);
+
+            return $yaml;
         } catch (ParseException $exception) {
             return null;
         }
