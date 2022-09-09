@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Synolia\SyliusMaintenancePlugin\Creator\CookieCreator;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
 use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
@@ -23,16 +24,20 @@ final class MaintenanceConfigurationController extends AbstractController
 
     private MaintenanceConfigurationFactory $configurationFactory;
 
+    private CookieCreator $cookieCreator;
+
     public function __construct(
         FlashBagInterface $flashBag,
         TranslatorInterface $translator,
         MaintenanceConfigurationExporter $maintenanceExporter,
-        MaintenanceConfigurationFactory $configurationFactory
+        MaintenanceConfigurationFactory $configurationFactory,
+        CookieCreator $cookieCreator
     ) {
         $this->flashBag = $flashBag;
         $this->translator = $translator;
         $this->maintenanceExporter = $maintenanceExporter;
         $this->configurationFactory = $configurationFactory;
+        $this->cookieCreator = $cookieCreator;
     }
 
     public function __invoke(Request $request): Response
@@ -57,8 +62,14 @@ final class MaintenanceConfigurationController extends AbstractController
             $this->flashBag->add('success', $this->translator->trans($message));
         }
 
-        return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
+        $response = $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
             'form' => $form->createView(),
         ]);
+
+        if ($maintenanceConfiguration->isEnabled()) {
+            $response->headers->setCookie($this->cookieCreator->create($maintenanceConfiguration->getToken()));
+        }
+
+        return $response;
     }
 }

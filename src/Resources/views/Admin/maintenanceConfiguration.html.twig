@@ -32,7 +32,13 @@
 				{{ form_row(form.channels) }}
 			{% endif %}
 		</div>
-		{{ form_row(form.ipAddresses) }}
+		<div class="two fields">
+			{{ form_row(form.ipAddresses) }}
+			<div class="field">
+				<div style="margin-bottom: 0.5em">{{ 'maintenance.ui.form.generate_cookie.help'|trans }}</div>
+				<a class="ui secondary button" href="{{ path('sylius_admin_generate_cookie') }}">{{ 'maintenance.ui.form.generate_cookie.button'|trans }}</a>
+			</div>
+		</div>
 		{{ form_row(form.customMessage) }}
 		<div class="two fields">
 			{{ form_row(form.startDate) }}

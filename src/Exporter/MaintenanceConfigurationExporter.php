@@ -36,6 +36,10 @@ final class MaintenanceConfigurationExporter
         if (0 !== count($channels)) {
             $dataToExport['channels'] = $channels;
         }
+        $token = $configuration->getToken();
+        if ('' !== $token) {
+            $dataToExport['token'] = $token;
+        }
         $scheduler = $this->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
 
         $this->configurationFileManager->createMaintenanceFile(array_merge(

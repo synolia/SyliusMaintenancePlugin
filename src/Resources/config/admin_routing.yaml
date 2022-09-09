@@ -7,3 +7,9 @@ sylius_admin_maintenance_configuration:
             permission: true
             section: admin
             alias: plugin_synolia_maintenance
+
+sylius_admin_generate_cookie:
+    path: //maintenance/generate-cookie
+    methods: [GET, POST]
+    defaults:
+        _controller: Synolia\SyliusMaintenancePlugin\Controller\GenerateCookieController

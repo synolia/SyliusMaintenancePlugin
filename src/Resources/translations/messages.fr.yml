@@ -6,6 +6,9 @@ maintenance:
         form:
             enabled: Activé ?
             ip: Adresses Ip (séparées par une virgule, sans espace)
+            generate_cookie:
+                button: Créer cookie
+                help: Autoriser l'accès à votre site d'internet en utilisant un cookie secret
             placeholder: 'Ajouter une ou plusieurs adresses ip séparées par une virgule. Par exemple: 255.255.255.255,192.0.0.255'
             custom_message: Message personnalisé
             start_date: Commence le

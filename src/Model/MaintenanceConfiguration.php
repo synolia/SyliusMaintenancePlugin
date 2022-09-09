@@ -18,10 +18,13 @@ class MaintenanceConfiguration
 
     private array $channels = [];
 
+    private string $token = '';
+
     public function __construct()
     {
         $this->startDate = null;
         $this->endDate = null;
+        $this->token = bin2hex(random_bytes(16));
     }
 
     public function getIpAddresses(): string
@@ -128,6 +131,9 @@ class MaintenanceConfiguration
         if (array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
             $this->setCustomMessage($dataFromMaintenanceYaml['custom_message'] ?? '');
         }
+        if (array_key_exists('token', $dataFromMaintenanceYaml)) {
+            $this->setToken($dataFromMaintenanceYaml['token']);
+        }
 
         return $this;
     }
@@ -140,6 +146,18 @@ class MaintenanceConfiguration
     public function setChannels(array $channels): self
     {
         $this->channels = $channels;
+
+        return $this;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
 
         return $this;
     }

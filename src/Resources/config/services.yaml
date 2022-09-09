@@ -1,6 +1,8 @@
 parameters:
   env(SYNOLIA_MAINTENANCE_DIR): ''
   synolia_maintenance_dir: '%env(resolve:SYNOLIA_MAINTENANCE_DIR)%'
+  env(SYNOLIA_MAINTENANCE_DOMAIN_COOKIE): 'domain.com'
+  synolia_domain_cookie: '%env(resolve:SYNOLIA_MAINTENANCE_DOMAIN_COOKIE)%'
 
 services:
   _defaults:
@@ -9,6 +11,7 @@ services:
     public: false
     bind:
       $maintenanceDirectory: '%synolia_maintenance_dir%'
+      $domainForCookie: '%synolia_domain_cookie%'
 
   _instanceof:
     Synolia\SyliusMaintenancePlugin\Checker\IsMaintenanceCheckerInterface:
