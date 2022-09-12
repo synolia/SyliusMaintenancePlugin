@@ -24,11 +24,11 @@ final class TokenStorage
 
     public function get(): string
     {
-        return $this->storage->get(self::MAINTENANCE_COOKIE_NAME);
-    }
+        $token = $this->storage->get(self::MAINTENANCE_COOKIE_NAME);
+        if (null === $token || !is_string($token)) {
+            $token = '';
+        }
 
-    public function has(): bool
-    {
-        return null !== $this->storage->get(self::MAINTENANCE_COOKIE_NAME);
+        return $token;
     }
 }

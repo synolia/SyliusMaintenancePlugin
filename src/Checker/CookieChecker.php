@@ -25,7 +25,7 @@ class CookieChecker implements IsMaintenanceCheckerInterface
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
-        if ($this->storage->has() && $this->storage->get() === $configuration->getToken()) {
+        if ($this->storage->get() === $configuration->getToken()) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
 
