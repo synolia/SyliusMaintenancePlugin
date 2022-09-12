@@ -101,9 +101,9 @@
 ### If you want to put the **maintenance.yaml** in a directory, please add your directory in .env:
 For example :
 
-    ``` yaml 
-        SYNOLIA_MAINTENANCE_DIR=var/maintenance
-    ```
+``` yaml 
+ SYNOLIA_MAINTENANCE_DIR=var/maintenance
+   ```
 
 ![Alt text](images/maintenance.png "maintenance_configure")
 
