@@ -8,8 +8,8 @@ sylius_admin_maintenance_configuration:
             section: admin
             alias: plugin_synolia_maintenance
 
-sylius_admin_generate_cookie:
-    path: //maintenance/generate-cookie
+sylius_admin_token_storage:
+    path: //maintenance/token-storage
     methods: [GET, POST]
     defaults:
-        _controller: Synolia\SyliusMaintenancePlugin\Controller\GenerateCookieController
+        _controller: Synolia\SyliusMaintenancePlugin\Controller\TokenStorageController

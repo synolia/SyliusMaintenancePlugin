@@ -16,8 +16,8 @@
 ### When your website is under maintenance, and you want to :
 
 * Do not allow access to your website and display the message "the website is under maintenance" on the frontpage.
-* Allow access to your website to some Ips addresses or secret cookie
-* Activate and deactivate theses behaviors by commands
+* Allow access to your website to some Ips addresses or secret token
+* Activate and deactivate these behaviors by commands
 * Activate and deactivate behaviors in your Sylius Back-office
 * Custom your message in your Sylius Back-office
 
@@ -95,7 +95,7 @@
 
 - Enable/disable the plugin
 - Allow access for one or multiple ips addresses (optional)
-- Allow access for secret cookie (optional)
+- Allow access for secret token (optional)
 - Create your custom message (optional)
 
 ### If you want to put the **maintenance.yaml** in a directory, please add your directory in .env:
@@ -103,13 +103,6 @@ For example :
 
     ``` yaml 
         SYNOLIA_MAINTENANCE_DIR=var/maintenance
-    ```
-
-### If you want to allow access for secret cookie, please add your domain in .env:
-For example :
-
-    ``` yaml
-        SYNOLIA_MAINTENANCE_DOMAIN_COOKIE=domain.com
     ```
 
 ![Alt text](images/maintenance.png "maintenance_configure")

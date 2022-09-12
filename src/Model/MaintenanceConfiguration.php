@@ -18,7 +18,7 @@ class MaintenanceConfiguration
 
     private array $channels = [];
 
-    private string $token = '';
+    private string $token;
 
     public function __construct()
     {

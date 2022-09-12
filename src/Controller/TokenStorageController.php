@@ -5,34 +5,33 @@ declare(strict_types=1);
 namespace Synolia\SyliusMaintenancePlugin\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Synolia\SyliusMaintenancePlugin\Creator\CookieCreator;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
+use Synolia\SyliusMaintenancePlugin\Storage\TokenStorage;
 
-final class GenerateCookieController extends AbstractController
+final class TokenStorageController extends AbstractController
 {
     private MaintenanceConfigurationFactory $configurationFactory;
 
-    private CookieCreator $cookieCreator;
+    private TokenStorage $tokenStorage;
 
     public function __construct(
         MaintenanceConfigurationFactory $configurationFactory,
-        CookieCreator $cookieCreator
+        TokenStorage $tokenStorage
     ) {
         $this->configurationFactory = $configurationFactory;
-        $this->cookieCreator = $cookieCreator;
+        $this->tokenStorage = $tokenStorage;
     }
 
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
         $maintenanceConfiguration = $this->configurationFactory->get();
 
-        $response = $this->redirectToRoute('sylius_admin_maintenance_configuration');
-
         if ($maintenanceConfiguration->isEnabled()) {
-            $response->headers->setCookie($this->cookieCreator->create($maintenanceConfiguration->getToken()));
+            $this->tokenStorage->set($maintenanceConfiguration->getToken());
         }
 
-        return $response;
+        return $this->redirectToRoute('sylius_admin_maintenance_configuration');
     }
 }
