@@ -9,7 +9,7 @@ use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 use Synolia\SyliusMaintenancePlugin\Storage\TokenStorage;
 use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
-class CookieChecker implements IsMaintenanceCheckerInterface
+class TokenChecker implements IsMaintenanceCheckerInterface
 {
     private TokenStorage $storage;
 

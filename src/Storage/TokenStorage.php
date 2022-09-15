@@ -8,7 +8,7 @@ use Sylius\Component\Resource\Storage\StorageInterface;
 
 final class TokenStorage
 {
-    public const MAINTENANCE_COOKIE_NAME = 'synolia_maintenance_cookie';
+    public const MAINTENANCE_TOKEN_NAME = 'synolia_maintenance_token';
 
     private StorageInterface $storage;
 
@@ -19,12 +19,12 @@ final class TokenStorage
 
     public function set(string $token): void
     {
-        $this->storage->set(self::MAINTENANCE_COOKIE_NAME, $token);
+        $this->storage->set(self::MAINTENANCE_TOKEN_NAME, $token);
     }
 
     public function get(): string
     {
-        $token = $this->storage->get(self::MAINTENANCE_COOKIE_NAME);
+        $token = $this->storage->get(self::MAINTENANCE_TOKEN_NAME);
         if (null === $token || !is_string($token)) {
             $token = '';
         }
