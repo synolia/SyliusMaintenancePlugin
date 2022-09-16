@@ -13,6 +13,8 @@ use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 abstract class AbstractWebTestCase extends WebTestCase
 {
+    use AssertTrait;
+
     protected string $file;
 
     protected static ?AbstractBrowser $client = null;
@@ -37,18 +39,5 @@ abstract class AbstractWebTestCase extends WebTestCase
     protected function tearDown(): void
     {
         @\unlink($this->file);
-    }
-
-    protected function assertSiteIsUp(): void
-    {
-        self::assertResponseIsSuccessful();
-        self::assertPageTitleContains('Fashion Web Store');
-        self::assertSelectorTextContains('#footer', 'Powered by Sylius');
-    }
-
-    protected function assertSiteIsInMaintenance(string $message = 'The website is under maintenance'): void
-    {
-        self::assertResponseStatusCodeSame(503);
-        self::assertSelectorTextContains('body', $message);
     }
 }
