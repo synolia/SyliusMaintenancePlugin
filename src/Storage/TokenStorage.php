@@ -8,7 +8,7 @@ use Sylius\Component\Resource\Storage\StorageInterface;
 
 final class TokenStorage
 {
-    private const MAINTENANCE_TOKEN_NAME = 'synolia_maintenance_token';
+    public const MAINTENANCE_TOKEN_NAME = 'synolia_maintenance_token';
 
     private StorageInterface $storage;
 

@@ -36,8 +36,8 @@ final class MaintenanceAllowAccessByTokenTest extends WebTestCase
 
         $client = static::createClient();
         if ($isGenerated) {
-            $storage = self::getContainer()->get(TokenStorage::class);
-            $storage->set($token);
+            $session = $client->getContainer()->get('session');
+            $session->set(TokenStorage::MAINTENANCE_TOKEN_NAME, $token);
         }
 
         $client->request('GET', '/en_US/');
