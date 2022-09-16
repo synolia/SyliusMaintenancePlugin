@@ -53,13 +53,13 @@ final class MaintenanceAllowAccessByTokenTest extends WebTestCase
     {
         // configurationToken, token, isGenerated, isUnderMaintenance
         yield 'same tokens, and token is generated, so access allowed' => [
-            '63454fe526b4102103f76a4dbbd442e3', '63454fe526b4102103f76a4dbbd442e3', true, false
+            '63454fe526b4102103f76a4dbbd442e3', '63454fe526b4102103f76a4dbbd442e3', true, false,
         ];
         yield 'same tokens, and token is NOT generated, so no access to website' => [
-            '63454fe526b4102103f76a4dbbd442e3', '63454fe526b4102103f76a4dbbd442e3', false, true
+            '63454fe526b4102103f76a4dbbd442e3', '63454fe526b4102103f76a4dbbd442e3', false, true,
         ];
         yield 'token generated is not that of the maintenance file, so no access to website' => [
-            '63454fe526b4102103f76a4dbbd442e3', 'token123', true, true
+            '63454fe526b4102103f76a4dbbd442e3', 'token123', true, true,
         ];
     }
 }

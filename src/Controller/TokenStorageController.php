@@ -26,7 +26,7 @@ final class TokenStorageController extends AbstractController
         MaintenanceConfigurationFactory $configurationFactory,
         TokenStorage $tokenStorage,
         FlashBagInterface $flashBag,
-        TranslatorInterface $translator,
+        TranslatorInterface $translator
     ) {
         $this->configurationFactory = $configurationFactory;
         $this->tokenStorage = $tokenStorage;
