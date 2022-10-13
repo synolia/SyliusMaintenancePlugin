@@ -7,8 +7,8 @@ maintenance:
             enabled: Activé ?
             ip: Adresses Ip (séparées par une virgule, sans espace)
             token_storage:
-                button: Générer token
-                help: Autoriser l'accès à votre site d'internet en utilisant un token secret
+                button: Générer un token
+                help: Autoriser l'accès à votre site internet en utilisant un token secret
                 message: Le token secret a été généré avec succès.
             placeholder: 'Ajouter une ou plusieurs adresses ip séparées par une virgule. Par exemple: 255.255.255.255,192.0.0.255'
             custom_message: Message personnalisé
