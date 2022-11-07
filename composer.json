@@ -37,14 +37,6 @@
     "config": {
         "sort-packages": true
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.9-dev"
-        },
-        "symfony": {
-            "require": "^4.4 || ^5.4"
-        }
-    },
     "autoload": {
         "psr-4": {
             "Synolia\\SyliusMaintenancePlugin\\": "src/",
