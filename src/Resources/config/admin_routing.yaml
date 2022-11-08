@@ -7,3 +7,13 @@ sylius_admin_maintenance_configuration:
             permission: true
             section: admin
             alias: plugin_synolia_maintenance
+
+sylius_admin_token_storage:
+    path: /maintenance/token-storage
+    methods: [GET, POST]
+    defaults:
+        _controller: Synolia\SyliusMaintenancePlugin\Controller\TokenStorageController
+        _sylius:
+            permission: true
+            section: admin
+            alias: plugin_synolia_maintenance

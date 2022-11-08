@@ -18,7 +18,7 @@ final class MaintenanceByChannelTest extends AbstractWebTestCase
         /** @var ChannelRepositoryInterface $channelRepository */
         $channelRepository = $this->manager->getRepository(ChannelInterface::class);
         /** @var DefaultChannelFactory $channelFactory */
-        $channelFactory = self::$container->get('sylius.behat.factory.default_channel');
+        $channelFactory = static::getContainer()->get('sylius.behat.factory.default_channel');
 
         // set hostname for actuel channel
         $channel = $channelRepository->findOneByCode('FASHION_WEB');
