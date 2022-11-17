@@ -1,5 +1,6 @@
 [![License](https://badgen.net/github/license/synolia/SyliusMaintenancePlugin)](https://github.com/synolia/SyliusMaintenancePlugin/blob/master/LICENSE)
-[![CI](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/ci.yaml)
+[![CI - Analysis](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/analysis.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/analysis.yaml)
+[![CI - Sylius](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/sylius.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusMaintenancePlugin/actions/workflows/sylius.yaml)
 [![Version](https://badgen.net/github/tag/synolia/SyliusMaintenancePlugin?label=Version)](https://packagist.org/packages/synolia/sylius-maintenance-plugin)
 [![Total Downloads](https://poser.pugx.org/synolia/sylius-maintenance-plugin/downloads)](https://packagist.org/packages/synolia/sylius-maintenance-plugin)
 
