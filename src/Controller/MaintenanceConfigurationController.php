@@ -7,7 +7,6 @@ namespace Synolia\SyliusMaintenancePlugin\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
@@ -17,19 +16,15 @@ final class MaintenanceConfigurationController extends AbstractController
 {
     private TranslatorInterface $translator;
 
-    private FlashBagInterface $flashBag;
-
     private MaintenanceConfigurationExporter $maintenanceExporter;
 
     private MaintenanceConfigurationFactory $configurationFactory;
 
     public function __construct(
-        FlashBagInterface $flashBag,
         TranslatorInterface $translator,
         MaintenanceConfigurationExporter $maintenanceExporter,
         MaintenanceConfigurationFactory $configurationFactory
     ) {
-        $this->flashBag = $flashBag;
         $this->translator = $translator;
         $this->maintenanceExporter = $maintenanceExporter;
         $this->configurationFactory = $configurationFactory;
@@ -45,7 +40,7 @@ final class MaintenanceConfigurationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if (null !== $maintenanceConfiguration->getEndDate() && $maintenanceConfiguration->getEndDate() < (new \DateTime())) {
                 $maintenanceConfiguration->setEnabled(false);
-                $this->flashBag->add('error', $this->translator->trans('maintenance.ui.message_end_date_in_the_past'));
+                $request->getSession()->getFlashBag()->add('error', $this->translator->trans('maintenance.ui.message_end_date_in_the_past'));
             }
 
             $this->maintenanceExporter->export($maintenanceConfiguration);
@@ -54,7 +49,7 @@ final class MaintenanceConfigurationController extends AbstractController
                 $message = 'maintenance.ui.message_enabled';
             }
 
-            $this->flashBag->add('success', $this->translator->trans($message));
+            $request->getSession()->getFlashBag()->add('success', $this->translator->trans($message));
         }
 
         return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
