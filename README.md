@@ -37,28 +37,22 @@
     composer require synolia/sylius-maintenance-plugin
     ```
 
-2. Enable the plugin in your `config/bundles.php` file by add
-
-    ``` php    
-    Synolia\SyliusMaintenancePlugin\SynoliaSyliusMaintenancePlugin::class => ['all' => true],
-    ```
-
-3. Import required config in your `config/packages/_sylius.yaml` file:
+2. Import required config in your `config/packages/_sylius.yaml` file:
 
     ``` yaml    
     imports:
         - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/config.yaml" }
     ```
 
-4. Import routing in your `config/routes.yaml` file:
+3. Import routing in your `config/routes.yaml` file:
 
     ``` yaml   
-    synolia_synolia_maintenance:
+    synolia_maintenance:
         resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yaml"
         prefix: '/%sylius_admin.path_name%'
     ```
 
-6. Clear cache
+4. Clear cache
 
     ``` shell
     php bin/console cache:clear
