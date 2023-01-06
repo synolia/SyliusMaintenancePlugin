@@ -33,7 +33,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
             $this->file,
             Yaml::dump([
                 'ips' => $ips,
-            ])
+            ]),
         );
 
         self::$client->request('GET', '/en_US/');
@@ -52,7 +52,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
             $this->file,
             Yaml::dump([
                 'custom_message' => $message,
-            ])
+            ]),
         );
 
         self::$client->request('GET', '/en_US/');
@@ -64,7 +64,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
     public function testMaintenanceFileWithScheduler(
         ?\DateTime $startDate,
         ?\DateTime $endDate,
-        bool $maintenance
+        bool $maintenance,
     ): void {
         $scheduler = [];
         if (null !== $startDate) {
@@ -78,7 +78,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
             $this->file,
             Yaml::dump([
                 'scheduler' => $scheduler,
-            ])
+            ]),
         );
 
         self::$client->request('GET', '/en_US/');

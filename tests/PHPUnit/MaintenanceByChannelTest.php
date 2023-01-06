@@ -52,7 +52,7 @@ final class MaintenanceByChannelTest extends AbstractWebTestCase
             $this->file,
             Yaml::dump([
                 'channels' => ['maintenance'],
-            ])
+            ]),
         );
 
         self::$client->request('GET', 'http://fashion.localhost/en_US/');

@@ -20,18 +20,19 @@ final class MaintenanceAllowAccessByTokenTest extends WebTestCase
         string $configurationToken,
         string $token,
         bool $isGenerated,
-        bool $isInMaintenance
+        bool $isInMaintenance,
     ): void {
         /** @var ReflectionClassConstant $constant */
         $constant = (new ReflectionClass(ConfigurationFileManager::class))
-            ->getReflectionConstant('MAINTENANCE_FILE');
+            ->getReflectionConstant('MAINTENANCE_FILE')
+        ;
         $file = $constant->getValue();
 
         \file_put_contents(
             $file,
             Yaml::dump([
                 'token' => $configurationToken,
-            ])
+            ]),
         );
 
         $client = static::createClient();

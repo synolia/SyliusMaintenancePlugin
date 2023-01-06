@@ -14,15 +14,10 @@ final class DisableMaintenanceCommand extends Command
 {
     protected static $defaultName = 'maintenance:disable';
 
-    private ConfigurationFileManager $configurationFileManager;
-
-    private TranslatorInterface $translator;
-
-    public function __construct(ConfigurationFileManager $fileManager, TranslatorInterface $translator)
-    {
-        $this->configurationFileManager = $fileManager;
-        $this->translator = $translator;
-
+    public function __construct(
+        private ConfigurationFileManager $configurationFileManager,
+        private TranslatorInterface $translator,
+    ) {
         parent::__construct();
     }
 
@@ -30,7 +25,8 @@ final class DisableMaintenanceCommand extends Command
     {
         $this
             ->setDescription('Deactivate maintenance plugin')
-            ->setHelp('This command allows you to delete the maintenance.yaml');
+            ->setHelp('This command allows you to delete the maintenance.yaml')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

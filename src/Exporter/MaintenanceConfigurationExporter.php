@@ -9,11 +9,8 @@ use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
 final class MaintenanceConfigurationExporter
 {
-    private ConfigurationFileManager $configurationFileManager;
-
-    public function __construct(ConfigurationFileManager $configurationFileManager)
+    public function __construct(private ConfigurationFileManager $configurationFileManager)
     {
-        $this->configurationFileManager = $configurationFileManager;
     }
 
     public function export(MaintenanceConfiguration $configuration): void
@@ -50,17 +47,13 @@ final class MaintenanceConfigurationExporter
 
     private function getSchedulerArray(?\DateTimeInterface $startDate, ?\DateTimeInterface $endDate): array
     {
-        if (null === $startDate && null === $endDate) {
-            return [];
-        }
-
         $scheduler = ['scheduler' => []];
 
         if (null !== $startDate) {
-            $scheduler['scheduler'] += ['start_date' => $startDate->format('Y-m-d H:i:s')];
+            $scheduler['scheduler']['start_date'] = $startDate->format('Y-m-d H:i:s');
         }
         if (null !== $endDate) {
-            $scheduler['scheduler'] += ['end_date' => $endDate->format('Y-m-d H:i:s')];
+            $scheduler['scheduler']['end_date'] = $endDate->format('Y-m-d H:i:s');
         }
         if ([] === $scheduler['scheduler']) {
             return [];

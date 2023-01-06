@@ -13,20 +13,11 @@ use Synolia\SyliusMaintenancePlugin\Storage\TokenStorage;
 
 final class TokenStorageController extends AbstractController
 {
-    private MaintenanceConfigurationFactory $configurationFactory;
-
-    private TokenStorage $tokenStorage;
-
-    private TranslatorInterface $translator;
-
     public function __construct(
-        MaintenanceConfigurationFactory $configurationFactory,
-        TokenStorage $tokenStorage,
-        TranslatorInterface $translator
+        private MaintenanceConfigurationFactory $configurationFactory,
+        private TokenStorage $tokenStorage,
+        private TranslatorInterface $translator,
     ) {
-        $this->configurationFactory = $configurationFactory;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
     }
 
     public function __invoke(Request $request): Response

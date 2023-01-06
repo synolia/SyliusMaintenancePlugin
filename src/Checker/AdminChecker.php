@@ -14,20 +14,11 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class AdminChecker implements IsMaintenanceCheckerInterface
 {
-    protected ParameterBagInterface $params;
-
-    protected RequestStack $requestStack;
-
-    protected TranslatorInterface $translator;
-
     public function __construct(
-        ParameterBagInterface $params,
-        RequestStack $requestStack,
-        TranslatorInterface $translator
+        protected ParameterBagInterface $params,
+        protected RequestStack $requestStack,
+        protected TranslatorInterface $translator,
     ) {
-        $this->params = $params;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
     }
 
     public static function getDefaultPriority(): int

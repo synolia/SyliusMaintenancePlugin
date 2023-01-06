@@ -11,15 +11,13 @@ name: Sylius
 jobs:
     sylius:
         name: 'Sylius ${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}'
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
         strategy:
             fail-fast: false
             matrix:
                 php:
-                    - 7.4
                     - 8.0
                 sylius:
-                    - 1.9.0
                     - 1.10.0
                     - 1.11.0
                     - 1.12.0
@@ -30,23 +28,11 @@ jobs:
                     - 14.x
                 exclude:
                     -
-                        sylius: 1.9.0
-                        php: 8.0
-                    -
-                        sylius: 1.11.0
-                        php: 7.4
-                    -
-                        sylius: 1.9.0
-                        symfony: 6.1
-                    -
                         sylius: 1.10.0
                         symfony: 6.1
                     -
                         sylius: 1.11.0
                         symfony: 6.1
-                    -
-                        sylius: 1.12.0
-                        php: 7.4
                     -
                         php: '8.0'
                         symfony: 6.1

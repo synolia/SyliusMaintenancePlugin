@@ -16,21 +16,11 @@ final class EnableMaintenanceCommand extends Command
 {
     protected static $defaultName = 'maintenance:enable';
 
-    private TranslatorInterface $translator;
-
-    private MaintenanceConfigurationExporter $maintenanceExporter;
-
-    private MaintenanceConfigurationFactory $configurationFactory;
-
     public function __construct(
-        TranslatorInterface $translator,
-        MaintenanceConfigurationExporter $maintenanceExporter,
-        MaintenanceConfigurationFactory $configurationFactory
+        private TranslatorInterface $translator,
+        private MaintenanceConfigurationExporter $maintenanceExporter,
+        private MaintenanceConfigurationFactory $configurationFactory,
     ) {
-        $this->translator = $translator;
-        $this->maintenanceExporter = $maintenanceExporter;
-        $this->configurationFactory = $configurationFactory;
-
         parent::__construct();
     }
 
@@ -39,7 +29,8 @@ final class EnableMaintenanceCommand extends Command
         $this
             ->setDescription('Turn your website under maintenance.')
             ->addArgument('ips_address', InputArgument::IS_ARRAY, 'Add ips addresses (separate multiple ips with a space)')
-            ->setHelp('This command allows you to create the maintenance.yaml and also allows you to put the ips into this file.');
+            ->setHelp('This command allows you to create the maintenance.yaml and also allows you to put the ips into this file.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

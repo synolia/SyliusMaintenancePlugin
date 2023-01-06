@@ -14,13 +14,10 @@ final class ConfigurationFileManager
 {
     private const MAINTENANCE_FILE = 'maintenance.yaml';
 
-    private Filesystem $filesystem;
-
     private string $maintenanceDirectory;
 
-    public function __construct(Filesystem $filesystem, KernelInterface $kernel, string $maintenanceDirectory)
+    public function __construct(private Filesystem $filesystem, KernelInterface $kernel, string $maintenanceDirectory)
     {
-        $this->filesystem = $filesystem;
         $this->maintenanceDirectory = $kernel->getProjectDir() . '/' . $maintenanceDirectory;
     }
 
@@ -56,7 +53,7 @@ final class ConfigurationFileManager
             Assert::nullOrIsArray($yaml);
 
             return $yaml;
-        } catch (ParseException $exception) {
+        } catch (ParseException) {
             return null;
         }
     }

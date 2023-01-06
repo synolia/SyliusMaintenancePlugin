@@ -11,11 +11,8 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class TokenChecker implements IsMaintenanceCheckerInterface
 {
-    private TokenStorage $storage;
-
-    public function __construct(TokenStorage $storage)
+    public function __construct(private TokenStorage $storage)
     {
-        $this->storage = $storage;
     }
 
     public static function getDefaultPriority(): int

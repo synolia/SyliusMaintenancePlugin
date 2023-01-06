@@ -19,11 +19,8 @@ use Symfony\Component\Validator\Constraints\GreaterThan;
 
 final class MaintenanceConfigurationType extends AbstractType
 {
-    private ChannelRepositoryInterface $channelRepository;
-
-    public function __construct(ChannelRepositoryInterface $channelRepository)
+    public function __construct(private ChannelRepositoryInterface $channelRepository)
     {
-        $this->channelRepository = $channelRepository;
     }
 
     /**
@@ -75,25 +72,22 @@ final class MaintenanceConfigurationType extends AbstractType
                 [
                     'multiple' => true,
                     'expanded' => true,
-                ]
+                ],
             );
 
             $builder->get('channels')
                 ->addModelTransformer(new CallbackTransformer(
-                    function (array $codesToChannels): array {
-                        return \array_map(
-                            function (string $channelCode): ?ChannelInterface {return $this->channelRepository->findOneByCode($channelCode); },
-                            $codesToChannels
-                        );
-                    },
-                    function (Collection $channelsToCodes): array {
-                        return \array_map(
-                            /** @phpstan-ignore-next-line */
-                            function (ChannelInterface $channel): ?string {return $channel->getCode(); },
-                            $channelsToCodes->toArray()
-                        );
-                    }
-                ));
+                    fn (array $codesToChannels): array => \array_map(
+                        fn (string $channelCode): ?ChannelInterface => $this->channelRepository->findOneByCode($channelCode),
+                        $codesToChannels,
+                    ),
+                    fn (Collection $channelsToCodes): array => \array_map(
+                        /** @phpstan-ignore-next-line */
+                        fn (ChannelInterface $channel): ?string => $channel->getCode(),
+                        $channelsToCodes->toArray(),
+                    ),
+                ))
+            ;
         }
     }
 }
