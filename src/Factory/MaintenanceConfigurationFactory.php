@@ -9,11 +9,8 @@ use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
 final class MaintenanceConfigurationFactory
 {
-    private ConfigurationFileManager $configurationFileManager;
-
-    public function __construct(ConfigurationFileManager $configurationFileManager)
+    public function __construct(private ConfigurationFileManager $configurationFileManager)
     {
-        $this->configurationFileManager = $configurationFileManager;
     }
 
     public function get(): MaintenanceConfiguration

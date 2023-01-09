@@ -12,16 +12,10 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class ChannelChecker implements IsMaintenanceCheckerInterface
 {
-    protected ChannelRepositoryInterface $channelRepository;
-
-    protected ChannelContextInterface $channelContext;
-
     public function __construct(
-        ChannelRepositoryInterface $channelRepository,
-        ChannelContextInterface $channelContext
+        protected ChannelRepositoryInterface $channelRepository,
+        protected ChannelContextInterface $channelContext,
     ) {
-        $this->channelRepository = $channelRepository;
-        $this->channelContext = $channelContext;
     }
 
     public static function getDefaultPriority(): int

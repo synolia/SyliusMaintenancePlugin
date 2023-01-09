@@ -14,20 +14,11 @@ use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
 
 final class MaintenanceConfigurationController extends AbstractController
 {
-    private TranslatorInterface $translator;
-
-    private MaintenanceConfigurationExporter $maintenanceExporter;
-
-    private MaintenanceConfigurationFactory $configurationFactory;
-
     public function __construct(
-        TranslatorInterface $translator,
-        MaintenanceConfigurationExporter $maintenanceExporter,
-        MaintenanceConfigurationFactory $configurationFactory
+        private TranslatorInterface $translator,
+        private MaintenanceConfigurationExporter $maintenanceExporter,
+        private MaintenanceConfigurationFactory $configurationFactory,
     ) {
-        $this->translator = $translator;
-        $this->maintenanceExporter = $maintenanceExporter;
-        $this->configurationFactory = $configurationFactory;
     }
 
     public function __invoke(Request $request): Response

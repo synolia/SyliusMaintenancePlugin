@@ -10,11 +10,8 @@ final class TokenStorage
 {
     public const MAINTENANCE_TOKEN_NAME = 'synolia_maintenance_token';
 
-    private StorageInterface $storage;
-
-    public function __construct(StorageInterface $storage)
+    public function __construct(private StorageInterface $storage)
     {
-        $this->storage = $storage;
     }
 
     public function set(string $token): void

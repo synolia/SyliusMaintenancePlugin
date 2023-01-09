@@ -10,7 +10,7 @@ use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 class IsMaintenanceVoter implements IsMaintenanceVoterInterface
 {
     /** @var array<\Synolia\SyliusMaintenancePlugin\Checker\IsMaintenanceCheckerInterface> */
-    private $isMaintenanceCheckers;
+    private array $isMaintenanceCheckers;
 
     public function __construct(\Traversable $checkers)
     {

@@ -14,24 +14,12 @@ use Twig\Environment;
 
 final class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
-    private TranslatorInterface $translator;
-
-    private Environment $twig;
-
-    private MaintenanceConfigurationFactory $configurationFactory;
-
-    private IsMaintenanceVoterInterface $isMaintenanceVoter;
-
     public function __construct(
-        TranslatorInterface $translator,
-        Environment $twig,
-        MaintenanceConfigurationFactory $configurationFactory,
-        IsMaintenanceVoterInterface $isMaintenanceVoter
+        private TranslatorInterface $translator,
+        private Environment $twig,
+        private MaintenanceConfigurationFactory $configurationFactory,
+        private IsMaintenanceVoterInterface $isMaintenanceVoter,
     ) {
-        $this->translator = $translator;
-        $this->twig = $twig;
-        $this->configurationFactory = $configurationFactory;
-        $this->isMaintenanceVoter = $isMaintenanceVoter;
     }
 
     public static function getSubscribedEvents(): array

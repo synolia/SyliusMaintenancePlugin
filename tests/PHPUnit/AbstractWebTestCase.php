@@ -25,7 +25,8 @@ abstract class AbstractWebTestCase extends WebTestCase
     {
         /** @var ReflectionClassConstant $constant */
         $constant = (new ReflectionClass(ConfigurationFileManager::class))
-            ->getReflectionConstant('MAINTENANCE_FILE');
+            ->getReflectionConstant('MAINTENANCE_FILE')
+        ;
         $this->file = $constant->getValue();
         @\unlink($this->file);
 
