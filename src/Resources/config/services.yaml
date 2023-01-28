@@ -31,8 +31,3 @@ services:
     class: Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoter
     arguments:
       - !tagged_iterator { tag: !php/const Synolia\SyliusMaintenancePlugin\Checker\IsMaintenanceCheckerInterface::TAG_ID }
-
-  Synolia\SyliusMaintenancePlugin\Storage\TokenStorage:
-    class:   Synolia\SyliusMaintenancePlugin\Storage\TokenStorage
-    arguments:
-      $storage: '@sylius.storage.session'
