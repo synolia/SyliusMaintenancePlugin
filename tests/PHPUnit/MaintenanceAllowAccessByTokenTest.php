@@ -6,7 +6,11 @@ namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
 use ReflectionClass;
 use ReflectionClassConstant;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Yaml\Yaml;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Storage\TokenStorage;
@@ -37,8 +41,7 @@ final class MaintenanceAllowAccessByTokenTest extends WebTestCase
 
         $client = static::createClient();
         if ($isGenerated) {
-            $session = $client->getContainer()->get('session');
-            $session->set(TokenStorage::MAINTENANCE_TOKEN_NAME, $token);
+            $session = $this->createSession($client, $token);
         }
 
         $client->request('GET', '/en_US/');
@@ -62,5 +65,29 @@ final class MaintenanceAllowAccessByTokenTest extends WebTestCase
         yield 'token generated is not that of the maintenance file, so no access to website' => [
             '63454fe526b4102103f76a4dbbd442e3', 'token123', true, true,
         ];
+    }
+
+    private function createSession(KernelBrowser $client, string $token): Session
+    {
+        $container = $client->getContainer();
+        $sessionSavePath = $container->getParameter('session.save_path');
+        $sessionStorage = new MockFileSessionStorage($sessionSavePath);
+
+        $session = new Session($sessionStorage);
+
+        $session->start();
+        $session->set(TokenStorage::MAINTENANCE_TOKEN_NAME, $token);
+        $session->save();
+
+        $sessionCookie = new Cookie(
+            $session->getName(),
+            $session->getId(),
+            null,
+            null,
+            'localhost',
+        );
+        $client->getCookieJar()->set($sessionCookie);
+
+        return $session;
     }
 }

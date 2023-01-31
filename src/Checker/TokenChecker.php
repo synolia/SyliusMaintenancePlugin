@@ -11,10 +11,6 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class TokenChecker implements IsMaintenanceCheckerInterface
 {
-    public function __construct(private TokenStorage $storage)
-    {
-    }
-
     public static function getDefaultPriority(): int
     {
         return 99;
@@ -22,7 +18,7 @@ class TokenChecker implements IsMaintenanceCheckerInterface
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
-        if ($this->storage->get() === $configuration->getToken()) {
+        if ($request->getSession()->get(TokenStorage::MAINTENANCE_TOKEN_NAME) === $configuration->getToken()) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
 
