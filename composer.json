@@ -36,7 +36,13 @@
         "symfony/web-profiler-bundle": "6.0.17"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "symfony/thanks": true,
+            "phpro/grumphp": true,
+            "phpstan/extension-installer": true
+        }
     },
     "autoload": {
         "psr-4": {

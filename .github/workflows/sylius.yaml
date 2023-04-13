@@ -1,4 +1,4 @@
-name: Sylius
+name: Install & Test
 'on':
     push:
         branches:
@@ -10,7 +10,7 @@ name: Sylius
             - README.md
 jobs:
     sylius:
-        name: 'Sylius ${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}'
+        name: 'PHP ${{ matrix.php }} Sylius ${{ matrix.sylius }} Symfony ${{ matrix.symfony }}'
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
@@ -25,10 +25,21 @@ jobs:
                     - 1.12.0
                 symfony:
                     - 5.4
+                    - 6.0
                     - 6.1
+                    - 6.2
                 node:
                     - 14.x
                 exclude:
+                    -
+                        sylius: 1.10.0
+                        symfony: 6.0
+                    -
+                        sylius: 1.11.0
+                        symfony: 6.0
+                    -
+                        php: '8.0'
+                        symfony: 6.1
                     -
                         sylius: 1.10.0
                         symfony: 6.1
@@ -37,7 +48,13 @@ jobs:
                         symfony: 6.1
                     -
                         php: '8.0'
-                        symfony: 6.1
+                        symfony: 6.2
+                    -
+                        sylius: 1.10.0
+                        symfony: 6.2
+                    -
+                        sylius: 1.11.0
+                        symfony: 6.2
         env:
             APP_ENV: test
             package-name: synolia/sylius-maintenance-plugin
