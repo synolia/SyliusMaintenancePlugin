@@ -63,6 +63,10 @@ final class MaintenanceConfigurationType extends AbstractType
                 'time_widget' => 'single_text',
                 'required' => false,
             ])
+            ->add('allowBots', CheckboxType::class, [
+                'label' => 'maintenance.ui.form.allow_bots',
+                'required' => true,
+            ])
         ;
 
         if ($this->channelRepository->count([]) > 1) {

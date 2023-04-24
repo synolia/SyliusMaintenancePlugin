@@ -10,6 +10,7 @@
     "license": "EUPL-1.2",
     "require": {
         "php": "^8.0",
+        "jaybizzle/crawler-detect": "^1.2",
         "sylius/sylius": "^1.10",
         "webmozart/assert": "^1.11"
     },
@@ -36,7 +37,12 @@
         "symfony/web-profiler-bundle": "6.0.17"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpro/grumphp": true,
+            "phpstan/extension-installer": true
+        }
     },
     "autoload": {
         "psr-4": {

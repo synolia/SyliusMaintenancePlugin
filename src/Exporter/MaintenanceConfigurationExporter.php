@@ -37,6 +37,9 @@ final class MaintenanceConfigurationExporter
         if ('' !== $token) {
             $dataToExport['token'] = $token;
         }
+        if ($configuration->allowBots()) {
+            $dataToExport['allowBots'] = true;
+        }
         $scheduler = $this->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
 
         $this->configurationFileManager->createMaintenanceFile(array_merge(

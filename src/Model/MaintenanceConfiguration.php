@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Model;
 
+/**
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ */
 class MaintenanceConfiguration
 {
     private string $ipAddresses = '';
@@ -19,6 +22,8 @@ class MaintenanceConfiguration
     private array $channels = [];
 
     private string $token;
+
+    private bool $allowBots = false;
 
     public function __construct()
     {
@@ -134,6 +139,9 @@ class MaintenanceConfiguration
         if (array_key_exists('token', $dataFromMaintenanceYaml)) {
             $this->setToken($dataFromMaintenanceYaml['token']);
         }
+        if (array_key_exists('allowBots', $dataFromMaintenanceYaml)) {
+            $this->setAllowBots($dataFromMaintenanceYaml['allowBots']);
+        }
 
         return $this;
     }
@@ -158,6 +166,18 @@ class MaintenanceConfiguration
     public function setToken(string $token): self
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    public function allowBots(): bool
+    {
+        return $this->allowBots;
+    }
+
+    public function setAllowBots(bool $allowBots): self
+    {
+        $this->allowBots = $allowBots;
 
         return $this;
     }
