@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Model;
 
-/**
- * @SuppressWarnings(PHPMD.NPathComplexity)
- */
+use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
+
 class MaintenanceConfiguration
 {
     private string $ipAddresses = '';
@@ -116,32 +115,12 @@ class MaintenanceConfiguration
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function map(?array $dataFromMaintenanceYaml): self
     {
-        if (null === $dataFromMaintenanceYaml) {
-            return $this;
-        }
-        if (array_key_exists('ips', $dataFromMaintenanceYaml)) {
-            $this->setIpAddresses(implode(',', $dataFromMaintenanceYaml['ips']));
-        }
-        if (array_key_exists('channels', $dataFromMaintenanceYaml)) {
-            $this->setChannels($dataFromMaintenanceYaml['channels']);
-        }
-        if (array_key_exists('scheduler', $dataFromMaintenanceYaml)) {
-            $startDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['start_date'] ?? '');
-            $this->setStartDate(false === $startDate ? null : $startDate);
-            $endDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dataFromMaintenanceYaml['scheduler']['end_date'] ?? '');
-            $this->setEndDate(false === $endDate ? null : $endDate);
-        }
-        if (array_key_exists('custom_message', $dataFromMaintenanceYaml)) {
-            $this->setCustomMessage($dataFromMaintenanceYaml['custom_message'] ?? '');
-        }
-        if (array_key_exists('token', $dataFromMaintenanceYaml)) {
-            $this->setToken($dataFromMaintenanceYaml['token']);
-        }
-        if (array_key_exists('allowBots', $dataFromMaintenanceYaml)) {
-            $this->setAllowBots($dataFromMaintenanceYaml['allowBots']);
-        }
+        MaintenanceConfigurationFactory::map($this, $dataFromMaintenanceYaml);
 
         return $this;
     }
