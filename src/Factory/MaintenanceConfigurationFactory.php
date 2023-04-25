@@ -45,7 +45,7 @@ final class MaintenanceConfigurationFactory
             ],
             'custom_message' => '',
             'token' => '',
-            'allowBots' => false,
+            'allow_bots' => false,
         ]);
         $options = $resolver->resolve($options);
 
@@ -66,7 +66,7 @@ final class MaintenanceConfigurationFactory
             ->setEndDate(false === $endDate ? null : $endDate)
             ->setCustomMessage($options['custom_message'])
             ->setToken($options['token'])
-            ->setAllowBots($options['allowBots'])
+            ->setAllowBots($options['allow_bots'])
         ;
     }
 }

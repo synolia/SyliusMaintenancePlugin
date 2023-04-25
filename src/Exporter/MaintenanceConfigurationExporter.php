@@ -38,7 +38,7 @@ final class MaintenanceConfigurationExporter
             $dataToExport['token'] = $token;
         }
         if ($configuration->allowBots()) {
-            $dataToExport['allowBots'] = true;
+            $dataToExport['allow_bots'] = true;
         }
         $scheduler = $this->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
 

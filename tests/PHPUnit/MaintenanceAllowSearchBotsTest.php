@@ -16,7 +16,7 @@ final class MaintenanceAllowSearchBotsTest extends AbstractWebTestCase
         \file_put_contents(
             $this->file,
             Yaml::dump([
-                'allowBots' => true,
+                'allow_bots' => true,
             ]),
         );
 
