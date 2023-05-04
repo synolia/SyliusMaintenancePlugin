@@ -69,9 +69,7 @@ final class MaintenanceAllowAccessByTokenTest extends WebTestCase
 
     private function createSession(KernelBrowser $client, string $token): Session
     {
-        $container = $client->getContainer();
-        $sessionSavePath = $container->getParameter('session.save_path');
-        $sessionStorage = new MockFileSessionStorage($sessionSavePath);
+        $sessionStorage = new MockFileSessionStorage('var/cache/test/sessions');
 
         $session = new Session($sessionStorage);
 
