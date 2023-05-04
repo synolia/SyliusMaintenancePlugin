@@ -24,10 +24,10 @@
 
 ## Requirements
 
-|        | Version    |
-|:-------|:-----------|
-| PHP    | ^8.0 |
-| Sylius | ^1.10       |
+|        | Version |
+|:-------|:--------|
+| PHP    | ^8.0    |
+| Sylius | ^1.10   |
 
 ## Installation
 
