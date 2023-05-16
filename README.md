@@ -21,6 +21,7 @@
 * Activate and deactivate these behaviors by commands
 * Activate and deactivate behaviors in your Sylius Back-office
 * Custom your message in your Sylius Back-office
+* Allow access to search bots to avoid negative impact on SEO
 
 ## Requirements
 
@@ -92,6 +93,7 @@
 - Allow access for one or multiple ips addresses (optional)
 - Allow access for secret token (optional)
 - Create your custom message (optional)
+- Grant access to search bots during maintenance (optional)
 
 ### If you want to put the **maintenance.yaml** in a directory, please add your directory in .env:
 For example :
