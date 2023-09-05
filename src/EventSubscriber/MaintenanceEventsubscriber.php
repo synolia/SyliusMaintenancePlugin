@@ -33,6 +33,10 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
     {
         $configuration = $this->configurationFactory->get();
 
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         if (!$this->isMaintenanceVoter->isMaintenance($configuration, $event->getRequest())) {
             return;
         }
