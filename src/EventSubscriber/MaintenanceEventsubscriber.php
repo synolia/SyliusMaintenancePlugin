@@ -33,6 +33,16 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
     {
         $configuration = $this->configurationFactory->get();
 
+        /** @phpstan-ignore-next-line */ /** Call to function method_exists() with RequestEvent and 'isMainRequest' will always evaluate to true. */
+        if (method_exists($event, 'isMainRequest') && !$event->isMainRequest()) {
+            return;
+        }
+
+        /** @TODO Drop after remove Symfony 4.4 compatibility */
+        if (method_exists($event, 'isMasterRequest') && !$event->isMasterRequest()) {
+            return;
+        }
+
         if (!$this->isMaintenanceVoter->isMaintenance($configuration, $event->getRequest())) {
             return;
         }
