@@ -13,7 +13,7 @@ class TokenChecker implements IsMaintenanceCheckerInterface
 {
     public static function getDefaultPriority(): int
     {
-        return 99;
+        return 20;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
