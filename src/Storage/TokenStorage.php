@@ -16,7 +16,14 @@ final class TokenStorage
 
     public function set(string $token): void
     {
-        $this->requestStack->getSession()->set(self::MAINTENANCE_TOKEN_NAME, $token);
+        if (method_exists($this->requestStack, 'getMainRequest')) {
+            $this->requestStack->getMainRequest()?->getSession()->set(self::MAINTENANCE_TOKEN_NAME, $token);
+        }
+
+        /** @TODO Drop after remove Symfony 4.4 compatibility */
+        if (method_exists($this->requestStack, 'getMasterRequest')) {
+            $this->requestStack->getMasterRequest()?->getSession()->set(self::MAINTENANCE_TOKEN_NAME, $token);
+        }
     }
 
     public function get(): string

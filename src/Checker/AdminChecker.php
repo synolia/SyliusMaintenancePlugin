@@ -32,10 +32,32 @@ class AdminChecker implements IsMaintenanceCheckerInterface
         /** @var string $adminPrefix */
         $adminPrefix = $this->params->get('sylius_admin.path_name');
 
+        if (str_starts_with($getRequestUri, '/_profiler') || str_starts_with($getRequestUri, '/_wdt')) {
+            return IsMaintenanceVoterInterface::ACCESS_GRANTED;
+        }
+
         if (false !== mb_strpos($getRequestUri, $adminPrefix, 1)) {
-            if ($this->requestStack->getMainRequest() === $this->requestStack->getCurrentRequest()) {
+            $session = null;
+            if (method_exists($this->requestStack, 'isMainRequest')) {
+                if (!$this->requestStack->isMainRequest()) {
+                    return IsMaintenanceVoterInterface::ACCESS_DENIED;
+                }
+
+                $session = $this->requestStack->getMainRequest()?->getSession();
+            }
+
+            /** @TODO Drop after remove Symfony 4.4 compatibility */
+            if (method_exists($this->requestStack, 'isMasterRequest')) {
+                if (!$this->requestStack->isMasterRequest()) {
+                    return IsMaintenanceVoterInterface::ACCESS_DENIED;
+                }
+
+                $session = $this->requestStack->getMasterRequest()?->getSession();
+            }
+
+            if (null !== $session) {
                 /** @var FlashBagInterface $flashBag */
-                $flashBag = $this->requestStack->getSession()->getBag('flashes');
+                $flashBag = $session->getBag('flashes');
                 $flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
             }
 

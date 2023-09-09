@@ -21,3 +21,4 @@ parameters:
         # Error not rightely reported because of Symfony 4.4
         - "#^Call to function method_exists\\(\\) with Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack and '.*' will always evaluate to true\\.$#"
         - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
+        - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\:\\:getMasterRequest\\(\\)\\.$#"
