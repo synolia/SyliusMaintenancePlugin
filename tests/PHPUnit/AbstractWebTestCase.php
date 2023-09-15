@@ -34,7 +34,7 @@ abstract class AbstractWebTestCase extends WebTestCase
             self::$client = self::createClient();
         }
 
-        $this->manager = static::getContainer()->get('doctrine')->getManager();
+        $this->manager = self::$kernel->getContainer()->get('doctrine')->getManager();
     }
 
     protected function tearDown(): void
