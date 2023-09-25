@@ -6,19 +6,20 @@ namespace Synolia\SyliusMaintenancePlugin\Checker;
 
 use Symfony\Component\HttpFoundation\Request;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
-use Synolia\SyliusMaintenancePlugin\Storage\TokenStorage;
 use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
-class TokenChecker implements IsMaintenanceCheckerInterface
+class ProfilerChecker implements IsMaintenanceCheckerInterface
 {
     public static function getDefaultPriority(): int
     {
-        return 20;
+        return 30;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
-        if ($request->getSession()->get(TokenStorage::MAINTENANCE_TOKEN_NAME) === $configuration->getToken()) {
+        $getRequestUri = $request->getRequestUri();
+
+        if (str_starts_with($getRequestUri, '/_profiler') || str_starts_with($getRequestUri, '/_wdt')) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
 
