@@ -12,6 +12,8 @@ use Webmozart\Assert\Assert;
 
 final class ConfigurationFileManager
 {
+    public const MAINTENANCE_CACHE_KEY = 'synolia_maintenance_configuration';
+
     private const MAINTENANCE_FILE = 'maintenance.yaml';
 
     private string $maintenanceDirectory;

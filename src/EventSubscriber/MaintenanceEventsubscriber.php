@@ -7,7 +7,11 @@ namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
+use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
+use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 use Twig\Environment;
 
@@ -17,6 +21,8 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         private Environment $twig,
         private MaintenanceConfigurationFactory $configurationFactory,
         private IsMaintenanceVoterInterface $isMaintenanceVoter,
+        private CacheInterface $synoliaMaintenanceCache,
+        private int $maintenanceCache,
     ) {
     }
 
@@ -29,7 +35,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
 
     public function handle(RequestEvent $event): void
     {
-        $configuration = $this->configurationFactory->get();
+        $configuration = $this->getMaintenanceConfiguration();
 
         /** @phpstan-ignore-next-line */ /** Call to function method_exists() with RequestEvent and 'isMainRequest' will always evaluate to true. */
         if (method_exists($event, 'isMainRequest') && !$event->isMainRequest()) {
@@ -50,5 +56,21 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
         ]);
 
         $event->setResponse(new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE));
+    }
+
+    private function getMaintenanceConfiguration(): MaintenanceConfiguration
+    {
+        if (0 !== $this->maintenanceCache) {
+            /** @var MaintenanceConfiguration $configuration */
+            $configuration = $this->synoliaMaintenanceCache->get(ConfigurationFileManager::MAINTENANCE_CACHE_KEY, function (ItemInterface $item): MaintenanceConfiguration {
+                $item->expiresAfter($this->maintenanceCache);
+
+                return $this->configurationFactory->get();
+            });
+
+            return $configuration;
+        }
+
+        return $this->configurationFactory->get();
     }
 }

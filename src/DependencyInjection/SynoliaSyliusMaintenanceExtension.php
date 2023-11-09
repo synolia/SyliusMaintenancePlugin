@@ -18,8 +18,28 @@ final class SynoliaSyliusMaintenanceExtension extends Extension
         $loader->load('services.yaml');
     }
 
+    public function prepend(ContainerBuilder $container): void
+    {
+        $this->addCachePool($container);
+    }
+
     public function getAlias(): string
     {
         return 'synolia_sylius_maintenance';
+    }
+
+    private function addCachePool(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('framework', [
+            'cache' => [
+                'pools' => [
+                    'synolia_maintenance.cache' => [
+                        'adapter' => 'cache.adapter.filesystem',
+                        'public' => false,
+                        'tags' => false,
+                    ],
+                ],
+            ],
+        ]);
     }
 }

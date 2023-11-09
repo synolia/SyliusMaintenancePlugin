@@ -23,6 +23,8 @@
 * Custom your message in your Sylius Back-office
 * Allow access to search bots to avoid negative impact on SEO
 
+![Alt text](images/maintenance.png "maintenance_configure")
+
 ## Requirements
 
 |        | Version |
@@ -102,7 +104,23 @@ For example :
  SYNOLIA_MAINTENANCE_DIR=var/maintenance
    ```
 
-![Alt text](images/maintenance.png "maintenance_configure")
+### If you want to add cache on the **maintenance.yaml**:
+
+``` yaml 
+# .env
+SYNOLIA_MAINTENANCE_CACHE=30 # ttl in seconds
+```
+And in project code (for exemple with redis)
+``` yaml 
+# config/packages/prod/cache.yaml
+framework:
+    cache:
+        ...
+        pools:
+            ...
+            synolia_maintenance.cache:
+                adapter: cache.adapter.redis
+```
 
 ## Development
 
