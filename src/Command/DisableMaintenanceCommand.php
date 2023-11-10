@@ -7,6 +7,7 @@ namespace Synolia\SyliusMaintenancePlugin\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
@@ -17,6 +18,7 @@ final class DisableMaintenanceCommand extends Command
     public function __construct(
         private ConfigurationFileManager $configurationFileManager,
         private TranslatorInterface $translator,
+        private CacheInterface $synoliaMaintenanceCache,
     ) {
         parent::__construct();
     }
@@ -32,6 +34,8 @@ final class DisableMaintenanceCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->configurationFileManager->deleteMaintenanceFile();
+        $this->synoliaMaintenanceCache->delete(ConfigurationFileManager::MAINTENANCE_CACHE_KEY);
+
         $output->writeln($this->translator->trans('maintenance.ui.message_disabled'));
 
         return 0;

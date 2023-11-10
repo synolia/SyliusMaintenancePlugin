@@ -8,9 +8,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
+use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 
 final class EnableMaintenanceCommand extends Command
 {
@@ -20,6 +22,7 @@ final class EnableMaintenanceCommand extends Command
         private TranslatorInterface $translator,
         private MaintenanceConfigurationExporter $maintenanceExporter,
         private MaintenanceConfigurationFactory $configurationFactory,
+        private CacheInterface $synoliaMaintenanceCache,
     ) {
         parent::__construct();
     }
@@ -43,6 +46,7 @@ final class EnableMaintenanceCommand extends Command
             $maintenanceConfiguration->setIpAddresses(implode(',', $ipsAddress));
         }
         $this->maintenanceExporter->export($maintenanceConfiguration);
+        $this->synoliaMaintenanceCache->delete(ConfigurationFileManager::MAINTENANCE_CACHE_KEY);
         $output->writeln($this->translator->trans('maintenance.ui.message_enabled'));
 
         return 0;

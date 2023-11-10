@@ -7,9 +7,11 @@ namespace Synolia\SyliusMaintenancePlugin\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
+use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Form\Type\MaintenanceConfigurationType;
 
 final class MaintenanceConfigurationController extends AbstractController
@@ -18,6 +20,7 @@ final class MaintenanceConfigurationController extends AbstractController
         private TranslatorInterface $translator,
         private MaintenanceConfigurationExporter $maintenanceExporter,
         private MaintenanceConfigurationFactory $configurationFactory,
+        private CacheInterface $synoliaMaintenanceCache,
     ) {
     }
 
@@ -39,6 +42,8 @@ final class MaintenanceConfigurationController extends AbstractController
             if ($maintenanceConfiguration->isEnabled()) {
                 $message = 'maintenance.ui.message_enabled';
             }
+
+            $this->synoliaMaintenanceCache->delete(ConfigurationFileManager::MAINTENANCE_CACHE_KEY);
 
             $request->getSession()->getFlashBag()->add('success', $this->translator->trans($message));
         }
