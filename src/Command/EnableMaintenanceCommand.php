@@ -15,10 +15,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
+use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
 final class EnableMaintenanceCommand extends Command
 {
     protected static $defaultName = 'maintenance:enable';
+
+    private MaintenanceConfiguration $maintenanceConfiguration;
 
     public function __construct(
         private TranslatorInterface $translator,
@@ -41,17 +44,10 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $maintenanceConfiguration = $this->configurationFactory->get();
-        $maintenanceConfiguration->setChannels($this->getChannels());
-        $maintenanceConfiguration->setEnabled(true);
-        /** @var array $ipsAddress */
-        $ipsAddress = $input->getArgument('ips_address');
-        if ([] !== $ipsAddress) {
-            $maintenanceConfiguration->setIpAddresses(implode(',', $ipsAddress));
-        }
-        $this->maintenanceExporter->export($maintenanceConfiguration);
+        $this->getMaintenanceConfiguration($input);
+        $this->maintenanceExporter->export($this->maintenanceConfiguration);
         $this->synoliaMaintenanceCache->delete(ConfigurationFileManager::MAINTENANCE_CACHE_KEY);
-        $output->writeln($this->translator->trans('maintenance.ui.message_enabled'));
+        $this->defineOutputMessage($output);
 
         return 0;
     }
@@ -65,5 +61,35 @@ final class EnableMaintenanceCommand extends Command
             $channelToExport[] = $channel->getCode();
         }
         return $channelToExport;
+    }
+
+    private function getMaintenanceConfiguration(InputInterface $input):void
+    {
+        $this->maintenanceConfiguration = $this->configurationFactory->get();
+        $this->maintenanceConfiguration->setChannels($this->getChannels());
+        $this->maintenanceConfiguration->setEnabled($this->isMaintenanceConfigurationEnabled());
+
+        /** @var array $ipsAddress */
+        $ipsAddress = $input->getArgument('ips_address');
+        if ([] !== $ipsAddress) {
+            $this->maintenanceConfiguration->setIpAddresses(implode(',', $ipsAddress));
+        }
+    }
+
+    private function isMaintenanceConfigurationEnabled():bool
+    {
+        if (count($this->maintenanceConfiguration->getChannels()) > 1){
+            return false;
+        }
+        return true;
+    }
+
+    private function defineOutputMessage(OutputInterface $output):void
+    {
+        if ($this->maintenanceConfiguration->isEnabled()){
+            $output->writeln($this->translator->trans('maintenance.ui.message_enabled'));
+            return;
+        }
+        $output->writeln($this->translator->trans('maintenance.ui.cannot_enable_maintenance'));
     }
 }
