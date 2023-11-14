@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Command;
 
+use App\Entity\Channel\Channel;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +25,7 @@ final class EnableMaintenanceCommand extends Command
         private MaintenanceConfigurationExporter $maintenanceExporter,
         private MaintenanceConfigurationFactory $configurationFactory,
         private CacheInterface $synoliaMaintenanceCache,
+        private ChannelRepositoryInterface $channelRepository
     ) {
         parent::__construct();
     }
@@ -39,6 +42,7 @@ final class EnableMaintenanceCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $maintenanceConfiguration = $this->configurationFactory->get();
+        $maintenanceConfiguration->setChannels($this->getChannels());
         $maintenanceConfiguration->setEnabled(true);
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
@@ -50,5 +54,16 @@ final class EnableMaintenanceCommand extends Command
         $output->writeln($this->translator->trans('maintenance.ui.message_enabled'));
 
         return 0;
+    }
+
+    private function getChannels():array
+    {
+        $channels = $this->channelRepository->findAll();
+        $channelToExport = [];
+        /** @var Channel $channel */
+        foreach ($channels as $channel) {
+            $channelToExport[] = $channel->getCode();
+        }
+        return $channelToExport;
     }
 }
