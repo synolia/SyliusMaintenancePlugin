@@ -15,10 +15,6 @@ final class MaintenanceConfigurationExporter
 
     public function export(MaintenanceConfiguration $configuration): void
     {
-        $this->configurationFileManager->deleteMaintenanceFile();
-        if (!$configuration->isEnabled()) {
-            return;
-        }
         $dataToExport = [];
 
         $ipAddresses = $configuration->getArrayIpsAddresses();
@@ -40,6 +36,7 @@ final class MaintenanceConfigurationExporter
         if ($configuration->allowBots()) {
             $dataToExport['allow_bots'] = true;
         }
+        $dataToExport['enabled'] = $configuration->isEnabled();
         $scheduler = $this->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
 
         $this->configurationFileManager->createMaintenanceFile(array_merge(

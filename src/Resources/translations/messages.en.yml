@@ -18,6 +18,7 @@ maintenance:
             allow_bots: Grant access to search bots during maintenance
         message_enabled: The maintenance plugin was successfully enabled.
         message_disabled: The maintenance plugin was successfully disabled.
+        message_reset: The maintenance plugin was successfully reset.
         message_success_ips: The ips were added to the file maintenance.yaml successfully.
         message_error_ips: An error occurred while adding ips addresses. Add one or multiple ips addresses separated with a comma.
         message_disabled_404: The plugin is disabled.
