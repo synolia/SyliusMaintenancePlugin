@@ -89,6 +89,11 @@
       php bin/console maintenance:disable
       ```
 
+  4. Remove configuration file using CLI
+
+  By default, **maintenance.yaml** configuration file remains when running `maintenance:disable` or via admin panel using toggle disable
+  Nevertheless passing option `[-c|--clear]` to command line above will reset previous saved configuration
+
 ### You can also turn your website under maintenance in Back Office :     
 
 - Enable/disable the plugin
