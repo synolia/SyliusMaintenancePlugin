@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Command;
 
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Synolia\SyliusMaintenancePlugin\Exporter\MaintenanceConfigurationExporter;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
+use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
 final class EnableMaintenanceCommand extends Command
 {
@@ -23,6 +26,7 @@ final class EnableMaintenanceCommand extends Command
         private MaintenanceConfigurationExporter $maintenanceExporter,
         private MaintenanceConfigurationFactory $configurationFactory,
         private CacheInterface $synoliaMaintenanceCache,
+        private ChannelRepositoryInterface $channelRepository,
     ) {
         parent::__construct();
     }
@@ -38,17 +42,39 @@ final class EnableMaintenanceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $maintenanceConfiguration = $this->configurationFactory->get();
-        $maintenanceConfiguration->setEnabled(true);
-        /** @var array $ipsAddress */
-        $ipsAddress = $input->getArgument('ips_address');
-        if ([] !== $ipsAddress) {
-            $maintenanceConfiguration->setIpAddresses(implode(',', $ipsAddress));
-        }
+        $maintenanceConfiguration = $this->getMaintenanceConfiguration($input);
         $this->maintenanceExporter->export($maintenanceConfiguration);
         $this->synoliaMaintenanceCache->delete(ConfigurationFileManager::MAINTENANCE_CACHE_KEY);
         $output->writeln($this->translator->trans('maintenance.ui.message_enabled'));
 
         return 0;
+    }
+
+    private function getChannels(): array
+    {
+        $channels = $this->channelRepository->findAll();
+        $channelToExport = [];
+
+        /** @var ChannelInterface $channel */
+        foreach ($channels as $channel) {
+            $channelToExport[] = $channel->getCode();
+        }
+
+        return $channelToExport;
+    }
+
+    private function getMaintenanceConfiguration(InputInterface $input): MaintenanceConfiguration
+    {
+        $maintenanceConfiguration = $this->configurationFactory->get();
+        $maintenanceConfiguration->setChannels($this->getChannels());
+        $maintenanceConfiguration->setEnabled(true);
+
+        /** @var array $ipsAddress */
+        $ipsAddress = $input->getArgument('ips_address');
+        if ([] !== $ipsAddress) {
+            $maintenanceConfiguration->setIpAddresses(implode(',', $ipsAddress));
+        }
+
+        return $maintenanceConfiguration;
     }
 }
