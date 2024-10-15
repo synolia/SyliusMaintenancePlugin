@@ -98,9 +98,10 @@
 
 - Enable/disable the plugin
 - Allow access for one or multiple ips addresses (optional)
-- Allow access for secret token (optional)
+- Allow access for secret token (session and request) (optional)
 - Create your custom message (optional)
 - Grant access to search bots during maintenance (optional)
+- Grant access to admins during maintenance (optional)
 
 ### If you want to put the **maintenance.yaml** in a directory, please add your directory in .env:
 For example :

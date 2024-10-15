@@ -45,14 +45,16 @@ class AdminChecker implements IsMaintenanceCheckerInterface
             }
             Assert::isInstanceOf($request, Request::class);
 
-            if ($request === $this->requestStack->getCurrentRequest()) {
-                $flashBag = $request->getSession()->getBag('flashes');
-                if ($flashBag instanceof FlashBagInterface) {
-                    $flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
+            if ($configuration->isAllowAdmins()) {
+                if ($request === $this->requestStack->getCurrentRequest()) {
+                    $flashBag = $request->getSession()->getBag('flashes');
+                    if ($flashBag instanceof FlashBagInterface) {
+                        $flashBag->add('info', $this->translator->trans('maintenance.ui.message_info_admin'));
+                    }
                 }
-            }
 
-            return IsMaintenanceVoterInterface::ACCESS_GRANTED;
+                return IsMaintenanceVoterInterface::ACCESS_GRANTED;
+            }
         }
 
         return IsMaintenanceVoterInterface::ACCESS_DENIED;

@@ -24,6 +24,8 @@ class MaintenanceConfiguration
 
     private bool $allowBots = false;
 
+    private bool $allowAdmins = false;
+
     public function __construct()
     {
         $this->startDate = null;
@@ -157,6 +159,18 @@ class MaintenanceConfiguration
     public function setAllowBots(bool $allowBots): self
     {
         $this->allowBots = $allowBots;
+
+        return $this;
+    }
+
+    public function isAllowAdmins(): bool
+    {
+        return $this->allowAdmins;
+    }
+
+    public function setAllowAdmins(bool $allowAdmins): self
+    {
+        $this->allowAdmins = $allowAdmins;
 
         return $this;
     }

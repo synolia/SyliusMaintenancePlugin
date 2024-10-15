@@ -49,6 +49,7 @@ final class MaintenanceConfigurationController extends AbstractController
         }
 
         return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
+            'maintenanceConfiguration' => $maintenanceConfiguration,
             'form' => $form->createView(),
         ]);
     }

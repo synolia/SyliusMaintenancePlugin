@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -55,7 +56,17 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
             'custom_message' => $configuration->getCustomMessage(),
         ]);
 
-        $event->setResponse(new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE));
+        if (!$event->getRequest()->isXmlHttpRequest()) {
+            $event->setResponse(new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE));
+
+            return;
+        }
+
+        $response = [
+            'key' => 'maintenance',
+            'message' => $configuration->getCustomMessage(),
+        ];
+        $event->setResponse(new JsonResponse($response, Response::HTTP_SERVICE_UNAVAILABLE));
     }
 
     private function getMaintenanceConfiguration(): MaintenanceConfiguration
