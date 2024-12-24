@@ -10,16 +10,19 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class ScheduledChecker implements IsMaintenanceCheckerInterface
 {
+    private const PRIORITY = 80;
+
     public static function getDefaultPriority(): int
     {
-        return 80;
+        return self::PRIORITY;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
-        if (false === $this->isActuallyScheduledMaintenance($configuration) &&
-            (null !== $configuration->getStartDate() ||
-                null !== $configuration->getEndDate())
+        if (
+            false === $this->isActuallyScheduledMaintenance($configuration) &&
+            ($configuration->getStartDate() instanceof \DateTime ||
+                $configuration->getEndDate() instanceof \DateTime)
         ) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
@@ -33,18 +36,16 @@ class ScheduledChecker implements IsMaintenanceCheckerInterface
         $startDate = $maintenanceConfiguration->getStartDate();
         $endDate = $maintenanceConfiguration->getEndDate();
         // Now is between startDate and endDate
-        if ($startDate !== null && $endDate !== null && ($now >= $startDate) && ($now <= $endDate)) {
+        if ($startDate instanceof \DateTime && $endDate instanceof \DateTime && ($now >= $startDate) && ($now <= $endDate)) {
             return true;
         }
         // No enddate provided, now is greater than startDate
-        if ($startDate !== null && $endDate === null && ($now >= $startDate)) {
+        if ($startDate instanceof \DateTime && !$endDate instanceof \DateTime && ($now >= $startDate)) {
             return true;
         }
+
         // No startdate provided, now is before than enddate
-        if ($endDate !== null && $startDate === null && ($now <= $endDate)) {
-            return true;
-        }
         // No schedule date
-        return false;
+        return $endDate instanceof \DateTime && !$startDate instanceof \DateTime && $now <= $endDate;
     }
 }

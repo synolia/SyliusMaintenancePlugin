@@ -12,6 +12,8 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class ChannelChecker implements IsMaintenanceCheckerInterface
 {
+    private const PRIORITY = 60;
+
     public function __construct(
         protected ChannelRepositoryInterface $channelRepository,
         protected ChannelContextInterface $channelContext,
@@ -20,15 +22,13 @@ class ChannelChecker implements IsMaintenanceCheckerInterface
 
     public static function getDefaultPriority(): int
     {
-        return 60;
+        return self::PRIORITY;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
-        if ($this->channelRepository->count([]) > 1) {
-            if (!\in_array($this->channelContext->getChannel()->getCode(), $configuration->getChannels(), true)) {
-                return IsMaintenanceVoterInterface::ACCESS_GRANTED;
-            }
+        if ($this->channelRepository->count([]) > 1 && !\in_array($this->channelContext->getChannel()->getCode(), $configuration->getChannels(), true)) {
+            return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
 
         return IsMaintenanceVoterInterface::ACCESS_DENIED;

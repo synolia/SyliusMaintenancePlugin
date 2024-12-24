@@ -1,0 +1,5 @@
+controllers:
+    resource:
+        path: ../../src/Controller/
+        namespace: Synolia\SyliusMaintenancePlugin\Controller
+    type: attribute

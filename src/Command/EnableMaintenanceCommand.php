@@ -6,6 +6,7 @@ namespace Synolia\SyliusMaintenancePlugin\Command;
 
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,16 +18,15 @@ use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
+#[AsCommand(name: 'maintenance:enable', description: 'Turn your website under maintenance.')]
 final class EnableMaintenanceCommand extends Command
 {
-    protected static $defaultName = 'maintenance:enable';
-
     public function __construct(
-        private TranslatorInterface $translator,
-        private MaintenanceConfigurationExporter $maintenanceExporter,
-        private MaintenanceConfigurationFactory $configurationFactory,
-        private CacheInterface $synoliaMaintenanceCache,
-        private ChannelRepositoryInterface $channelRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly MaintenanceConfigurationExporter $maintenanceExporter,
+        private readonly MaintenanceConfigurationFactory $configurationFactory,
+        private readonly CacheInterface $synoliaMaintenanceCache,
+        private readonly ChannelRepositoryInterface $channelRepository,
     ) {
         parent::__construct();
     }
@@ -34,7 +34,6 @@ final class EnableMaintenanceCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Turn your website under maintenance.')
             ->addArgument('ips_address', InputArgument::IS_ARRAY, 'Add ips addresses (separate multiple ips with a space)')
             ->setHelp('This command allows you to create the maintenance.yaml and also allows you to put the ips into this file.')
         ;

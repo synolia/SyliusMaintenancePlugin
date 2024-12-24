@@ -11,9 +11,11 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class TokenChecker implements IsMaintenanceCheckerInterface
 {
+    private const PRIORITY = 20;
+
     public static function getDefaultPriority(): int
     {
-        return 20;
+        return self::PRIORITY;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool

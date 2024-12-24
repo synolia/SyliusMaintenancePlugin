@@ -1,0 +1,14 @@
+parameters:
+  env(SYNOLIA_MAINTENANCE_DIR): ''
+  synolia_maintenance_dir: '%env(resolve:SYNOLIA_MAINTENANCE_DIR)%'
+  env(SYNOLIA_MAINTENANCE_CACHE): 0
+  synolia_maintenance_cache: '%env(resolve:int:SYNOLIA_MAINTENANCE_CACHE)%'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Synolia\SyliusMaintenancePlugin\:
+    resource: '../src/*'
+    exclude: '../src/{SynoliaSyliusMaintenancePlugin.php}'

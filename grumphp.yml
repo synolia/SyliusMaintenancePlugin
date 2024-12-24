@@ -5,25 +5,31 @@ grumphp:
     tasks:
         composer:
             no_check_all: true
-        git_blacklist:
-            keywords:
-                - 'var_dump'
-                - 'print_r'
-                - 'die\('
-                - 'console\.'
-            triggered_by: [php, twig, js]
         jsonlint:
             detect_key_conflicts: true
+        phplint:
+            exclude: ['vendor', 'tests/Application/*']
+            triggered_by: ['php']
         phpmd:
             ruleset: ['ruleset/.php_md.xml']
         phpstan:
             level: ~
             configuration: 'ruleset/phpstan.neon'
+            use_grumphp_paths: false
         yamllint:
             parse_custom_tags: true
         ecs:
             config: 'ruleset/ecs.php'
             no-progress-bar: true
+        phpmnd:
+            directory: src
         twigcs:
             path: 'src/'
             severity: error
+        phpcs:
+            standard: "ruleset"
+            warning_severity: 0
+            whitelist_patterns:
+                - 'src'
+            exclude:
+                - 'PSR12.Files.FileHeader'

@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\FileManager;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Webmozart\Assert\Assert;
 
-final class ConfigurationFileManager
+final readonly class ConfigurationFileManager
 {
     public const MAINTENANCE_CACHE_KEY = 'synolia_maintenance_configuration';
 
     private const MAINTENANCE_FILE = 'maintenance.yaml';
 
-    private string $maintenanceDirectory;
-
-    public function __construct(private Filesystem $filesystem, KernelInterface $kernel, string $maintenanceDirectory)
-    {
-        $this->maintenanceDirectory = $kernel->getProjectDir() . '/' . $maintenanceDirectory;
+    public function __construct(
+        private Filesystem $filesystem,
+        #[Autowire(value: '%kernel.project_dir%/%synolia_maintenance_dir%')]
+        private string $maintenanceDirectory,
+    ) {
     }
 
     public function hasMaintenanceFile(): bool

@@ -10,9 +10,11 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class ProfilerChecker implements IsMaintenanceCheckerInterface
 {
+    private const PRIORITY = 30;
+
     public static function getDefaultPriority(): int
     {
-        return 30;
+        return self::PRIORITY;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool

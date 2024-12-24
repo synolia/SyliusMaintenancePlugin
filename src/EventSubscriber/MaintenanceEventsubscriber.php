@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -15,13 +16,14 @@ use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 use Twig\Environment;
 
-final class MaintenanceEventsubscriber implements EventSubscriberInterface
+final readonly class MaintenanceEventsubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private Environment $twig,
         private MaintenanceConfigurationFactory $configurationFactory,
         private IsMaintenanceVoterInterface $isMaintenanceVoter,
         private CacheInterface $synoliaMaintenanceCache,
+        #[Autowire(param: 'synolia_maintenance_cache')]
         private int $maintenanceCache,
     ) {
     }
@@ -37,13 +39,7 @@ final class MaintenanceEventsubscriber implements EventSubscriberInterface
     {
         $configuration = $this->getMaintenanceConfiguration();
 
-        /** @phpstan-ignore-next-line */ /** Call to function method_exists() with RequestEvent and 'isMainRequest' will always evaluate to true. */
-        if (method_exists($event, 'isMainRequest') && !$event->isMainRequest()) {
-            return;
-        }
-
-        /** @TODO Drop after remove Symfony 4.4 compatibility */
-        if (method_exists($event, 'isMasterRequest') && !$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

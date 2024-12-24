@@ -57,10 +57,10 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
         bool $maintenance,
     ): void {
         $scheduler = [];
-        if (null !== $startDate) {
+        if ($startDate instanceof \DateTime) {
             $scheduler['start_date'] = $startDate->format('Y-m-d H:i:s');
         }
-        if (null !== $endDate) {
+        if ($endDate instanceof \DateTime) {
             $scheduler['end_date'] = $endDate->format('Y-m-d H:i:s');
         }
 

@@ -7,7 +7,7 @@ namespace Synolia\SyliusMaintenancePlugin\Exporter;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
-final class MaintenanceConfigurationExporter
+final readonly class MaintenanceConfigurationExporter
 {
     public function __construct(private ConfigurationFileManager $configurationFileManager)
     {
@@ -26,7 +26,7 @@ final class MaintenanceConfigurationExporter
             $dataToExport['custom_message'] = $customMessage;
         }
         $channels = $configuration->getChannels();
-        if (0 !== count($channels)) {
+        if ([] !== $channels) {
             $dataToExport['channels'] = $channels;
         }
         $token = $configuration->getToken();
@@ -49,10 +49,10 @@ final class MaintenanceConfigurationExporter
     {
         $scheduler = ['scheduler' => []];
 
-        if (null !== $startDate) {
+        if ($startDate instanceof \DateTimeInterface) {
             $scheduler['scheduler']['start_date'] = $startDate->format('Y-m-d H:i:s');
         }
-        if (null !== $endDate) {
+        if ($endDate instanceof \DateTimeInterface) {
             $scheduler['scheduler']['end_date'] = $endDate->format('Y-m-d H:i:s');
         }
         if ([] === $scheduler['scheduler']) {

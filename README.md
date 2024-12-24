@@ -29,8 +29,8 @@
 
 |        | Version |
 |:-------|:--------|
-| PHP    | ^8.0    |
-| Sylius | ^1.10   |
+| PHP    | ^8.2    |
+| Sylius | ^1.12   |
 
 ## Installation
 
@@ -40,22 +40,15 @@
     composer require synolia/sylius-maintenance-plugin
     ```
 
-2. Import required config in your `config/packages/_sylius.yaml` file:
-
-    ``` yaml    
-    imports:
-        - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/config.yaml" }
-    ```
-
-3. Import routing in your `config/routes.yaml` file:
+2. Import routing in your `config/routes.yaml` file:
 
     ``` yaml   
     synolia_maintenance:
-        resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yaml"
+        resource: "@SynoliaSyliusMaintenancePlugin/config/routes/attributes.yaml"
         prefix: '/%sylius_admin.path_name%'
     ```
 
-4. Clear cache
+3. Clear cache
 
     ``` shell
     php bin/console cache:clear
@@ -65,7 +58,7 @@
 
 - To turn your website under maintenance, please create a file **maintenance.yaml** at the root of your project.
 - If you want to allow access for some Ips, please add these Ip into **maintenance.yaml**   
-   For example :   
+  For example :
 
     ``` yaml   
     ips: [172.16.254.1, 255.255.255.255, 192.0.0.255]
@@ -73,28 +66,28 @@
 
 ### You can turn your website under maintenance by console commands :
 
-  1. Enable the plugin
+1. Enable the plugin
 
-     ``` shell
-      php bin/console maintenance:enable
-      ```
-  2. Enable the plugin and add one or multiple ips addresses separated with a space
+    ``` shell
+    php bin/console maintenance:enable
+    ```
+2. Enable the plugin and add one or multiple ips addresses separated with a space
 
-      ``` shell
-      php bin/console maintenance:enable 172.16.254.1 255.255.255.255 192.0.0.255
-      ```
-  3. Disable the plugin
+    ``` shell
+    php bin/console maintenance:enable 172.16.254.1 255.255.255.255 192.0.0.255
+    ```
+3. Disable the plugin
 
-      ``` shell
-      php bin/console maintenance:disable
-      ```
+    ``` shell
+    php bin/console maintenance:disable
+    ```
 
-  4. Remove configuration file using CLI
+4. Remove configuration file using CLI
 
-  By default, **maintenance.yaml** configuration file remains when running `maintenance:disable` or via admin panel using toggle disable
-  Nevertheless passing option `[-c|--clear]` to command line above will reset previous saved configuration
+By default, **maintenance.yaml** configuration file remains when running `maintenance:disable` or via admin panel using toggle disable
+Nevertheless passing option `[-c|--clear]` to command line above will reset previous saved configuration
 
-### You can also turn your website under maintenance in Back Office :     
+### You can also turn your website under maintenance in Back Office :
 
 - Enable/disable the plugin
 - Allow access for one or multiple ips addresses (optional)
@@ -103,11 +96,12 @@
 - Grant access to search bots during maintenance (optional)
 
 ### If you want to put the **maintenance.yaml** in a directory, please add your directory in .env:
+
 For example :
 
 ``` yaml 
  SYNOLIA_MAINTENANCE_DIR=var/maintenance
-   ```
+```
 
 ### If you want to add cache on the **maintenance.yaml**:
 
@@ -115,7 +109,9 @@ For example :
 # .env
 SYNOLIA_MAINTENANCE_CACHE=30 # ttl in seconds
 ```
-And in project code (for exemple with redis)
+
+And in project code (for example with redis)
+
 ``` yaml 
 # config/packages/prod/cache.yaml
 framework:

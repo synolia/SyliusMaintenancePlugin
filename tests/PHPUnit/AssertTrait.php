@@ -13,9 +13,11 @@ trait AssertTrait
         self::assertSelectorTextContains('#footer', 'Powered by Sylius');
     }
 
-    protected function assertSiteIsInMaintenance(string $message = 'The website is under maintenance'): void
+    protected function assertSiteIsInMaintenance(string $message = 'maintenance.ui.message'): void
     {
+        $translator = self::getContainer()->get('translator');
+
         self::assertResponseStatusCodeSame(503);
-        self::assertSelectorTextContains('body', $message);
+        self::assertSelectorTextContains('body', $translator->trans($message));
     }
 }
