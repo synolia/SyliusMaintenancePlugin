@@ -44,7 +44,7 @@
 
     ``` yaml   
     synolia_maintenance:
-        resource: "@SynoliaSyliusMaintenancePlugin/config/routes/attributes.yaml"
+        resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yaml"
         prefix: '/%sylius_admin.path_name%'
     ```
 

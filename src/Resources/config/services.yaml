@@ -10,5 +10,5 @@ services:
     autoconfigure: true
 
   Synolia\SyliusMaintenancePlugin\:
-    resource: '../src/*'
-    exclude: '../src/{SynoliaSyliusMaintenancePlugin.php}'
+    resource: '../../*'
+    exclude: '../../{SynoliaSyliusMaintenancePlugin.php}'
