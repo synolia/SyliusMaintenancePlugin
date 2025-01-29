@@ -1,0 +1,57 @@
+{% from '@SyliusAdmin/shared/helper/button.html.twig' import default as btn %}
+
+{% if form is not defined %}
+    {% set form = hookable_metadata.context.form %}
+{% endif %}
+
+{% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' %}
+
+<div class="container-xl">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': form.vars.id}}) }}
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form.enabled) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {% if form.channels is defined %}
+                                {{ form_row(form.channels) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form.ipAddresses) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3 field">
+                                <label class="form-label">
+                                    {{ 'maintenance.ui.form.token_storage.help'|trans }}
+                                </label>
+                                {{ btn({
+                                    class: 'btn-secondary',
+                                    url: path('sylius_admin_maintenance_token_storage'),
+                                    text: 'maintenance.ui.form.token_storage.button'|trans
+                                }) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            {{ form_row(form.customMessage) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form.startDate) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form.endDate) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form.allowBots) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>

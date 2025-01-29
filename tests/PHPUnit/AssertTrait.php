@@ -10,7 +10,7 @@ trait AssertTrait
     {
         self::assertResponseIsSuccessful();
         self::assertPageTitleContains('Fashion Web Store');
-        self::assertSelectorTextContains('#footer', 'Powered by Sylius');
+        self::assertSelectorTextContains('footer', 'Powered by Sylius');
     }
 
     protected function assertSiteIsInMaintenance(string $message = 'maintenance.ui.message'): void

@@ -7,9 +7,9 @@ CONSOLE=cd ${TEST_DIRECTORY} && php bin/console -e test
 COMPOSER=cd ${TEST_DIRECTORY} && composer
 YARN=cd ${TEST_DIRECTORY} && yarn
 
-SYLIUS_VERSION=1.14.0
-SYMFONY_VERSION=6.4
-PHP_VERSION=8.2
+SYLIUS_VERSION=2.0
+SYMFONY_VERSION=7.1
+PHP_VERSION=8.3
 PLUGIN_NAME=synolia/sylius-maintenance-plugin
 
 ###
