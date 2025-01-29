@@ -9,7 +9,7 @@ use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Test\Services\DefaultChannelFactory;
 use Symfony\Component\Yaml\Yaml;
 
-final class MulitChannelMaintenanceTest extends AbstractWebTestCase
+final class MultiChannelMaintenanceTest extends AbstractWebTestCase
 {
     protected function setUp(): void
     {
@@ -20,7 +20,7 @@ final class MulitChannelMaintenanceTest extends AbstractWebTestCase
         /** @var DefaultChannelFactory $channelFactory */
         $channelFactory = self::$kernel->getContainer()->get('sylius.behat.factory.default_channel');
 
-        // set hostname for actuel channel
+        // set hostname for actual channel
         $channel = $channelRepository->findOneByCode('FASHION_WEB');
         $channel->setHostname('fashion.localhost');
 
@@ -30,6 +30,20 @@ final class MulitChannelMaintenanceTest extends AbstractWebTestCase
         $this->manager->persist($maintenanceChannel);
 
         $this->manager->flush();
+    }
+
+    protected function tearDown(): void
+    {
+        /** @var ChannelRepositoryInterface $channelRepository */
+        $channelRepository = $this->manager->getRepository(ChannelInterface::class);
+
+        // remove test channel
+        $maintenanceChannel = $channelRepository->findOneByCode('test');
+        $this->manager->remove($maintenanceChannel);
+
+        $this->manager->flush();
+
+        parent::tearDown();
     }
 
     public function testMaintenanceIsNotEnabledWhenFileIsNotEnabled(): void

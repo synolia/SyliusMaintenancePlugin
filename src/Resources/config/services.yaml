@@ -8,29 +8,7 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
-    public: false
-    bind:
-      $maintenanceDirectory: '%synolia_maintenance_dir%'
-      $maintenanceCache: '%synolia_maintenance_cache%'
-
-  _instanceof:
-    Synolia\SyliusMaintenancePlugin\Checker\IsMaintenanceCheckerInterface:
-      tags:
-        - { name: !php/const Synolia\SyliusMaintenancePlugin\Checker\IsMaintenanceCheckerInterface::TAG_ID }
 
   Synolia\SyliusMaintenancePlugin\:
     resource: '../../*'
-    exclude: '../../{Controller,Migrations,SynoliaSyliusMaintenancePlugin.php}'
-
-  Synolia\SyliusMaintenancePlugin\Controller\:
-    resource: '../../Controller/*'
-    tags: ['controller.service_arguments']
-
-  Synolia\SyliusMaintenancePlugin\Menu\AdminMenuListener:
-    tags:
-      - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
-
-  Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface:
-    class: Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoter
-    arguments:
-      - !tagged_iterator { tag: !php/const Synolia\SyliusMaintenancePlugin\Checker\IsMaintenanceCheckerInterface::TAG_ID }
+    exclude: '../../{SynoliaSyliusMaintenancePlugin.php}'

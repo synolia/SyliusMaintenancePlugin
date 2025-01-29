@@ -30,7 +30,7 @@ abstract class AbstractWebTestCase extends WebTestCase
         $this->file = $constant->getValue();
         @\unlink($this->file);
 
-        if (!self::$client) {
+        if (!self::$client instanceof AbstractBrowser) {
             self::$client = self::createClient();
         }
 

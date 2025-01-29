@@ -1,2 +1,1 @@
-imports:
-  - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/services.yaml" }
+# deprecated: will be removed in the next major release

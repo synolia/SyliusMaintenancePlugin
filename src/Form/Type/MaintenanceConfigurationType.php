@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\GreaterThan;
 
 final class MaintenanceConfigurationType extends AbstractType
 {
-    public function __construct(private ChannelRepositoryInterface $channelRepository)
+    public function __construct(private readonly ChannelRepositoryInterface $channelRepository)
     {
     }
 
@@ -82,6 +82,7 @@ final class MaintenanceConfigurationType extends AbstractType
             $builder->get('channels')
                 ->addModelTransformer(new CallbackTransformer(
                     fn (array $codesToChannels): array => \array_map(
+                        /** @phpstan-ignore-next-line */
                         fn (string $channelCode): ?ChannelInterface => $this->channelRepository->findOneByCode($channelCode),
                         $codesToChannels,
                     ),

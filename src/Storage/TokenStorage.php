@@ -6,7 +6,7 @@ namespace Synolia\SyliusMaintenancePlugin\Storage;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
-final class TokenStorage
+final readonly class TokenStorage
 {
     public const MAINTENANCE_TOKEN_NAME = 'synolia_maintenance_token';
 
@@ -16,20 +16,13 @@ final class TokenStorage
 
     public function set(string $token): void
     {
-        if (method_exists($this->requestStack, 'getMainRequest')) {
-            $this->requestStack->getMainRequest()?->getSession()->set(self::MAINTENANCE_TOKEN_NAME, $token);
-        }
-
-        /** @TODO Drop after remove Symfony 4.4 compatibility */
-        if (method_exists($this->requestStack, 'getMasterRequest')) {
-            $this->requestStack->getMasterRequest()?->getSession()->set(self::MAINTENANCE_TOKEN_NAME, $token);
-        }
+        $this->requestStack->getMainRequest()?->getSession()->set(self::MAINTENANCE_TOKEN_NAME, $token);
     }
 
     public function get(): string
     {
         $token = $this->requestStack->getSession()->get(self::MAINTENANCE_TOKEN_NAME);
-        if (null === $token || !is_string($token)) {
+        if (!is_string($token)) {
             $token = '';
         }
 

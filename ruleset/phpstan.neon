@@ -1,24 +1,18 @@
 parameters:
     level: max
     reportUnmatchedIgnoredErrors: false
-    checkMissingIterableValueType: false
+    treatPhpDocTypesAsCertain: false
+    paths:
+        - ../src
     bootstrapFiles:
         - ../vendor/autoload.php
     excludePaths:
-        # Makes PHPStan crash
-        - '../src/DependencyInjection/Configuration.php'
-        - '../ruleset/ecs.php'
-
-        # Test dependencies
-        - '../tests/Application/'
-        - '../tests/PHPUnit'
-
-        - '../bin/'
-
+        - ../src/DependencyInjection/Configuration.php?
+        - ../tests/Application/?
+        - ../tests/PHPUnit
     ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
         - '/Parameter #1 \$configuration of method Symfony\\Component\\DependencyInjection\\Extension\\Extension::processConfiguration\(\) expects Symfony\\Component\\Config\\Definition\\ConfigurationInterface, Symfony\\Component\\Config\\Definition\\ConfigurationInterface\|null given\./'
         - '#Call to an undefined method Sylius\\Component\\Channel\\Repository\\ChannelRepositoryInterface::count\(\)\.#'
-        # Error not rightely reported because of Symfony 4.4
-        - "#^Call to function method_exists\\(\\) with Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack and '.*' will always evaluate to true\\.$#"
         - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-        - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\:\\:getMasterRequest\\(\\)\\.$#"

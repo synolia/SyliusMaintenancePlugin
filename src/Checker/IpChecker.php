@@ -10,9 +10,11 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 class IpChecker implements IsMaintenanceCheckerInterface
 {
+    private const PRIORITY = 90;
+
     public static function getDefaultPriority(): int
     {
-        return 90;
+        return self::PRIORITY;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool

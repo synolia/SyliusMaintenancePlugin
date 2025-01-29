@@ -20,7 +20,7 @@ final class MaintenanceByChannelTest extends AbstractWebTestCase
         /** @var DefaultChannelFactory $channelFactory */
         $channelFactory = self::$kernel->getContainer()->get('sylius.behat.factory.default_channel');
 
-        // set hostname for actuel channel
+        // set hostname for actual channel
         $channel = $channelRepository->findOneByCode('FASHION_WEB');
         $channel->setHostname('fashion.localhost');
 

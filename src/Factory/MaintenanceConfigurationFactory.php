@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Synolia\SyliusMaintenancePlugin\FileManager\ConfigurationFileManager;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
 
-final class MaintenanceConfigurationFactory
+final readonly class MaintenanceConfigurationFactory
 {
     public function __construct(private ConfigurationFileManager $configurationFileManager)
     {
@@ -48,6 +48,17 @@ final class MaintenanceConfigurationFactory
             'allow_bots' => false,
             'enabled' => true,
         ]);
+        /**
+         * @var array{
+         *     'ips': array<string>,
+         *     'channels': array<string>,
+         *     'scheduler': array{'start_date': string, 'end_date': string},
+         *     'custom_message': string,
+         *     'token': string,
+         *     'allow_bots': bool,
+         *     'enabled': bool,
+         *  } $options
+         */
         $options = $resolver->resolve($options);
 
         $ips = implode(',', $options['ips']);

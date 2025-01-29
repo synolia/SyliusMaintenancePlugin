@@ -14,9 +14,9 @@ class MaintenanceConfiguration
 
     private string $customMessage = '';
 
-    private ?\DateTime $startDate;
+    private ?\DateTime $startDate = null;
 
-    private ?\DateTime $endDate;
+    private ?\DateTime $endDate = null;
 
     private array $channels = [];
 
@@ -26,8 +26,6 @@ class MaintenanceConfiguration
 
     public function __construct()
     {
-        $this->startDate = null;
-        $this->endDate = null;
         $this->token = bin2hex(random_bytes(16));
     }
 

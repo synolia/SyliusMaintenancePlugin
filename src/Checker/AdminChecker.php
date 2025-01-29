@@ -15,6 +15,8 @@ use Webmozart\Assert\Assert;
 
 class AdminChecker implements IsMaintenanceCheckerInterface
 {
+    private const PRIORITY = 70;
+
     public function __construct(
         protected ParameterBagInterface $params,
         protected RequestStack $requestStack,
@@ -24,7 +26,7 @@ class AdminChecker implements IsMaintenanceCheckerInterface
 
     public static function getDefaultPriority(): int
     {
-        return 70;
+        return self::PRIORITY;
     }
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
@@ -35,14 +37,7 @@ class AdminChecker implements IsMaintenanceCheckerInterface
         $adminPrefix = \DIRECTORY_SEPARATOR . $adminPrefix;
 
         if (str_starts_with($getRequestUri, $adminPrefix)) {
-            if (method_exists($this->requestStack, 'getMainRequest')) {
-                $request = $this->requestStack->getMainRequest();
-            }
-
-            /** @TODO Drop after remove Symfony 4.4 compatibility */
-            if (method_exists($this->requestStack, 'getMasterRequest')) {
-                $request = $this->requestStack->getMasterRequest();
-            }
+            $request = $this->requestStack->getMainRequest();
             Assert::isInstanceOf($request, Request::class);
 
             if ($request === $this->requestStack->getCurrentRequest()) {
