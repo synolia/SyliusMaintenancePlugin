@@ -22,7 +22,9 @@ class TokenChecker implements IsMaintenanceCheckerInterface
     {
         if ($request->get('maintenanceToken') === $configuration->getToken()) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
-        } elseif ($request->getSession()->get(TokenStorage::MAINTENANCE_TOKEN_NAME) === $configuration->getToken()) {
+        }
+
+        if ($request->getSession()->get(TokenStorage::MAINTENANCE_TOKEN_NAME) === $configuration->getToken()) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
 

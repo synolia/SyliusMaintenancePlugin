@@ -1,6 +1,6 @@
 maintenance:
     ui:
-        message: Die Webseite befindet im Wartungsmodus
+        message: Die Webseite befindet sich im Wartungsmodus
         title: Wartungsmodus
         subtitle: Wartungsmodus verwalten
         form:
