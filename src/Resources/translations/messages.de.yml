@@ -1,0 +1,33 @@
+maintenance:
+    ui:
+        message: Die Webseite befindet sich im Wartungsmodus
+        title: Wartungsmodus
+        subtitle: Wartungsmodus verwalten
+        form:
+            enabled: Aktiv?
+            ip: Ip Adressen ignorieren (getrennt mit ,)
+            token_storage:
+                button: Generiere Token
+                help: Zugriff über Token erlauben
+                message: Token wurde generiert
+            placeholder: 'Ip Adressen ignorieren (getrennt mit ,) Zum Beispiel: 255.255.255.255,192.0.0.255'
+            custom_message: Nachricht
+            start_date: Start
+            end_date: Ende
+            error_end_date: End-Datum muss hinter Startdatum liegen
+            allow_bots: Erlaube Bots den Zugriff während dem Wartungsmodus
+            allow_admins: Erlaube Admins den Zugriff während dem Wartungsmodus
+        message_enabled: Wartungsmodus aktiviert
+        message_disabled: Wartungsmodus deaktiviert
+        message_reset: Wartungsmodus zurückgesetzt
+        message_success_ips: Ip Adressen wurden gespeichert
+        message_error_ips: Fehler in den Ip-Adressen
+        message_disabled_404: Das Plugin ist nicht aktiv
+        message_success_message: Nachricht erfolgreich gespeichert
+        message_end_date_in_the_past: End-Datum ist in der Vergangenheit, Wartungsmodus wurde beendet
+        message_info_admin: Die Webseite ist im Wartungsmodus
+sylius_plus:
+    rbac:
+        parent:
+            plugin_synolia_maintenances: Wartungsmodus
+        sylius_admin_maintenance_configuration: Wartungsmodus verwalten

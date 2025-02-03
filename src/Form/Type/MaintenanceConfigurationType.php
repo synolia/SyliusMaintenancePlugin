@@ -67,6 +67,10 @@ final class MaintenanceConfigurationType extends AbstractType
                 'label' => 'maintenance.ui.form.allow_bots',
                 'required' => true,
             ])
+            ->add('allowAdmins', CheckboxType::class, [
+                'label' => 'maintenance.ui.form.allow_admins',
+                'required' => true,
+            ])
         ;
 
         if ($this->channelRepository->count([]) > 1) {

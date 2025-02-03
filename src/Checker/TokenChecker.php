@@ -20,6 +20,10 @@ class TokenChecker implements IsMaintenanceCheckerInterface
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
+        if ($request->get('maintenanceToken') === $configuration->getToken()) {
+            return IsMaintenanceVoterInterface::ACCESS_GRANTED;
+        }
+
         if ($request->getSession()->get(TokenStorage::MAINTENANCE_TOKEN_NAME) === $configuration->getToken()) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }

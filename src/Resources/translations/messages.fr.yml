@@ -16,6 +16,7 @@ maintenance:
             end_date: Se termine le
             error_end_date: La date de fin doit être postérieure à la date de début.
             allow_bots: Accorder l'accès aux robots de recherche pendant la maintenance
+            allow_admins: Autoriser l'accès aux administrateurs pendant le mode de maintenance
         message_enabled: Le plugin de maintenance a été activé avec succès.
         message_disabled: Le plugin de maintenance a été désactivé avec succès.
         message_reset: Le plugin de maintenance a été réinitialisé avec succès.
