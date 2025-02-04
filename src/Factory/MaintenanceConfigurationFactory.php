@@ -57,6 +57,7 @@ final readonly class MaintenanceConfigurationFactory
          *     'custom_message': string,
          *     'token': string,
          *     'allow_bots': bool,
+         *     'allow_admins': bool,
          *     'enabled': bool,
          *  } $options
          */

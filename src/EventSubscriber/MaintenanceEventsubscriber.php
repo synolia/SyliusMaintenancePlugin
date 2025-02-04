@@ -52,7 +52,7 @@ final readonly class MaintenanceEventsubscriber implements EventSubscriberInterf
             'custom_message' => $configuration->getCustomMessage(),
         ]);
 
-        if (str_contains($event->getRequest()->headers->get('Content-Type', ''), 'application/json')) {
+        if ('json' === $event->getRequest()->getContentTypeFormat()) {
             $event->setResponse(new JsonResponse([
                 'key' => 'maintenance',
                 'message' => $configuration->getCustomMessage(),
