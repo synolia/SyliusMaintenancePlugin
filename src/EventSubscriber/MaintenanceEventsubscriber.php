@@ -6,6 +6,7 @@ namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -50,6 +51,15 @@ final readonly class MaintenanceEventsubscriber implements EventSubscriberInterf
         $responseContent = $this->twig->render('@SynoliaSyliusMaintenancePlugin/maintenance.html.twig', [
             'custom_message' => $configuration->getCustomMessage(),
         ]);
+
+        if ('json' === $event->getRequest()->getContentTypeFormat()) {
+            $event->setResponse(new JsonResponse([
+                'key' => 'maintenance',
+                'message' => $configuration->getCustomMessage(),
+            ], Response::HTTP_SERVICE_UNAVAILABLE));
+
+            return;
+        }
 
         $event->setResponse(new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE));
     }
