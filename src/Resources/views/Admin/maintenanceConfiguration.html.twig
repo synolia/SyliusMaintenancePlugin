@@ -37,8 +37,8 @@
 			<div class="field">
 				<div style="margin-bottom: 0.5em">{{ 'maintenance.ui.form.token_storage.help'|trans }}</div>
 				<a class="ui secondary button" href="{{ path('sylius_admin_maintenance_token_storage') }}">{{ 'maintenance.ui.form.token_storage.button'|trans }}</a>
-                {% if maintenanceConfiguration.token is defined %}
-                    {{ maintenanceConfiguration.token }}
+                {% if maintenanceConfiguration.enabled and maintenanceConfiguration.token is defined and maintenanceConfiguration.token is not empty %}
+                    <kbd>{{ maintenanceConfiguration.token }}</kbd>
                 {% endif %}
 			</div>
 		</div>
