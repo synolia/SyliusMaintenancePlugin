@@ -24,7 +24,7 @@ class MaintenanceConfiguration
 
     private bool $allowBots = false;
 
-    private bool $allowAdmins = false;
+    private bool $allowAdmins = true;
 
     public function __construct()
     {

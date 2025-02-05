@@ -25,6 +25,7 @@ final class MaintenanceAllowAccessToAdminAreaTest extends AbstractWebTestCase
             $file,
             Yaml::dump([
                 'custom_message' => 'Maintenance ON',
+                'allow_admins' => false,
             ]),
         );
 
@@ -45,7 +46,6 @@ final class MaintenanceAllowAccessToAdminAreaTest extends AbstractWebTestCase
             $file,
             Yaml::dump([
                 'custom_message' => 'Maintenance ON',
-                'allow_admins' => true,
             ]),
         );
 
