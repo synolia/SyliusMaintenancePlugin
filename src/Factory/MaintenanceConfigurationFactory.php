@@ -46,6 +46,7 @@ final readonly class MaintenanceConfigurationFactory
             'custom_message' => '',
             'token' => '',
             'allow_bots' => false,
+            'allow_admins' => true,
             'enabled' => true,
         ]);
         /**
@@ -56,6 +57,7 @@ final readonly class MaintenanceConfigurationFactory
          *     'custom_message': string,
          *     'token': string,
          *     'allow_bots': bool,
+         *     'allow_admins': bool,
          *     'enabled': bool,
          *  } $options
          */
@@ -79,6 +81,7 @@ final readonly class MaintenanceConfigurationFactory
             ->setCustomMessage($options['custom_message'])
             ->setToken($options['token'])
             ->setAllowBots($options['allow_bots'])
+            ->setAllowAdmins($options['allow_admins'])
             ->setEnabled($options['enabled'])
         ;
     }

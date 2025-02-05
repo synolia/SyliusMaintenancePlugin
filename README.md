@@ -76,13 +76,18 @@
     ``` shell
     php bin/console maintenance:enable 172.16.254.1 255.255.255.255 192.0.0.255
     ```
-3. Disable the plugin
+3.Enable the plugin and disable admin access
+
+    ``` shell
+    php bin/console maintenance:enable --disable-admin
+    ```
+4.Disable the plugin
 
     ``` shell
     php bin/console maintenance:disable
     ```
 
-4. Remove configuration file using CLI
+5.Remove configuration file using CLI
 
 By default, **maintenance.yaml** configuration file remains when running `maintenance:disable` or via admin panel using toggle disable
 Nevertheless passing option `[-c|--clear]` to command line above will reset previous saved configuration
@@ -91,9 +96,10 @@ Nevertheless passing option `[-c|--clear]` to command line above will reset prev
 
 - Enable/disable the plugin
 - Allow access for one or multiple ips addresses (optional)
-- Allow access for secret token (optional)
+- Allow access for secret token (session and request) (optional)
 - Create your custom message (optional)
 - Grant access to search bots during maintenance (optional)
+- Grant access to admins during maintenance (optional)
 
 ### If you want to put the **maintenance.yaml** in a directory, please add your directory in .env:
 
@@ -122,6 +128,11 @@ framework:
             synolia_maintenance.cache:
                 adapter: cache.adapter.redis
 ```
+
+### Precisions for access token
+
+Once token is generated, disallowing maintenance will be available thought request as well.
+So you can use it as query parameter `?synolia_maintenance_token={$token}` or in headers `HTTP_SYNOLIA_MAINTENANCE_TOKEN: token` for a particular request to bypass maintenance mode.
 
 ## Development
 
