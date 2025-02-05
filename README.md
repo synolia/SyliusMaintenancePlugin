@@ -129,6 +129,11 @@ framework:
                 adapter: cache.adapter.redis
 ```
 
+### Precisions for access token
+
+Once token is generated, disallowing maintenance will be available thought request as well.
+So you can use it as query parameter `?synolia_maintenance_token={$token}` or in headers `HTTP_SYNOLIA_MAINTENANCE_TOKEN: token` for a particular request to bypass maintenance mode.
+
 ## Development
 
 See [How to contribute](CONTRIBUTING.md).
