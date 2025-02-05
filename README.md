@@ -76,13 +76,18 @@
     ``` shell
     php bin/console maintenance:enable 172.16.254.1 255.255.255.255 192.0.0.255
     ```
-3. Disable the plugin
+3.Enable the plugin and disable admin access
+
+    ``` shell
+    php bin/console maintenance:enable --disable-admin
+    ```
+4.Disable the plugin
 
     ``` shell
     php bin/console maintenance:disable
     ```
 
-4. Remove configuration file using CLI
+5.Remove configuration file using CLI
 
 By default, **maintenance.yaml** configuration file remains when running `maintenance:disable` or via admin panel using toggle disable
 Nevertheless passing option `[-c|--clear]` to command line above will reset previous saved configuration

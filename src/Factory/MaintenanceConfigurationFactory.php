@@ -46,7 +46,7 @@ final readonly class MaintenanceConfigurationFactory
             'custom_message' => '',
             'token' => '',
             'allow_bots' => false,
-            'allow_admins' => false,
+            'allow_admins' => true,
             'enabled' => true,
         ]);
         /**

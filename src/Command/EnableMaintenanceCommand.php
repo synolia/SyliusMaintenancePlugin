@@ -10,6 +10,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -35,6 +36,7 @@ final class EnableMaintenanceCommand extends Command
     {
         $this
             ->addArgument('ips_address', InputArgument::IS_ARRAY, 'Add ips addresses (separate multiple ips with a space)')
+            ->addOption('disable-admin', null, InputOption::VALUE_NONE, 'disable admin access')
             ->setHelp('This command allows you to create the maintenance.yaml and also allows you to put the ips into this file.')
         ;
     }
@@ -67,6 +69,9 @@ final class EnableMaintenanceCommand extends Command
         $maintenanceConfiguration = $this->configurationFactory->get();
         $maintenanceConfiguration->setChannels($this->getChannels());
         $maintenanceConfiguration->setEnabled(true);
+
+        $disableAdmin = (bool) $input->getOption('disable-admin');
+        $maintenanceConfiguration->setAllowAdmins(!$disableAdmin);
 
         /** @var array $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
