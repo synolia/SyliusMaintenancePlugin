@@ -38,6 +38,7 @@ final readonly class MaintenanceConfigurationExporter
         }
         $dataToExport['enabled'] = $configuration->isEnabled();
         $scheduler = $this->getSchedulerArray($configuration->getStartDate(), $configuration->getEndDate());
+        $dataToExport['allow_admins'] = $configuration->isAllowAdmins();
 
         $this->configurationFileManager->createMaintenanceFile(array_merge(
             $scheduler,
