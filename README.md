@@ -52,7 +52,14 @@
         prefix: '/%sylius_admin.path_name%'
     ```
 
-3. Clear cache
+3. Import twig hooks from config in your `config/packages/maintenance.yaml` file:
+
+    ``` yaml   
+    imports:
+         - { resource: "@SynoliaSyliusMaintenancePlugin/config/config.yaml" }
+    ```
+
+4. Clear cache
 
     ``` shell
     php bin/console cache:clear

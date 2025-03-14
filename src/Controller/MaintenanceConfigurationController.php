@@ -55,7 +55,7 @@ final class MaintenanceConfigurationController extends AbstractController
             $flashBag->add('success', $this->translator->trans($message));
         }
 
-        return $this->render('@SynoliaSyliusMaintenancePlugin/Admin/maintenanceConfiguration.html.twig', [
+        return $this->render('@SynoliaSyliusMaintenancePlugin/admin/maintenance/layout.html.twig', [
             'maintenanceConfiguration' => $maintenanceConfiguration,
             'form' => $form->createView(),
         ]);
