@@ -48,7 +48,7 @@
 
     ``` yaml   
     synolia_maintenance:
-        resource: "@SynoliaSyliusMaintenancePlugin/config/routes/admin_routing.yaml"
+        resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/admin_routing.yaml"
         prefix: '/%sylius_admin.path_name%'
     ```
 
@@ -56,7 +56,7 @@
 
     ``` yaml   
     imports:
-         - { resource: "@SynoliaSyliusMaintenancePlugin/config/config.yaml" }
+         - { resource: "@SynoliaSyliusMaintenancePlugin/Resources/config/config.yaml" }
     ```
 
 4. Clear cache
