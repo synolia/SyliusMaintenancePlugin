@@ -1,5 +1,6 @@
 {% import '@SyliusAdmin/shared/helper/button.html.twig' as button %}
 
 {% set index_url = sylius_generate_redirect_path(app.request.headers.get('referer')) %}
+{% set fallback_url = path('sylius_admin_dashboard') %}
 
-{{ button.cancel(sylius_test_form_attribute('cancel-changes-button')|merge({ text: 'sylius.ui.cancel'|trans, url: index_url, class: 'btn' })) }}
+{{ button.cancel(sylius_test_form_attribute('cancel-changes-button')|merge({ text: 'sylius.ui.cancel'|trans, url: index_url, class: 'btn', fallback_url: fallback_url })) }}
