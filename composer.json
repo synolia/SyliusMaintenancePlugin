@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.2",
         "jaybizzle/crawler-detect": "^1.2",
-        "sylius/sylius": "~2.0.0",
+        "sylius/sylius": "^2.0",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
