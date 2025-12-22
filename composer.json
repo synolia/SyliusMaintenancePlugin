@@ -29,39 +29,68 @@
         "rector/rector": "^2.0",
         "squizlabs/php_codesniffer": "^3.11",
         "sylius-labs/coding-standard": "^4.3",
-        "symfony/browser-kit": "^6.4",
-        "symfony/debug-bundle": "^6.4",
-        "symfony/dotenv": "^6.4",
-        "symfony/intl": "^6.4",
+        "sylius/test-application": "~2.1.0@alpha",
+        "symfony/browser-kit": "^6.4 | ^7.4 | ^8.0",
+        "symfony/debug-bundle": "^6.4 | ^7.4 | ^8.0",
+        "symfony/dotenv": "^6.4 | ^7.4 | ^8.0",
+        "symfony/intl": "^6.4 | ^7.4 | ^8.0",
         "symfony/panther": "^2.0",
-        "symfony/web-profiler-bundle": "^6.4"
+        "symfony/web-profiler-bundle": "^6.4 | ^7.4 | ^8.0"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "symfony/thanks": true,
             "phpro/grumphp": true,
             "phpstan/extension-installer": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "symfony/flex": true,
+            "symfony/runtime": true,
+            "symfony/thanks": true
         }
     },
     "autoload": {
         "psr-4": {
-            "Synolia\\SyliusMaintenancePlugin\\": "src/",
-            "Tests\\Synolia\\SyliusMaintenancePlugin\\": "tests/"
+            "Synolia\\SyliusMaintenancePlugin\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Synolia\\SyliusMaintenancePlugin\\": ["tests/", "tests/TestApplication/src/"]
         }
     },
     "scripts": {
-        "post-install-cmd": [
-            "php bin/create_node_symlink.php"
+        "ecs": "ecs check -c ruleset/ecs.php --ansi --clear-cache",
+        "fix-ecs": "@ecs --fix",
+        "phpmd": "phpmd src ansi ruleset/.php_md.xml",
+        "phpstan": "phpstan analyse src -c ruleset/phpstan.neon",
+        "phpunit": "phpunit tests/PHPUnit --colors=always",
+        "tests": [
+            "@ecs",
+            "@phpmd",
+            "@phpstan",
+            "@phpunit"
         ],
-        "post-update-cmd": [
-            "php bin/create_node_symlink.php"
+        "test-application:install": [
+            "vendor/bin/console doctrine:database:drop --force --if-exists -n",
+            "vendor/bin/console doctrine:database:create -n",
+            "vendor/bin/console doctrine:migration:migrate -n",
+            "vendor/bin/console sylius:payment:generate-key -n",
+            "vendor/bin/console sylius:fixtures:load -n",
+            "yarn --cwd vendor/sylius/test-application install --force",
+            "yarn --cwd vendor/sylius/test-application build",
+            "vendor/bin/console assets:install --symlink -n vendor/sylius/test-application/public",
+            "cp tests/TestApplication/public/.htaccess vendor/sylius/test-application/public"
         ],
-        "post-create-project-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "fix-ecs": "ecs check -c ruleset/ecs.php --fix --ansi --clear-cache ."
+        "test-application:front": [
+            "yarn --cwd vendor/sylius/test-application install --force",
+            "yarn --cwd vendor/sylius/test-application build"
+        ]
+    },
+    "extra": {
+        "public-dir": "vendor/sylius/test-application/public",
+        "symfony": {
+            "require": "^6.4"
+        }
     }
 }
