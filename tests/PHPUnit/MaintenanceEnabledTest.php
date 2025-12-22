@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace PHPUnit;
 
-use Symfony\Component\Yaml\Yaml;
 use Tests\Synolia\SyliusMaintenancePlugin\PHPUnit\AbstractWebTestCase;
 
 final class MaintenanceEnabledTest extends AbstractWebTestCase
 {
     public function testMaintenanceIsEnabledForJsonRequests(): void
     {
-        \file_put_contents(
-            $this->file,
-            Yaml::dump([
-                'enabled' => true,
-                'custom_message' => 'niwebnimaster',
-            ]),
-        );
+        $this->configurationFileManager->createMaintenanceFile([
+            'custom_message' => 'niwebnimaster',
+        ]);
         self::$client->jsonRequest('GET', '/en_US/');
 
         self::assertResponseStatusCodeSame(503);

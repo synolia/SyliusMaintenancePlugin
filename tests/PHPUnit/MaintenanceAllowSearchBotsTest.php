@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
-use Symfony\Component\Yaml\Yaml;
-
 final class MaintenanceAllowSearchBotsTest extends AbstractWebTestCase
 {
     /**
@@ -13,12 +11,9 @@ final class MaintenanceAllowSearchBotsTest extends AbstractWebTestCase
      */
     public function testMaintenanceAllowBots(bool $isMaintenance, string $userAgent): void
     {
-        \file_put_contents(
-            $this->file,
-            Yaml::dump([
-                'allow_bots' => true,
-            ]),
-        );
+        $this->configurationFileManager->createMaintenanceFile([
+            'allow_bots' => true,
+        ]);
 
         self::$client->request('GET', '/en_US/', [], [], ['HTTP_USER_AGENT' => $userAgent]);
 
