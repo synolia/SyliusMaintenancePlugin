@@ -92,5 +92,8 @@
         "symfony": {
             "require": "^6.4"
         }
+    },
+    "conflict": {
+        "sylius/test-application": "v2.0.0-ALPHA.1"
     }
 }

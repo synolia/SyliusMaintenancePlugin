@@ -20,8 +20,8 @@ jobs:
                     - 8.3
                     - 8.4
                 sylius:
-                    - 2.0.0
                     - 2.1.0
+                    - 2.2.0
                 symfony:
                     - 6.4
                     - 7.4
@@ -82,8 +82,7 @@ jobs:
                 run: 'make install -e SYLIUS_VERSION=${{ matrix.sylius }} SYMFONY_VERSION=${{ matrix.symfony }} PHP_VERSION=${{ matrix.php }}'
             -
                 name: 'Doctrine Schema Validate - Run'
-                working-directory: ./tests/Application
-                run: 'php bin/console doctrine:schema:validate --skip-sync'
+                run: 'php vendor/bin/console doctrine:schema:validate --skip-sync'
             -
                 name: 'Run PHPUnit'
                 run: 'make phpunit'
