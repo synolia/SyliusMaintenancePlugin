@@ -11,5 +11,5 @@ imports:
 #                        is_bundle: false
 #                        type: attribute
 #                        dir: '%kernel.project_dir%/../../../tests/TestApplication/src/Entity'
-#                        prefix: Tests\Synolia\SyliusSchedulerCommandPlugin
+#                        prefix: Tests\Synolia\SyliusMaintenancePlugin
 
