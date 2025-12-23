@@ -67,3 +67,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+/tests/TestApplication/.env.local
+/tests/TestApplication/.env.*.local
+/var/

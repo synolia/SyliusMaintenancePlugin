@@ -7,7 +7,6 @@ namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Test\Services\DefaultChannelFactory;
-use Symfony\Component\Yaml\Yaml;
 
 final class MultiChannelMaintenanceTest extends AbstractWebTestCase
 {
@@ -48,16 +47,13 @@ final class MultiChannelMaintenanceTest extends AbstractWebTestCase
 
     public function testMaintenanceIsNotEnabledWhenFileIsNotEnabled(): void
     {
-        \file_put_contents(
-            $this->file,
-            Yaml::dump([
-                'channels' => [
-                    'FASHION_WEB',
-                    'test',
-                ],
-                'enabled' => true,
-            ]),
-        );
+        $this->configurationFileManager->createMaintenanceFile([
+            'channels' => [
+                'FASHION_WEB',
+                'test',
+            ],
+            'enabled' => true,
+        ]);
         self::$client->request('GET', 'http://fashion.localhost/en_US/');
         $this->assertSiteIsInMaintenance();
 

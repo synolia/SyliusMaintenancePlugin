@@ -7,7 +7,6 @@ namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Test\Services\DefaultChannelFactory;
-use Symfony\Component\Yaml\Yaml;
 
 final class MaintenanceByChannelTest extends AbstractWebTestCase
 {
@@ -48,12 +47,9 @@ final class MaintenanceByChannelTest extends AbstractWebTestCase
 
     public function testMaintenanceWithChannel(): void
     {
-        \file_put_contents(
-            $this->file,
-            Yaml::dump([
-                'channels' => ['maintenance'],
-            ]),
-        );
+        $this->configurationFileManager->createMaintenanceFile([
+            'channels' => ['maintenance'],
+        ]);
 
         self::$client->request('GET', 'http://fashion.localhost/en_US/');
         $this->assertSiteIsUp();

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
-use Symfony\Component\Yaml\Yaml;
-
 final class MaintenanceByFileTest extends AbstractWebTestCase
 {
     public function testMaintenanceEnabledWhenFileExist(): void
     {
-        \touch($this->file);
+        $this->configurationFileManager->createMaintenanceFile([]);
         self::$client->request('GET', '/en_US/');
 
         $this->assertSiteIsInMaintenance();
@@ -19,12 +17,9 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
     /** @dataProvider listOfIps */
     public function testMaintenanceFileWithIp(array $ips, bool $maintenance): void
     {
-        \file_put_contents(
-            $this->file,
-            Yaml::dump([
-                'ips' => $ips,
-            ]),
-        );
+        $this->configurationFileManager->createMaintenanceFile([
+            'ips' => $ips,
+        ]);
 
         self::$client->request('GET', '/en_US/');
 
@@ -38,12 +33,9 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
     public function testMaintenanceFileWithMessage(): void
     {
         $message = 'Maintenance custom message.';
-        \file_put_contents(
-            $this->file,
-            Yaml::dump([
-                'custom_message' => $message,
-            ]),
-        );
+        $this->configurationFileManager->createMaintenanceFile([
+            'custom_message' => $message,
+        ]);
 
         self::$client->request('GET', '/en_US/');
 
@@ -64,12 +56,9 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
             $scheduler['end_date'] = $endDate->format('Y-m-d H:i:s');
         }
 
-        \file_put_contents(
-            $this->file,
-            Yaml::dump([
-                'scheduler' => $scheduler,
-            ]),
-        );
+        $this->configurationFileManager->createMaintenanceFile([
+            'scheduler' => $scheduler,
+        ]);
 
         self::$client->request('GET', '/en_US/');
 

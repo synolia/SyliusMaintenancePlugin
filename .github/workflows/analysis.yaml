@@ -19,8 +19,7 @@ jobs:
                     - 8.2
                     - 8.3
                 symfony:
-                    - '7.1.*'
-                    - '7.2.*'
+                    - '6.4.*'
         env:
             APP_ENV: test
         steps:
@@ -73,7 +72,4 @@ jobs:
                 name: 'GrumPHP - Run'
                 run: 'if [ -f grumphp.yml ]; then vendor/bin/grumphp run ; else echo Grumphp ruleset file does not exist, skipping step ; fi'
                 if: 'always() && steps.end-of-setup.outcome == ''success'''
-            -
-                uses: symfonycorp/security-checker-action@v3
-                if: 'always() && steps.end-of-setup.outcome == ''success'''
-                continue-on-error: true
+
