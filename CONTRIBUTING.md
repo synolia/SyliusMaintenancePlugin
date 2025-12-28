@@ -38,11 +38,11 @@ $ make reset
 - Using `test` environment:
 
     ```bash
-    $ symfony server:start -d -e test
+    $ APP_ENV=test symfony server:start -d
     ```
 
 - Using `dev` environment:
 
     ```bash
-    $ symfony server:start -d -e dev
+    $ symfony server:start -d
     ```
