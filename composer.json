@@ -18,7 +18,7 @@
         "dbrekelmans/bdi": "^1.0",
         "friendsoftwig/twigcs": "^6.4.0",
         "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpmd/phpmd": "^2.13",
+        "phpmd/phpmd": "^3.0",
         "phpro/grumphp": "^2.0",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^2.0",
@@ -63,7 +63,7 @@
     "scripts": {
         "ecs": "ecs check -c ruleset/ecs.php --ansi --clear-cache",
         "fix-ecs": "@ecs --fix",
-        "phpmd": "phpmd src ansi ruleset/.php_md.xml",
+        "phpmd": "phpmd analyze src --format ansi --ruleset ruleset/.php_md.xml",
         "phpstan": "phpstan analyse src -c ruleset/phpstan.neon",
         "phpunit": "phpunit tests/PHPUnit --colors=always",
         "tests": [

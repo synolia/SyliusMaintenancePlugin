@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusMaintenancePlugin\Voter;
 
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\HttpFoundation\Request;
 use Synolia\SyliusMaintenancePlugin\Checker\IsMaintenanceCheckerInterface;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
@@ -13,7 +13,7 @@ class IsMaintenanceVoter implements IsMaintenanceVoterInterface
 {
     /** @param iterable<IsMaintenanceCheckerInterface> $checkers */
     public function __construct(
-        #[TaggedIterator(IsMaintenanceCheckerInterface::class)]
+        #[AutowireIterator(IsMaintenanceCheckerInterface::class)]
         private readonly iterable $checkers,
     ) {
     }
