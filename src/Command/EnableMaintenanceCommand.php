@@ -73,7 +73,7 @@ final class EnableMaintenanceCommand extends Command
         $disableAdmin = (bool) $input->getOption('disable-admin');
         $maintenanceConfiguration->setAllowAdmins(!$disableAdmin);
 
-        /** @var array $ipsAddress */
+        /** @var array<string> $ipsAddress */
         $ipsAddress = $input->getArgument('ips_address');
         if ([] !== $ipsAddress) {
             $maintenanceConfiguration->setIpAddresses(implode(',', $ipsAddress));

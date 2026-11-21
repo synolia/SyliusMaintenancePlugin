@@ -9,9 +9,9 @@
     ],
     "license": "EUPL-1.2",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "jaybizzle/crawler-detect": "^1.2",
-        "sylius/sylius": "^2.0",
+        "sylius/sylius": "^2.2",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
@@ -29,7 +29,7 @@
         "rector/rector": "^2.0",
         "squizlabs/php_codesniffer": "^3.11",
         "sylius-labs/coding-standard": "^4.3",
-        "sylius/test-application": "~2.1.0@alpha",
+        "sylius/test-application": "~2.2.0@alpha",
         "symfony/browser-kit": "^6.4 | ^7.4 | ^8.0",
         "symfony/css-selector": "^6.4 | ^7.4 | ^8.0",
         "symfony/debug-bundle": "^6.4 | ^7.4 | ^8.0",
@@ -91,7 +91,7 @@
     "extra": {
         "public-dir": "vendor/sylius/test-application/public",
         "symfony": {
-            "require": "^6.4"
+            "require": "^7.4"
         }
     },
     "conflict": {
