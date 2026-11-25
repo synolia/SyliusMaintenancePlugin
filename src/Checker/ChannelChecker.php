@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Synolia\SyliusMaintenancePlugin\Checker;
 
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Synolia\SyliusMaintenancePlugin\Model\MaintenanceConfiguration;
@@ -27,8 +28,12 @@ class ChannelChecker implements IsMaintenanceCheckerInterface
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
-        if ($this->channelRepository->count([]) > 1 && !\in_array($this->channelContext->getChannel()->getCode(), $configuration->getChannels(), true)) {
-            return IsMaintenanceVoterInterface::ACCESS_GRANTED;
+        try {
+            if ($this->channelRepository->count([]) > 1 && !\in_array($this->channelContext->getChannel()->getCode(), $configuration->getChannels(), true)) {
+                return IsMaintenanceVoterInterface::ACCESS_GRANTED;
+            }
+        } catch (ChannelNotFoundException) {
+            // No channel matches the request hostname: let the next checkers decide
         }
 
         return IsMaintenanceVoterInterface::ACCESS_DENIED;
