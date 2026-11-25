@@ -20,6 +20,17 @@ final class MaintenanceAllowSearchBotsTest extends AbstractWebTestCase
         $isMaintenance ? $this->assertSiteIsInMaintenance() : $this->assertSiteIsUp();
     }
 
+    public function testMaintenanceDisallowBotsByDefault(): void
+    {
+        $this->configurationFileManager->createMaintenanceFile([
+            'custom_message' => 'Back soon',
+        ]);
+
+        self::$client->request('GET', '/en_US/', [], [], ['HTTP_USER_AGENT' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/112.0.0.0 Safari/537.36']);
+
+        $this->assertSiteIsInMaintenance('Back soon');
+    }
+
     public function provideUserAgent(): \Generator
     {
         yield 'crawler : googlebot desktop' => [false, 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/112.0.0.0 Safari/537.36'];
