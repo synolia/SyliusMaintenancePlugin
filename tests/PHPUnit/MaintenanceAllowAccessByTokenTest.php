@@ -38,6 +38,18 @@ final class MaintenanceAllowAccessByTokenTest extends AbstractWebTestCase
         }
     }
 
+    public function testEmptyTokenDoesNotBypassAMaintenanceFileWithoutToken(): void
+    {
+        // A maintenance file written by hand, as in the README, has no token
+        $this->configurationFileManager->createMaintenanceFile([
+            'ips' => ['10.0.0.1'],
+        ]);
+
+        self::$client->request('GET', '/en_US/', ['synolia_maintenance_token' => '']);
+
+        $this->assertSiteIsInMaintenance();
+    }
+
     public function tokens(): \Generator
     {
         // configurationToken, token, isGenerated, isInMaintenance
@@ -61,6 +73,15 @@ final class MaintenanceAllowAccessByTokenTest extends AbstractWebTestCase
         ];
         yield 'token is generated and same token, so access to website even if queryParams are not matching' => [
             'g00d_s$cr3t', 'g00d_s$cr3t', true, false, ['synolia_maintenance_token' => '0th4r_s$cr3t'],
+        ];
+        yield 'no token configured and empty queryParam, so no access to website' => [
+            '', '', false, true, ['synolia_maintenance_token' => ''],
+        ];
+        yield 'no token configured and empty header, so no access to website' => [
+            '', '', false, true, [], ['HTTP_SYNOLIA_MAINTENANCE_TOKEN' => ''],
+        ];
+        yield 'no token configured and empty token in session, so no access to website' => [
+            '', '', true, true,
         ];
     }
 

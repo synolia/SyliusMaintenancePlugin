@@ -20,6 +20,11 @@ class TokenChecker implements IsMaintenanceCheckerInterface
 
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
+        // Without a configured token, an empty token must not bypass the maintenance
+        if ('' === $configuration->getToken()) {
+            return IsMaintenanceVoterInterface::ACCESS_DENIED;
+        }
+
         if ($request->query->get(TokenStorage::MAINTENANCE_TOKEN_NAME) === $configuration->getToken()) {
             return IsMaintenanceVoterInterface::ACCESS_GRANTED;
         }
