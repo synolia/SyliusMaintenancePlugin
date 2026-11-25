@@ -7,8 +7,11 @@ namespace Synolia\SyliusMaintenancePlugin\EventSubscriber;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Synolia\SyliusMaintenancePlugin\Factory\MaintenanceConfigurationFactory;
@@ -33,35 +36,59 @@ final readonly class MaintenanceEventsubscriber implements EventSubscriberInterf
     {
         return [
             RequestEvent::class => 'handle',
+            ExceptionEvent::class => 'handleNotFound',
         ];
     }
 
     public function handle(RequestEvent $event): void
     {
-        $configuration = $this->getMaintenanceConfiguration();
-
         if (!$event->isMainRequest()) {
             return;
         }
 
-        if (!$this->isMaintenanceVoter->isMaintenance($configuration, $event->getRequest())) {
+        $response = $this->getMaintenanceResponse($event->getRequest());
+
+        if ($response instanceof Response) {
+            $event->setResponse($response);
+        }
+    }
+
+    /**
+     * The router throws a 404 before the request listener runs when no route matches the URL.
+     */
+    public function handleNotFound(ExceptionEvent $event): void
+    {
+        if (!$event->isMainRequest() || !$event->getThrowable() instanceof NotFoundHttpException) {
             return;
+        }
+
+        $response = $this->getMaintenanceResponse($event->getRequest());
+
+        if ($response instanceof Response) {
+            $event->setResponse($response);
+        }
+    }
+
+    private function getMaintenanceResponse(Request $request): ?Response
+    {
+        $configuration = $this->getMaintenanceConfiguration();
+
+        if (!$this->isMaintenanceVoter->isMaintenance($configuration, $request)) {
+            return null;
+        }
+
+        if ('json' === $request->getContentTypeFormat()) {
+            return new JsonResponse([
+                'key' => 'maintenance',
+                'message' => $configuration->getCustomMessage(),
+            ], Response::HTTP_SERVICE_UNAVAILABLE);
         }
 
         $responseContent = $this->twig->render('@SynoliaSyliusMaintenancePlugin/maintenance.html.twig', [
             'custom_message' => $configuration->getCustomMessage(),
         ]);
 
-        if ('json' === $event->getRequest()->getContentTypeFormat()) {
-            $event->setResponse(new JsonResponse([
-                'key' => 'maintenance',
-                'message' => $configuration->getCustomMessage(),
-            ], Response::HTTP_SERVICE_UNAVAILABLE));
-
-            return;
-        }
-
-        $event->setResponse(new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE));
+        return new Response($responseContent, Response::HTTP_SERVICE_UNAVAILABLE);
     }
 
     private function getMaintenanceConfiguration(): MaintenanceConfiguration
