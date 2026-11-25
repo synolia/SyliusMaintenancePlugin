@@ -3,15 +3,15 @@ SHELL=/bin/bash
 COMPOSER_ROOT=composer
 CONSOLE=vendor/bin/console
 COMPOSER=composer
-SYLIUS_VERSION=2.1.0
-SYMFONY_VERSION=6.4
+SYLIUS_VERSION=2.3.0
+SYMFONY_VERSION=7.4
 PLUGIN_NAME=synolia/sylius-maintenance-plugin
 
 ###
 ### DEVELOPMENT
 ### ¯¯¯¯¯¯¯¯¯¯¯
 
-install: sylius ## Install all dependencies with [SYLIUS_VERSION=2.1.0] [SYMFONY_VERSION=6.4]
+install: sylius ## Install all dependencies with [SYLIUS_VERSION=2.3.0] [SYMFONY_VERSION=7.4]
 .PHONY: install
 
 reset: ## Remove dependencies
