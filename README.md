@@ -73,6 +73,10 @@ The maintenance is driven by a **maintenance.yaml** file at the root of your pro
 While this file exists, the website is under maintenance, unless it contains `enabled: false`.
 You can write it by hand, or let the console commands and the back-office write it for you.
 
+> [!WARNING]
+> On a store with **several channels**, a **maintenance.yaml** without `channels` puts **no channel** under maintenance.
+> List the channels to put under maintenance, or use `maintenance:enable`, which lists all of them for you.
+
 ### Configuration file
 
 Every key is optional:
@@ -92,7 +96,7 @@ allow_admins: false                    # default: true
 ```
 
 On a store with **several channels**, only the channels listed in `channels` are under maintenance:
-a file without `channels` puts no channel under maintenance. With a single channel, `channels` is ignored.
+a file without `channels` puts no channel under maintenance (see the warning above). With a single channel, `channels` is ignored.
 
 ### Console commands
 
