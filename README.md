@@ -32,11 +32,12 @@ When your website is under maintenance, the plugin lets you:
 
 ## Requirements
 
-|         | Version                    |
-|:--------|:---------------------------|
-| PHP     | ^8.3                       |
-| Sylius  | ^2.2                       |
-| Symfony | ^6.4 \|\| ^7.4 \|\| ^8.0 |
+|         | Version                                            |
+|:--------|:---------------------------------------------------|
+| PHP     | ^8.2 (8.3+ for Sylius 2.3, 8.4+ for Symfony 8)     |
+| Sylius  | ^2.2                                               |
+| Symfony | ^7.4 \|\| ^8.0 (Symfony 8 requires Sylius 2.3)     |
+| Node    | 22, 24 or 26 (Sylius 2.3 requires ^22.13 or >= 24) |
 
 ## Installation
 
@@ -228,7 +229,7 @@ admin area (70), channels (60), profiler (30) and token (20).
 The plugin is developed and tested with the [Sylius Test Application](https://github.com/Sylius/TestApplication):
 
 ```shell
-make install    # optionally: make install SYLIUS_VERSION=2.3.0 SYMFONY_VERSION=7.4
+make install    # optionally: make install SYLIUS_VERSION=2.3.0 SYMFONY_VERSION=8.1
 make phpunit
 make serve      # Symfony local web server on the test application
 ```
