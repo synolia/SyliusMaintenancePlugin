@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
-use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -21,10 +20,5 @@ return RectorConfig::configure()
         symfonyConfigs: true,
     )
     ->withTypeCoverageLevel(0)
-    ->withSets([
-        SymfonySetList::SYMFONY_60,
-        SymfonySetList::SYMFONY_61,
-        SymfonySetList::SYMFONY_62,
-        SymfonySetList::SYMFONY_63,
-        SymfonySetList::SYMFONY_64,
-    ]);
+    // Symfony rules matching the installed Symfony version (versioned SymfonySetList constants were removed in Rector 2.x)
+    ->withComposerBased(symfony: true);

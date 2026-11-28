@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -12,7 +13,7 @@ use Synolia\SyliusMaintenancePlugin\Storage\TokenStorage;
 
 final class MaintenanceAllowAccessByTokenTest extends AbstractWebTestCase
 {
-    /** @dataProvider tokens */
+    #[DataProvider('tokens')]
     public function testMaintenanceFileWithToken(
         string $configurationToken,
         string $token,
@@ -50,7 +51,7 @@ final class MaintenanceAllowAccessByTokenTest extends AbstractWebTestCase
         $this->assertSiteIsInMaintenance();
     }
 
-    public function tokens(): \Generator
+    public static function tokens(): \Generator
     {
         // configurationToken, token, isGenerated, isInMaintenance
         yield 'same tokens, and token is generated, so access allowed' => [

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="Synolia Sylius Maintenance plugin PHPMD rule set"
+<ruleset name="Synolia Sylius plugin PHPMD rule set"
          xmlns="http://pmd.sf.net/ruleset/1.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0
@@ -7,7 +7,7 @@
          xsi:noNamespaceSchemaLocation="
                        http://pmd.sf.net/ruleset_xml_schema.xsd">
     <description>
-        Synolia Sylius Maintenance plugin PHPMD rule set
+        Synolia Sylius plugin PHPMD rule set
     </description>
 
     <rule ref="rulesets/codesize.xml">
@@ -63,6 +63,7 @@
     </rule>
 
     <exclude-pattern>src/Migrations/*</exclude-pattern>
+    <exclude-pattern>migrations/*</exclude-pattern>
     <exclude-pattern>spec/*</exclude-pattern>
     <exclude-pattern>tests/*</exclude-pattern>
 </ruleset>

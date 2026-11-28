@@ -1,0 +1,3 @@
+# Generated with: vendor/bin/phpstan analyse -c ruleset/phpstan.neon --generate-baseline ruleset/phpstan-baseline.neon
+parameters:
+    ignoreErrors: []

@@ -1,3 +1,6 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: max
     reportUnmatchedIgnoredErrors: false
@@ -7,11 +10,9 @@ parameters:
     bootstrapFiles:
         - ../vendor/autoload.php
     excludePaths:
-        - ../src/DependencyInjection/Configuration.php?
-        - ../tests/PHPUnit
+        - ../bin
+        - ../tests
     ignoreErrors:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
-        - '/Parameter #1 \$configuration of method Symfony\\Component\\DependencyInjection\\Extension\\Extension::processConfiguration\(\) expects Symfony\\Component\\Config\\Definition\\ConfigurationInterface, Symfony\\Component\\Config\\Definition\\ConfigurationInterface\|null given\./'
-        - '#Call to an undefined method Sylius\\Component\\Channel\\Repository\\ChannelRepositoryInterface::count\(\)\.#'
-        - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
+        # Plugin-specific ignores (with a comment explaining why) go below this line
