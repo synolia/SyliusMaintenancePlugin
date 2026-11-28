@@ -68,8 +68,5 @@
     },
     "extra": {
         "public-dir": "vendor/sylius/test-application/public"
-    },
-    "conflict": {
-        "sylius/test-application": "v2.0.0-ALPHA.1"
     }
 }
