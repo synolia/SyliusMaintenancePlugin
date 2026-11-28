@@ -7,7 +7,6 @@ namespace Synolia\SyliusMaintenancePlugin\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -36,12 +35,9 @@ final class MaintenanceConfigurationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var FlashBagInterface $flashBag */
-            $flashBag = $request->getSession()->getFlashBag();
-
             if ($maintenanceConfiguration->getEndDate() instanceof \DateTime && $maintenanceConfiguration->getEndDate() < (new \DateTime())) {
                 $maintenanceConfiguration->setEnabled(false);
-                $flashBag->add('error', $this->translator->trans('maintenance.ui.message_end_date_in_the_past'));
+                $this->addFlash('error', $this->translator->trans('maintenance.ui.message_end_date_in_the_past'));
             }
 
             $this->maintenanceExporter->export($maintenanceConfiguration);
@@ -52,7 +48,7 @@ final class MaintenanceConfigurationController extends AbstractController
 
             $this->synoliaMaintenanceCache->delete(ConfigurationFileManager::MAINTENANCE_CACHE_KEY);
 
-            $flashBag->add('success', $this->translator->trans($message));
+            $this->addFlash('success', $this->translator->trans($message));
         }
 
         return $this->render('@SynoliaSyliusMaintenancePlugin/admin/maintenance/layout.html.twig', [

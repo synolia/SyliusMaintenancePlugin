@@ -73,7 +73,7 @@ final class MaintenanceConfigurationType extends AbstractType
             ])
         ;
 
-        if ($this->channelRepository->count([]) > 1) {
+        if ($this->channelRepository->countAll() > 1) {
             $builder->add(
                 'channels',
                 ChannelChoiceType::class,

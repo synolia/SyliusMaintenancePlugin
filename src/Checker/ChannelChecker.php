@@ -26,10 +26,13 @@ class ChannelChecker implements IsMaintenanceCheckerInterface
         return self::PRIORITY;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function isMaintenance(MaintenanceConfiguration $configuration, Request $request): bool
     {
         try {
-            if ($this->channelRepository->count([]) > 1 && !\in_array($this->channelContext->getChannel()->getCode(), $configuration->getChannels(), true)) {
+            if ($this->channelRepository->countAll() > 1 && !\in_array($this->channelContext->getChannel()->getCode(), $configuration->getChannels(), true)) {
                 return IsMaintenanceVoterInterface::ACCESS_GRANTED;
             }
         } catch (ChannelNotFoundException) {
