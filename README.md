@@ -225,7 +225,17 @@ admin area (70), channels (60), profiler (30) and token (20).
 
 ## Development
 
-See [How to contribute](CONTRIBUTING.md).
+The plugin is developed and tested with the [Sylius Test Application](https://github.com/Sylius/TestApplication):
+
+```shell
+make install    # optionally: make install SYLIUS_VERSION=2.3.0 SYMFONY_VERSION=7.4
+make phpunit
+make serve      # Symfony local web server on the test application
+```
+
+Use `vendor/bin/console` to run Symfony commands against the test application.
+
+See [How to contribute](CONTRIBUTING.md) for more details (database configuration, versions, ...).
 
 ## License
 

@@ -8,7 +8,6 @@ parameters:
         - ../vendor/autoload.php
     excludePaths:
         - ../src/DependencyInjection/Configuration.php?
-        - ../tests/Application/?
         - ../tests/PHPUnit
     ignoreErrors:
         - identifier: missingType.iterableValue

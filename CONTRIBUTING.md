@@ -1,15 +1,29 @@
 ## Installation
 
-From the plugin root directory, run the following commands:
+The plugin is developed and tested against the official [Sylius Test Application](https://github.com/Sylius/TestApplication)
+(`sylius/test-application`), installed as a Composer dev dependency. The plugin-specific configuration
+of the test application lives in `tests/TestApplication/`.
+
+To be able to setup the plugin database, remember to configure your database credentials
+in `tests/TestApplication/.env.local` and `tests/TestApplication/.env.test.local`
+(default: `mysql://root@127.0.0.1/synolia_maintenance_plugin_%kernel.environment%`).
+
+From the plugin root directory, run the following command:
 
 ```bash
-$ make install -e SYLIUS_VERSION=XX SYMFONY_VERSION=YY
+$ make install
 ```
 
-Default values: XX=2.3.0 and YY=7.4
+To test against specific Sylius and Symfony versions (as the CI does), run:
 
-To be able to setup this plugin database, remember to configure your database credentials 
-in `tests/TestApplication/.env.local` and `tests/TestApplication/.env.test.local`.
+```bash
+$ make install SYLIUS_VERSION=XX SYMFONY_VERSION=YY
+```
+
+e.g. `SYLIUS_VERSION=2.3.0 SYMFONY_VERSION=7.4`.
+
+It installs Composer dependencies and the frontend assets of the test application,
+then creates the database, runs the migrations and loads the fixtures (`test` environment by default).
 
 To reset test environment:
 ```bash
@@ -35,14 +49,7 @@ $ make reset
 
 ### Opening Sylius with your plugin
 
-- Using `test` environment:
-
-    ```bash
-    $ APP_ENV=test symfony server:start -d
-    ```
-
-- Using `dev` environment:
-
-    ```bash
-    $ symfony server:start -d
-    ```
+```bash
+$ make serve                # `test` environment
+$ make serve APP_ENV=dev    # `dev` environment
+```
