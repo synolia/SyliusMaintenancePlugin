@@ -8,9 +8,9 @@ grumphp:
         jsonlint:
             detect_key_conflicts: true
         phplint:
-            exclude: ['vendor']
+            exclude: ['vendor', 'var']
             triggered_by: ['php']
-        phpmd:
+        phpmd3:
             ruleset: ['ruleset/.php_md.xml']
         phpstan:
             level: ~
@@ -24,7 +24,7 @@ grumphp:
         phpmnd:
             directory: src
         phpcs:
-            standard: "ruleset"
+            standard: 'ruleset'
             warning_severity: 0
             whitelist_patterns:
                 - 'src'
