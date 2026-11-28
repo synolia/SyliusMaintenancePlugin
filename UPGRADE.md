@@ -1,3 +1,9 @@
+# UPGRADE FROM `v2.2.X` TO `v2.3.0`
+
+* Symfony 6.4 is no longer supported: the minimum required version is now Symfony 7.4.
+  Composer keeps projects on Symfony 6.4 on `v2.2.x`.
+* PHP 8.2 is now supported (with Sylius 2.2 and Symfony 7.4).
+
 # UPGRADE FROM `v2.1.2` TO `v2.2.0`
 
 * Minimum requirements have been raised to PHP 8.3, Sylius 2.2 and Symfony 6.4 or 7.4.
