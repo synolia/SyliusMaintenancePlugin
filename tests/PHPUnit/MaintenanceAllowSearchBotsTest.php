@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 final class MaintenanceAllowSearchBotsTest extends AbstractWebTestCase
 {
-    /**
-     * @dataProvider provideUserAgent
-     */
+    #[DataProvider('provideUserAgent')]
     public function testMaintenanceAllowBots(bool $isMaintenance, string $userAgent): void
     {
         $this->configurationFileManager->createMaintenanceFile([
@@ -31,7 +31,7 @@ final class MaintenanceAllowSearchBotsTest extends AbstractWebTestCase
         $this->assertSiteIsInMaintenance('Back soon');
     }
 
-    public function provideUserAgent(): \Generator
+    public static function provideUserAgent(): \Generator
     {
         yield 'crawler : googlebot desktop' => [false, 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/112.0.0.0 Safari/537.36'];
         yield 'crawler : googlebot smartphone' => [false, 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'];

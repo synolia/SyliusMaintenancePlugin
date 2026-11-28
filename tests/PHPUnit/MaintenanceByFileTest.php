@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 final class MaintenanceByFileTest extends AbstractWebTestCase
 {
     public function testMaintenanceEnabledWhenFileExist(): void
@@ -14,7 +16,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
         $this->assertSiteIsInMaintenance();
     }
 
-    /** @dataProvider listOfIps */
+    #[DataProvider('listOfIps')]
     public function testMaintenanceFileWithIp(array $ips, bool $maintenance): void
     {
         $this->configurationFileManager->createMaintenanceFile([
@@ -42,7 +44,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
         $this->assertSiteIsInMaintenance($message);
     }
 
-    /** @dataProvider generateDates */
+    #[DataProvider('generateDates')]
     public function testMaintenanceFileWithScheduler(
         ?\DateTime $startDate,
         ?\DateTime $endDate,
@@ -69,7 +71,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
         }
     }
 
-    public function listOfIps(): \Generator
+    public static function listOfIps(): \Generator
     {
         // ips[], isInMaintenance
         yield [['127.0.0.1'], false];
@@ -79,7 +81,7 @@ final class MaintenanceByFileTest extends AbstractWebTestCase
         yield [['123.123.123.123', '10.0.0.1'], true];
     }
 
-    public function generateDates(): \Generator
+    public static function generateDates(): \Generator
     {
         // ?\DateTime $startDate, ?\DateTime $endDate, bool $maintenance
         yield 'Maintenance already ended' => [null, (new \DateTime())->modify('-1 day'), false];

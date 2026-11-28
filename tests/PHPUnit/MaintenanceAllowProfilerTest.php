@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusMaintenancePlugin\PHPUnit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -13,7 +14,7 @@ use Synolia\SyliusMaintenancePlugin\Voter\IsMaintenanceVoterInterface;
 
 final class MaintenanceAllowProfilerTest extends AbstractWebTestCase
 {
-    /** @dataProvider provideUrls */
+    #[DataProvider('provideUrls')]
     public function testProfilerIsReachableDuringMaintenance(string $url, bool $isMaintenance): void
     {
         $this->configurationFileManager->createMaintenanceFile([]);
@@ -22,7 +23,7 @@ final class MaintenanceAllowProfilerTest extends AbstractWebTestCase
         self::assertSame($isMaintenance, $this->isMaintenance(Request::create($url)));
     }
 
-    public function provideUrls(): \Generator
+    public static function provideUrls(): \Generator
     {
         yield 'profiler' => ['http://localhost/_profiler/123456', false];
         yield 'web debug toolbar' => ['http://localhost/_wdt/123456', false];
